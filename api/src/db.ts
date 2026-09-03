@@ -9,6 +9,7 @@ export const db = new DatabaseSync(join(here, "..", "marg.db"));
 
 db.exec("PRAGMA journal_mode = WAL;");
 db.exec("PRAGMA foreign_keys = ON;");
+db.exec("PRAGMA busy_timeout = 4000;"); // fail fast on a lock instead of hanging
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,

@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { db } from "./db.js";
 import { auth, id, now, hash, verify, newToken, type AuthedRequest } from "./auth.js";
-import { options, optById, pathById } from "./dataset.js";
+import { options, optById, pathById, scholarships } from "./dataset.js";
 import { reflect, planReflect, MODEL, hasKey } from "./claude.js";
 
 const app = express();
@@ -30,7 +30,7 @@ function logEvent(userId: string | null, name: string, props: any) {
 
 // ---- health & content ----
 app.get("/api/health", (_req, res) => res.json({ ok: true, model: MODEL, ai_key_detected: hasKey, options: options.length }));
-app.get("/api/options", (_req, res) => res.json({ options }));
+app.get("/api/options", (_req, res) => res.json({ options, scholarships }));
 app.get("/api/option/:id", (req, res) => {
   const o = optById.get(req.params.id);
   return o ? res.json({ option: o }) : res.status(404).json({ error: "unknown_option" });
@@ -146,6 +146,12 @@ app.post("/api/event", auth, (req: AuthedRequest, res) => {
   const { name, props } = req.body || {};
   if (name) logEvent(req.userId!, String(name), props);
   res.json({ ok: true });
+});
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error("ROUTE ERROR:", err?.stack || err);
+  res.status(500).json({ error: "server_error", message: String(err?.message || err) });
 });
 
 const PORT = Number(process.env.PORT) || 5175;

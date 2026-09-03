@@ -45,8 +45,8 @@ export async function reflect(profile: any, option: any) {
     output_format: betaZodOutputFormat(ReflectionSchema),
     messages: [{ role: "user", content: JSON.stringify(payload) }],
   });
-  if (!resp.parsed) throw new Error("reflection could not be parsed");
-  return resp.parsed;
+  if (!resp.parsed_output) throw new Error("reflection could not be parsed");
+  return resp.parsed_output;
 }
 
 const PlanSchema = z.object({
@@ -87,6 +87,6 @@ export async function planReflect(profile: any, pathway: any) {
     output_format: betaZodOutputFormat(PlanSchema),
     messages: [{ role: "user", content: JSON.stringify(payload) }],
   });
-  if (!resp.parsed) throw new Error("plan reflection could not be parsed");
-  return resp.parsed;
+  if (!resp.parsed_output) throw new Error("plan reflection could not be parsed");
+  return resp.parsed_output;
 }

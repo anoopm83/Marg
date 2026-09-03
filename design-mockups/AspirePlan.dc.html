@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    :root{--bg:#F7F5F0;--surface:#FFFFFF;--ink:#233039;--muted:#6E7A82;--primary:#0E7C7B;--primary-d:#0B5E5D;--violet:#6D5AC0;--amber:#B4692B;--border:#E7E3DA;}
+    *{box-sizing:border-box;}
+    body{margin:0;font-family:'Public Sans',system-ui,Segoe UI,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
+    h1,h2,h3{font-family:'Spectral',Georgia,serif;font-weight:600;margin:0;line-height:1.18;}
+    .phone{width:390px;min-height:1040px;background:var(--bg);display:flex;flex-direction:column;padding:22px 20px;}
+    .muted{color:var(--muted);}
+    .step{display:flex;gap:13px;}
+    .num{flex:none;width:28px;height:28px;border-radius:999px;background:#E3F0EF;color:var(--primary-d);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;}
+    .stem{width:2px;background:var(--border);margin:2px auto 0;flex:1;}
+    .chip{display:inline-flex;font-size:13px;font-weight:600;padding:7px 12px;border-radius:999px;background:#fff;border:1.5px solid var(--border);color:var(--ink);}
+  </style>
+</helmet>
+<div class="phone">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#233039" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    <span style="font-size:12px;font-weight:700;color:var(--violet);background:#EEE9F8;padding:4px 9px;border-radius:999px;">PREVIEW</span>
+  </div>
+
+  <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+    <h1 style="font-size:25px;">Becoming a doctor — a possible path</h1>
+    <p class="muted" style="font-size:14px;line-height:1.5;margin:0;">This is one way there, and it can change as you do.</p>
+  </div>
+
+  <div style="margin-top:20px;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.4px;">YOUR NEXT 1–2 YEARS</div>
+  <div style="margin-top:12px;display:flex;flex-direction:column;">
+    <div class="step"><div style="display:flex;flex-direction:column;align-items:center;align-self:stretch;"><div class="num">1</div><div class="stem"></div></div><div style="padding-bottom:16px;"><div style="font-weight:700;font-size:15px;">Take PU Science with Biology</div><div class="muted" style="font-size:13.5px;line-height:1.5;">PCB or PCMB after Class 10.</div></div></div>
+    <div class="step"><div style="display:flex;flex-direction:column;align-items:center;align-self:stretch;"><div class="num">2</div><div class="stem"></div></div><div style="padding-bottom:16px;"><div style="font-weight:700;font-size:15px;">Build toward NEET</div><div class="muted" style="font-size:13.5px;line-height:1.5;">The national medical entrance, across Classes 11–12.</div></div></div>
+    <div class="step"><div style="display:flex;flex-direction:column;align-items:center;"><div class="num">3</div></div><div><div style="font-weight:700;font-size:15px;">Stay aware, stay open</div><div class="muted" style="font-size:13.5px;line-height:1.5;">NEET is competitive — plan realistically and keep the alternatives below in view.</div></div></div>
+  </div>
+
+  <div style="margin-top:18px;background:#FBF3EA;border:1px solid #EAD9C2;border-radius:14px;padding:16px;">
+    <div style="display:inline-flex;gap:7px;align-items:center;font-size:12px;font-weight:700;color:var(--amber);letter-spacing:.3px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#B4692B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2 18a2 2 0 0 0 1.7 3h16.6A2 2 0 0 0 22 18L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg> HONEST ABOUT WHAT IT TAKES</div>
+    <p style="font-size:14px;line-height:1.55;margin:10px 0 0;">MBBS is long (~5.5 years) and very competitive. But there are real routes through the cost:</p>
+    <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;"><span class="chip">Government seats</span><span class="chip">PM YASASVI / state aid</span><span class="chip">Education loans</span></div>
+  </div>
+
+  <div style="margin-top:16px;">
+    <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.4px;">IF THIS CHANGES, YOU'RE NOT STUCK</div>
+    <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;"><span class="chip">Nursing &amp; allied health</span><span class="chip">Pharmacy</span><span class="chip">Biosciences</span><span class="chip">Veterinary</span></div>
+  </div>
+
+  <div style="margin-top:16px;background:#EEE9F8;border:1px solid #DFD6F3;border-radius:14px;padding:15px;display:flex;gap:11px;">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#6D5AC0" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px;"><path d="M8 12h8M12 8v8"/><circle cx="12" cy="12" r="9"/></svg>
+    <div style="font-size:13.5px;line-height:1.55;">Earlier you leaned toward <strong>creative subjects</strong>. This path needs Science — worth sitting with that trade-off before you commit. Want to <span style="color:var(--violet);font-weight:600;">explore both side by side?</span></div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

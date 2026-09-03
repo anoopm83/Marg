@@ -1,0 +1,15 @@
+{
+  "name": "marg-ai-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Marg AI backend — grounded Claude reflection endpoint + static app serving.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.69.0",
+    "puppeteer-core": "^25.9.0",
+    "zod": "^3.25.0"
+  }
+}

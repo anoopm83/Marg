@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+
+# environment / secrets
+.env
+.env.*
+*.key
+
+# build output
+dist/
+build/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+~$*
+
+# logs
+*.log
+npm-debug.log*

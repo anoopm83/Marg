@@ -1,0 +1,10 @@
+import puppeteer from "puppeteer-core";
+const b = await puppeteer.launch({ executablePath: "C:/Program Files/Google/Chrome/Application/chrome.exe", headless: true, args:["--no-sandbox","--disable-dev-shm-usage"] });
+const p = await b.newPage();
+p.on("console", m => console.log("PAGE:", m.type(), m.text()));
+p.on("pageerror", e => console.log("PAGEERROR:", e.message));
+await p.goto("http://localhost:5173/", { waitUntil: "domcontentloaded" });
+await new Promise(r=>setTimeout(r,800));
+const info = await p.evaluate(() => ({ hasData: !!window.MARG_DATA, appLen: (document.getElementById('app')||{}).innerHTML?.length||0, snippet: (document.getElementById('app')||{}).innerHTML?.slice(0,180)||'(no #app)' }));
+console.log("INFO:", JSON.stringify(info));
+await b.close();

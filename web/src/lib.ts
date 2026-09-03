@@ -53,7 +53,7 @@ export function costText(o: Option): string {
   if (!c.c) return "Varies";
   const parts: string[] = [];
   for (const [k, v] of Object.entries(c.c)) {
-    if (k === "needs_verification" || k === "note") continue;
+    if (k === "needs_verification" || k === "note" || k === "verified_note") continue;
     parts.push(`${k.replace(/_/g, " ")}: ₹${v}`);
   }
   if (!parts.length && (c.c as any).note) parts.push((c.c as any).note);

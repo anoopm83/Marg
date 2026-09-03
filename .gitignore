@@ -9,6 +9,10 @@ node_modules/
 # build output
 dist/
 build/
+*.tsbuildinfo
+
+# dev screenshot failures
+screenshots-app/99-*.png
 
 # OS / editor cruft
 .DS_Store

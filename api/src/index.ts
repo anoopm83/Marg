@@ -3,8 +3,9 @@ import express from "express";
 import cors from "cors";
 import { db } from "./db.js";
 import { auth, id, now, hash, verify, newToken, type AuthedRequest } from "./auth.js";
-import { options, optById, pathById, scholarships, pathways } from "./dataset.js";
-import { reflect, planReflect, MODEL, hasKey, PROVIDER } from "./llm.js";
+import { options, optById, pathById, scholarships, pathways, specializedPathways, groundingFor } from "./dataset.js";
+import { reflect, planReflect, chat, type ChatMsg, MODEL, hasKey, PROVIDER } from "./llm.js";
+import { checkDistress, HELPLINES } from "./safety.js";
 
 const app = express();
 app.use(cors());
@@ -31,7 +32,7 @@ function logEvent(userId: string | null, name: string, props: any) {
 
 // ---- health & content ----
 app.get("/api/health", (_req, res) => res.json({ ok: true, provider: PROVIDER, model: MODEL, ai_key_detected: hasKey, options: options.length }));
-app.get("/api/options", (_req, res) => res.json({ options, scholarships, pathways }));
+app.get("/api/options", (_req, res) => res.json({ options, scholarships, pathways, specialized: specializedPathways }));
 app.get("/api/option/:id", (req, res) => {
   const o = optById.get(req.params.id);
   return o ? res.json({ option: o }) : res.status(404).json({ error: "unknown_option" });
@@ -116,6 +117,45 @@ app.post("/api/plan", auth, async (req: AuthedRequest, res) => {
     res.json({ source: PROVIDER, model: MODEL, plan });
   } catch (e: any) {
     res.status(e?.status || 500).json({ error: "plan_failed", message: String(e?.message || e) });
+  }
+});
+
+// ---- conversational chat (grounded, no-verdict; safety-gated) ----
+app.post("/api/chat", auth, async (req: AuthedRequest, res) => {
+  const { mode, contextId, goal, messages } = req.body || {};
+  if (!Array.isArray(messages) || messages.length === 0) return res.status(400).json({ error: "no_messages" });
+
+  // SAFETY GATE — server-side, before any LLM call. Scan the latest user turn.
+  const lastUser = [...messages].reverse().find((m: any) => m?.role === "user");
+  if (lastUser && checkDistress(String(lastUser.content || ""))) {
+    logEvent(req.userId!, "distress_flag_raised", { source: "chat", mode });
+    return res.json({ safety: true, helplines: HELPLINES });
+  }
+
+  if (!hasKey) return res.status(503).json({ error: "no_ai_key", message: `No key for LLM_PROVIDER='${PROVIDER}'. Set it in api/.env to enable chat.` });
+
+  const row = getIntake.get(req.userId!) as { data: string } | undefined;
+  const profile = row ? JSON.parse(row.data) : {};
+  const chatMode: "explore" | "aspire" = mode === "aspire" ? "aspire" : "explore";
+  const currentOption = chatMode === "explore" && contextId ? optById.get(contextId) : null;
+  const groundCtx = {
+    student: { interests: profile?.interests ?? [], values: profile?.values ?? [] },
+    current_focus: chatMode === "aspire"
+      ? { kind: "goal", goal: goal || "(unspecified)" }
+      : { kind: "option", option: currentOption ? { id: currentOption.id, name: currentOption.name } : null },
+    ...groundingFor(chatMode),
+  };
+  // Trim history sent to the model (keep it bounded); Zod-free prose output.
+  const history: ChatMsg[] = messages.slice(-10).map((m: any) => ({
+    role: m.role === "assistant" ? "assistant" : "user",
+    content: String(m.content || "").slice(0, 1000),
+  }));
+  try {
+    const reply = await chat(groundCtx, history);
+    logEvent(req.userId!, "chat_message", { mode, turns: history.length });
+    res.json({ source: PROVIDER, model: MODEL, reply });
+  } catch (e: any) {
+    res.status(e?.status || 500).json({ error: "chat_failed", message: String(e?.message || e) });
   }
 });
 

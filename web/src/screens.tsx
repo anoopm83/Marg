@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { api, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, setToken } from "./api";
+import { api, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, type ChatMsg, type Specialized, setToken } from "./api";
 import { Icon, Compass, Bookmark } from "./icons";
 import { INTERESTS, VALUES, localReflect, planLocal, expansionId, costText, checkDistress, shortName, optIconName } from "./lib";
 
@@ -8,6 +8,7 @@ export interface Ctx {
   param: string | null;
   toast: (m: string) => void;
   openSafety: (fromDistress?: boolean) => void;
+  logout: () => void;
   options: Option[];
   profile: Profile;
   setProfile: (p: Profile) => void;
@@ -17,6 +18,7 @@ export interface Ctx {
   setShortlist: (s: ShortlistItem[]) => void;
   scholarshipNames: Record<string, string>;
   pathways: Pathway[];
+  specialized: Specialized[];
 }
 
 function FooterLinks({ ctx }: { ctx: Ctx }) {
@@ -25,6 +27,55 @@ function FooterLinks({ ctx }: { ctx: Ctx }) {
       <button className="help-link" onClick={() => ctx.openSafety(false)}>Get help</button>
       <span>·</span>
       <button className="help-link" onClick={() => ctx.go("delete-confirm")}>Delete my data</button>
+      <span>·</span>
+      <button className="help-link" onClick={() => ctx.logout()}>Log out</button>
+    </div>
+  );
+}
+
+// Grounded, no-verdict conversational chat. Used in Mode A (about a stream) and
+// Mode B (about a typed goal). Distress is caught by a client pre-check here AND
+// authoritatively server-side before any model call.
+export function Chat({ ctx, mode, contextId, goal, placeholder, seedAssistant }: {
+  ctx: Ctx; mode: "explore" | "aspire"; contextId?: string | null; goal?: string;
+  placeholder: string; seedAssistant?: string;
+}) {
+  const [msgs, setMsgs] = useState<ChatMsg[]>(seedAssistant ? [{ role: "assistant", content: seedAssistant }] : []);
+  const [input, setInput] = useState("");
+  const [busy, setBusy] = useState(false);
+  const scroller = useRef<HTMLDivElement>(null);
+  useEffect(() => { scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: "smooth" }); }, [msgs, busy]);
+
+  async function send() {
+    const text = input.trim();
+    if (!text || busy) return;
+    if (checkDistress(text)) ctx.openSafety(true); // instant local pre-check; server re-checks authoritatively
+    const next: ChatMsg[] = [...msgs, { role: "user", content: text }];
+    setMsgs(next); setInput(""); setBusy(true);
+    const res = await api.chat({ mode, contextId, goal, messages: next });
+    setBusy(false);
+    if (res.data?.safety) {
+      ctx.openSafety(true);
+      setMsgs([...next, { role: "assistant", content: "I want to make sure you're okay before we carry on — please see the help options that just came up. I'm here when you're ready." }]);
+      return;
+    }
+    setMsgs([...next, { role: "assistant", content: res.data?.reply || "Sorry — I couldn't answer just now. Please try again in a moment." }]);
+  }
+
+  return (
+    <div className="chat">
+      <div className="chat-log" ref={scroller}>
+        {msgs.length === 0 && <div className="chat-empty">Ask anything about your options. I answer from verified info, and I'll never tell you what to pick.</div>}
+        {msgs.map((m, i) => <div key={i} className={"bubble " + m.role}>{m.content}</div>)}
+        {busy && <div className="bubble assistant typing"><span></span><span></span><span></span></div>}
+      </div>
+      <div className="chat-input">
+        <textarea className="ta chat-ta" rows={1} value={input} placeholder={placeholder}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }} />
+        <button className="chat-send" onClick={send} disabled={busy || !input.trim()} aria-label="Send"><Icon name="chev" size={19} stroke={2.4} /></button>
+      </div>
+      <div className="chat-disc"><Icon name="info" size={12} style={{ color: "var(--muted)" }} /> Answers come from verified info only, never a verdict — figures may still be being checked.</div>
     </div>
   );
 }
@@ -50,6 +101,7 @@ export function Welcome({ ctx }: { ctx: Ctx }) {
             </div>
           </div>
         </div>
+        <button className="help-link" onClick={() => ctx.go("login")}>Already have an account? Log in</button>
       </div>
     </section>
   );
@@ -110,7 +162,7 @@ export function Register({ ctx }: { ctx: Ctx }) {
     setBusy(false);
     if (res.ok && res.data?.token) { setToken(res.data.token); ctx.go("intake"); return; }
     const code = (res.data as any)?.error;
-    setErr(code === "handle_taken" ? "That username is taken — try another." : code === "weak_password" ? "That password is too short." : "Something went wrong. Please try again.");
+    setErr(code === "handle_taken" ? "That username is taken — log in instead, or try another." : code === "weak_password" ? "That password is too short." : "Something went wrong. Please try again.");
   }
   return (
     <section className="screen">
@@ -125,7 +177,50 @@ export function Register({ ctx }: { ctx: Ctx }) {
       {err && <div className="err">{err}</div>}
       <div className="spacer" style={{ minHeight: 16 }} />
       <button className="btn btn-primary" disabled={busy} onClick={submit}>{busy ? "Creating…" : "Create account"}</button>
-      <div className="center-note" style={{ marginTop: 12 }}>No email needed. Nothing is shared.</div>
+      <button className="help-link" style={{ marginTop: 12 }} onClick={() => ctx.go("login")}>Already registered? Log in</button>
+      <div className="center-note" style={{ marginTop: 8 }}>No email needed. Nothing is shared.</div>
+    </section>
+  );
+}
+
+export function Login({ ctx }: { ctx: Ctx }) {
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  async function submit() {
+    if (!userId.trim() || !password) { setErr("Enter your username and password."); return; }
+    setErr(""); setBusy(true);
+    const res = await api.login({ userId: userId.trim(), password });
+    if (!res.ok || !res.data?.token) {
+      setBusy(false);
+      setErr(res.status === 401 ? "Incorrect username or password." : "Something went wrong. Please try again.");
+      return;
+    }
+    setToken(res.data.token);
+    // Hydrate the returning session — same as the initial boot in App.tsx.
+    const [ik, sl] = await Promise.all([api.getIntake(), api.getShortlist()]);
+    if (ik.data?.intake) {
+      const it = ik.data.intake;
+      ctx.setProfile({ interests: it.interests ?? [], values: it.values ?? [], marks: it.marks ?? null, mind_flagged: it.mind_flagged });
+    }
+    if (sl.data?.shortlist) ctx.setShortlist(sl.data.shortlist);
+    setBusy(false);
+    ctx.go("mode");
+  }
+  return (
+    <section className="screen">
+      <div className="topbar"><button className="back" onClick={() => ctx.go("welcome")}><Icon name="back" size={22} /></button><span className="muted" style={{ fontSize: 14 }}>Log in</span></div>
+      <h1 style={{ fontSize: 26 }}>Welcome back</h1>
+      <p className="lead" style={{ marginTop: 10 }}>Log in to pick up where you left off — your options and shortlist are saved.</p>
+      <div className="stack" style={{ marginTop: 20 }}>
+        <div><label className="field-label">Username</label><input className="ta" autoCapitalize="none" value={userId} onChange={(e) => setUserId(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} placeholder="your username" /></div>
+        <div><label className="field-label">Password</label><input className="ta" type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} placeholder="your password" /></div>
+      </div>
+      {err && <div className="err">{err}</div>}
+      <div className="spacer" style={{ minHeight: 16 }} />
+      <button className="btn btn-primary" disabled={busy} onClick={submit}>{busy ? "Logging in…" : "Log in"}</button>
+      <button className="help-link" style={{ marginTop: 14 }} onClick={() => ctx.go("consent")}>New here? Create an account</button>
     </section>
   );
 }
@@ -223,7 +318,24 @@ export function Explore({ ctx }: { ctx: Ctx }) {
           );
         })}
       </div>
-      <button className="btn btn-ghost" style={{ marginTop: 16 }} onClick={() => ctx.go("shortlist")}>View my shortlist ({ctx.shortlist.length})</button>
+
+      {ctx.specialized.length > 0 && (
+        <>
+          <div className="section-k" style={{ marginTop: 24, color: "var(--violet)" }}>PATHS YOU MIGHT NOT HAVE CONSIDERED</div>
+          <p className="muted" style={{ fontSize: 13, marginTop: 6, lineHeight: 1.5 }}>Less common routes, shown for breadth — not ranked. Still being verified, so explore them, but confirm details before you rely on them.</p>
+          <div className="grid" style={{ marginTop: 12 }}>
+            {ctx.specialized.map((s) => (
+              <button key={s.id} className="opt spec" onClick={() => ctx.go("specialized", s.id)}>
+                <div className="dot" style={{ background: "var(--violet-tint)", color: "var(--violet)" }}><Icon name="star" size={16} /></div>
+                <h3>{s.name}</h3>
+                <div className="sub">{(s.leads_to || []).slice(0, 2).join(", ")}</div>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      <button className="btn btn-ghost" style={{ marginTop: 20 }} onClick={() => ctx.go("shortlist")}>View my shortlist ({ctx.shortlist.length})</button>
     </section>
   );
 }
@@ -232,6 +344,7 @@ export function Detail({ ctx }: { ctx: Ctx }) {
   const o = ctx.options.find((x) => x.id === ctx.param);
   const [refl, setRefl] = useState<Reflection | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showChat, setShowChat] = useState(false);
   useEffect(() => {
     if (!o) return;
     setRefl(localReflect(o, ctx.profile));
@@ -288,8 +401,84 @@ export function Detail({ ctx }: { ctx: Ctx }) {
           <div className="disc"><Icon name="info" size={13} style={{ color: "var(--muted)" }} /> {loading ? "personalizing…" : "An AI suggestion, not a guarantee — you decide."}</div>
         </div>
       )}
+      {!showChat ? (
+        <button className="ask-open" onClick={() => setShowChat(true)}>
+          <span style={{ color: "var(--primary)" }}><Icon name="bulb" size={17} stroke={2} /></span>
+          <span style={{ flex: 1, textAlign: "left" }}>Have a question about {shortName(o.name)}? Ask Marg</span>
+          <span style={{ color: "var(--primary)" }}><Icon name="chev" size={18} stroke={2} /></span>
+        </button>
+      ) : (
+        <div style={{ marginTop: 16 }}>
+          <div className="section-k">ASK ABOUT THIS STREAM</div>
+          <Chat ctx={ctx} mode="explore" contextId={o.id} placeholder={`e.g. Can I do CA after ${shortName(o.name)}?`} />
+        </div>
+      )}
       <div className="spacer" style={{ minHeight: 16 }} />
       <button className={"btn " + (saved ? "btn-soft" : "btn-primary")} onClick={toggleSave}>{saved ? "✓ In your shortlist" : <><Icon name="plus" size={18} style={{ color: "#fff" }} /> Add to my shortlist</>}</button>
+    </section>
+  );
+}
+
+// Detail view for an expansion-tier pathway. These are unverified and framing-led,
+// so (unlike core options) there is no AI "fit" band and no shortlist — instead we
+// lead with the honest frame and cross-link to the related core options.
+export function SpecializedDetail({ ctx }: { ctx: Ctx }) {
+  const s = ctx.specialized.find((x) => x.id === ctx.param);
+  if (!s) return <Explore ctx={ctx} />;
+  const where = s.where_in_bangalore?.examples?.slice(0, 3).join(", ") || "";
+  const cost = costText(s as unknown as Option);
+  const schs = (s.related_scholarships || []).map((id) => ctx.scholarshipNames[id] || id).join(", ");
+  const related = (s.related_core_options || [])
+    .map((id) => ctx.options.find((o) => o.id === id))
+    .filter((o): o is Option => !!o);
+  const row = (name: string, lab: string, val: string) => (
+    <div className="row"><span style={{ color: "var(--violet)" }}><Icon name={name} size={18} /></span><div><div className="lab">{lab}</div><div className="val">{val}</div></div></div>
+  );
+  return (
+    <section className="screen">
+      <div className="topbar"><button className="back" onClick={() => ctx.go("explore")}><Icon name="back" size={22} /></button><span className="muted" style={{ fontSize: 14 }}>Back to options</span></div>
+      <div className="eyebrow" style={{ color: "var(--violet)", background: "var(--violet-tint)" }}><Icon name="star" size={14} stroke={2} /> A path worth knowing about</div>
+      <h1 style={{ fontSize: 24, marginTop: 12 }}>{s.name}</h1>
+      <p style={{ fontSize: 15, lineHeight: 1.55, marginTop: 10 }}>{s.summary}</p>
+
+      {s.frame && (
+        <div className="card" style={{ marginTop: 16, background: "var(--violet-tint)", borderColor: "var(--violet-bd)" }}>
+          <div style={{ display: "inline-flex", gap: 7, alignItems: "center", fontSize: 11.5, fontWeight: 700, color: "var(--violet)", letterSpacing: ".3px" }}><Icon name="info" size={15} stroke={2} /> HOW TO READ THIS PATH</div>
+          <p style={{ fontSize: 14, lineHeight: 1.55, marginTop: 10 }}>{s.frame}</p>
+        </div>
+      )}
+
+      <div className="card" style={{ marginTop: 16, paddingTop: 2, paddingBottom: 2 }}>
+        {s.eligibility?.text && row("check", "Eligibility", s.eligibility.text)}
+        {s.duration && row("clock", "Duration", s.duration)}
+        {where && row("pin", "In Bengaluru", where)}
+        {cost && cost !== "Varies" && row("rupee", "Approx. cost", cost)}
+        {schs && row("sch", "Scholarships", schs)}
+      </div>
+      <div className="verify"><Icon name="refresh" size={14} style={{ color: "var(--muted)" }} />An unverified path — confirm details with the official source before you rely on them.</div>
+
+      {s.honest_notes && (
+        <div className="note" style={{ marginTop: 14 }}>{s.honest_notes}</div>
+      )}
+
+      {related.length > 0 && (
+        <>
+          <div className="section-k" style={{ marginTop: 20 }}>RELATED OPTIONS TO COMPARE</div>
+          <div className="stack" style={{ marginTop: 10 }}>
+            {related.map((o) => (
+              <button key={o.id} className="opt" style={{ minHeight: "auto" }} onClick={() => ctx.go("detail", o.id)}>
+                <div style={{ display: "flex", gap: 11, alignItems: "center" }}>
+                  <div className="dot"><Icon name={optIconName(o.id)} size={16} /></div>
+                  <h3>{shortName(o.name)}</h3>
+                </div>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      <div className="spacer" style={{ minHeight: 16 }} />
+      <button className="btn btn-ghost" onClick={() => ctx.go("explore")}>Back to all options</button>
     </section>
   );
 }
@@ -335,12 +524,24 @@ export function Shortlist({ ctx }: { ctx: Ctx }) {
 }
 
 export function Aspire({ ctx }: { ctx: Ctx }) {
+  const [goal, setGoal] = useState("");
+  const start = () => { const g = goal.trim(); if (g) ctx.go("goalchat", g); };
   return (
     <section className="screen">
       <div className="topbar"><button className="back" onClick={() => ctx.go("mode")}><Icon name="back" size={22} /></button><div className="wordmark" style={{ fontSize: 17 }}>A goal in mind</div></div>
       <h1 style={{ fontSize: 24 }}>Where would you like to head?</h1>
-      <p className="lead" style={{ marginTop: 6 }}>Pick one to start. We'll keep it open, not fixed.</p>
-      <div className="stack" style={{ marginTop: 16 }}>
+      <p className="lead" style={{ marginTop: 6 }}>Tell me your goal in your own words — or pick a common one below. We'll keep it open, not fixed.</p>
+
+      <div className="card" style={{ marginTop: 16 }}>
+        <label className="field-label">Your goal, in your words</label>
+        <textarea className="ta" value={goal} rows={2} placeholder="e.g. I want to design video games / join the army / start my own business…"
+          onChange={(e) => setGoal(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); start(); } }} />
+        <button className="btn btn-primary" style={{ marginTop: 12 }} disabled={!goal.trim()} onClick={start}>Talk it through with Marg</button>
+      </div>
+
+      <div className="section-k" style={{ marginTop: 22 }}>OR START FROM A COMMON GOAL</div>
+      <div className="stack" style={{ marginTop: 12 }}>
         {ctx.pathways.map((p) => (
           <button key={p.id} className="opt" style={{ minHeight: "auto" }} onClick={() => ctx.go("why", p.id)}>
             <div style={{ display: "flex", gap: 11, alignItems: "center" }}>
@@ -351,6 +552,23 @@ export function Aspire({ ctx }: { ctx: Ctx }) {
         ))}
       </div>
       <FooterLinks ctx={ctx} />
+    </section>
+  );
+}
+
+export function GoalChat({ ctx }: { ctx: Ctx }) {
+  const goal = ctx.param || "";
+  if (!goal) return <Aspire ctx={ctx} />;
+  return (
+    <section className="screen">
+      <div className="topbar"><button className="back" onClick={() => ctx.go("aspire")}><Icon name="back" size={22} /></button><span style={{ fontSize: 12, fontWeight: 700, color: "var(--violet)", background: "var(--violet-tint)", padding: "4px 9px", borderRadius: 999 }}>PREVIEW</span></div>
+      <h1 style={{ fontSize: 23, marginTop: 8 }}>“{goal}”</h1>
+      <p className="lead" style={{ marginTop: 8 }}>Let's talk it through. I'll point you to real paths that fit — and be honest where a goal has no single fixed route. Goals often shift as you learn, and that's fine.</p>
+      <div style={{ marginTop: 14 }}>
+        <Chat ctx={ctx} mode="aspire" goal={goal}
+          placeholder="Ask me how to get there, what it takes, or what else is close…"
+          seedAssistant={`Tell me a little about why “${goal}” draws you, and I'll walk you through the real routes toward it after Class 10.`} />
+      </div>
     </section>
   );
 }

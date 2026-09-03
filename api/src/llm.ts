@@ -170,3 +170,81 @@ export async function planReflect(profile: any, pathway: any) {
   };
   return complete(PLAN_SYSTEM, payload, planGeminiSchema, PlanSchema);
 }
+
+// ---- conversational chat (Mode A "ask about a stream" / Mode B "type a goal") ----
+// Full chat is prose, so the structured-output verdict lock does not apply here —
+// no-verdict + no-invention are enforced by this system prompt and by grounding
+// every turn on the curated catalogue ONLY. (Distress is caught server-side before
+// this is ever called.) This is weaker than the structured path and must be
+// adversarially tested before real students (Architecture §8).
+export type ChatMsg = { role: "user" | "assistant"; content: string };
+
+const CHAT_SYSTEM = [
+  "You are Marg, a warm, calm, non-judgmental guide for an Indian Class 10 student (Bengaluru, CBSE) deciding what to do after Class 10. You are in a short conversation with the student.",
+  "You are given the student's self-described interests and values, what they are currently looking at (an option they are exploring, or a goal they typed), and the FULL curated catalogue of options, specialized pathways, ambition-pathways and scholarships. That catalogue is your ONLY source of facts.",
+  "HARD RULES — follow every time:",
+  "1. NEVER tell the student what to choose, never rank options, never call one 'best' or 'better'. You help them see and weigh options; the decision is always theirs and their family's.",
+  "2. Use ONLY facts from the supplied catalogue. NEVER invent a college, fee, cutoff, scholarship, deadline or link. If they ask something not in the catalogue, say plainly you don't have verified information on that and point them to the official source (the college itself, DTE Karnataka dtetech.karnataka.gov.in, PUE pue.karnataka.gov.in, KEA, or scholarships.gov.in). Do not guess.",
+  "3. Any figure marked needs_verification is INDICATIVE — say 'approximately' or 'still being verified', never present it as a guarantee.",
+  "4. Growth-framed: interests and marks can change. Never label the child (never say 'you're not a science person').",
+  "5. If a typed goal has no exact match in the catalogue, say so honestly, point to the nearest real pathway(s) present, and note there may be more than one route — never fabricate a path.",
+  "6. Keep replies SHORT: 2-4 sentences, plain language, kind. End with a gentle question or a concrete next step when it helps.",
+  "7. Stay on the topic of options and next steps after Class 10 in the Bengaluru/CBSE context. If asked something off-topic, gently steer back. You are not a crisis counsellor.",
+].join("\n");
+
+function groundingBlock(ctx: any): string {
+  return "GROUNDING (facts you may use — nothing beyond this):\n" + JSON.stringify(ctx);
+}
+
+async function chatOpenAICompat(system: string, messages: ChatMsg[]): Promise<string> {
+  const cfg = OPENAI_COMPAT[PROVIDER];
+  const r = await fetch(cfg.base + "/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(cfg.key ? { Authorization: "Bearer " + cfg.key } : {}) },
+    body: JSON.stringify({
+      model: MODEL,
+      messages: [{ role: "system", content: system }, ...messages],
+      temperature: 0.5,
+      max_tokens: 320,
+    }),
+  });
+  if (!r.ok) throw new Error(`LLM ${r.status}: ${(await r.text()).slice(0, 300)}`);
+  const d: any = await r.json();
+  return d.choices?.[0]?.message?.content ?? "";
+}
+
+async function chatAnthropic(system: string, messages: ChatMsg[]): Promise<string> {
+  const { default: Anthropic } = await import("@anthropic-ai/sdk");
+  const client = new Anthropic();
+  const resp = await client.messages.create({
+    model: MODEL, max_tokens: 320, system,
+    messages: messages.map((m) => ({ role: m.role, content: m.content })),
+  });
+  return resp.content.filter((b: any) => b.type === "text").map((b: any) => b.text).join("");
+}
+
+async function chatGemini(system: string, messages: ChatMsg[]): Promise<string> {
+  const key = process.env.GEMINI_API_KEY;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${key}`;
+  const r = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: system }] },
+      contents: messages.map((m) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] })),
+      generationConfig: { temperature: 0.5, maxOutputTokens: 320 },
+    }),
+  });
+  if (!r.ok) throw new Error(`Gemini ${r.status}: ${(await r.text()).slice(0, 300)}`);
+  const d: any = await r.json();
+  return d.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+}
+
+export async function chat(groundCtx: any, messages: ChatMsg[]): Promise<string> {
+  const system = CHAT_SYSTEM + "\n\n" + groundingBlock(groundCtx);
+  let raw: string;
+  if (PROVIDER === "gemini") raw = await chatGemini(system, messages);
+  else if (PROVIDER === "anthropic") raw = await chatAnthropic(system, messages);
+  else raw = await chatOpenAICompat(system, messages); // groq | openai | ollama
+  return raw.trim();
+}

@@ -1,9 +1,10 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { db } from "./db.js";
 import { auth, id, now, hash, verify, newToken, type AuthedRequest } from "./auth.js";
 import { options, optById, pathById, scholarships } from "./dataset.js";
-import { reflect, planReflect, MODEL, hasKey } from "./claude.js";
+import { reflect, planReflect, MODEL, hasKey, PROVIDER } from "./llm.js";
 
 const app = express();
 app.use(cors());
@@ -29,7 +30,7 @@ function logEvent(userId: string | null, name: string, props: any) {
 }
 
 // ---- health & content ----
-app.get("/api/health", (_req, res) => res.json({ ok: true, model: MODEL, ai_key_detected: hasKey, options: options.length }));
+app.get("/api/health", (_req, res) => res.json({ ok: true, provider: PROVIDER, model: MODEL, ai_key_detected: hasKey, options: options.length }));
 app.get("/api/options", (_req, res) => res.json({ options, scholarships }));
 app.get("/api/option/:id", (req, res) => {
   const o = optById.get(req.params.id);
@@ -91,13 +92,13 @@ app.post("/api/reflect", auth, async (req: AuthedRequest, res) => {
   const { optionId } = req.body || {};
   const option = optById.get(optionId);
   if (!option) return res.status(400).json({ error: "unknown_option" });
-  if (!hasKey) return res.status(503).json({ error: "no_ai_key", message: "Set ANTHROPIC_API_KEY to enable live reflections." });
+  if (!hasKey) return res.status(503).json({ error: "no_ai_key", message: `No key for LLM_PROVIDER='${PROVIDER}'. Set it in api/.env (see api/.env.example) to enable live reflections.` });
   const row = getIntake.get(req.userId!) as { data: string } | undefined;
   const profile = row ? JSON.parse(row.data) : {};
   try {
     const reflection = await reflect(profile, option);
     logEvent(req.userId!, "option_reflected", { option_id: optionId });
-    res.json({ source: "claude", model: MODEL, reflection });
+    res.json({ source: PROVIDER, model: MODEL, reflection });
   } catch (e: any) {
     res.status(e?.status || 500).json({ error: "reflect_failed", message: String(e?.message || e) });
   }
@@ -107,12 +108,12 @@ app.post("/api/plan", auth, async (req: AuthedRequest, res) => {
   const { pathwayId } = req.body || {};
   const pathway = pathById.get(pathwayId);
   if (!pathway) return res.status(400).json({ error: "unknown_pathway" });
-  if (!hasKey) return res.status(503).json({ error: "no_ai_key", message: "Set ANTHROPIC_API_KEY to enable live reflections." });
+  if (!hasKey) return res.status(503).json({ error: "no_ai_key", message: `No key for LLM_PROVIDER='${PROVIDER}'. Set it in api/.env (see api/.env.example) to enable live reflections.` });
   const row = getIntake.get(req.userId!) as { data: string } | undefined;
   const profile = row ? JSON.parse(row.data) : {};
   try {
     const plan = await planReflect(profile, pathway);
-    res.json({ source: "claude", model: MODEL, plan });
+    res.json({ source: PROVIDER, model: MODEL, plan });
   } catch (e: any) {
     res.status(e?.status || 500).json({ error: "plan_failed", message: String(e?.message || e) });
   }

@@ -1,4 +1,4 @@
-import type { Option, Profile, Reflection } from "./api";
+import type { Option, Profile, Reflection, Pathway, PlanReflection } from "./api";
 
 export const INTERESTS = ["Making & art", "Numbers", "Biology", "Building things", "Helping people", "Business"];
 export const VALUES = ["A steady income", "Doing work I love", "Helping my family soon", "Making an impact"];
@@ -24,6 +24,20 @@ export function localReflect(option: Option, profile: Profile): Reflection {
   if (profile.values.includes("Doing work I love") && hits.length) why += " It also fits wanting work you love.";
   const watch = option.honest_notes ? option.honest_notes.split(".")[0] + "." : "Keep your other options open while you look.";
   return { band, why_this_connects: why, what_to_watch: watch, confidence: "low" };
+}
+
+// Local fallback for the Mode B plan framing (used until /api/plan answers).
+export function planLocal(pathway: Pathway, profile: Profile): PlanReflection {
+  const creative = profile.interests.includes("Making & art");
+  const sciencey = /science|doctor|engineer/i.test(pathway.ambition + " " + (pathway.next_horizon_steps || []).join(" "));
+  return {
+    opening: `This is one way toward ${pathway.ambition.toLowerCase().replace(/^become /, "")}, and it can change as you do.`,
+    reconciliation: creative && sciencey
+      ? "Earlier you leaned toward creative subjects, and this path leans Science — worth sitting with that trade-off, and the adjacent paths below stay open to you."
+      : "Keep the adjacent paths below in view too — choosing this now doesn't close the others.",
+    watch: pathway.honest_cost_effort ? pathway.honest_cost_effort.split(".")[0] + "." : "",
+    confidence: "low",
+  };
 }
 
 // surface a legitimate option the student's stated interests did NOT point to

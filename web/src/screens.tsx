@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { api, type Option, type Profile, type Reflection, type ShortlistItem, setToken } from "./api";
+import { api, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, setToken } from "./api";
 import { Icon, Compass, Bookmark } from "./icons";
-import { INTERESTS, VALUES, localReflect, expansionId, costText, checkDistress, shortName, optIconName } from "./lib";
+import { INTERESTS, VALUES, localReflect, planLocal, expansionId, costText, checkDistress, shortName, optIconName } from "./lib";
 
 export interface Ctx {
   go: (name: string, param?: string | null) => void;
@@ -16,6 +16,7 @@ export interface Ctx {
   shortlist: ShortlistItem[];
   setShortlist: (s: ShortlistItem[]) => void;
   scholarshipNames: Record<string, string>;
+  pathways: Pathway[];
 }
 
 function FooterLinks({ ctx }: { ctx: Ctx }) {
@@ -183,10 +184,10 @@ export function Mode({ ctx }: { ctx: Ctx }) {
           <div style={{ fontFamily: "Spectral, Georgia, serif", fontWeight: 600, fontSize: 19 }}>I'm not sure yet</div>
           <div className="muted" style={{ fontSize: 14.5, lineHeight: 1.5 }}>Help me explore all my options and see what fits.</div>
         </button>
-        <button className="choice" onClick={() => ctx.toast("The goal-planning mode is coming next — explore is ready now.")}>
+        <button className="choice" onClick={() => ctx.go("aspire")}>
           <div className="ic" style={{ background: "var(--violet-tint)", color: "var(--violet)" }}><Icon name="target" size={24} stroke={1.8} /></div>
           <div style={{ fontFamily: "Spectral, Georgia, serif", fontWeight: 600, fontSize: 19 }}>I have a goal in mind</div>
-          <div className="muted" style={{ fontSize: 14.5, lineHeight: 1.5 }}>Help me plan the next steps toward it. <span style={{ color: "var(--violet)", fontWeight: 600 }}>(coming soon)</span></div>
+          <div className="muted" style={{ fontSize: 14.5, lineHeight: 1.5 }}>Help me plan the next steps toward it.</div>
         </button>
       </div>
       <FooterLinks ctx={ctx} />
@@ -329,6 +330,116 @@ export function Shortlist({ ctx }: { ctx: Ctx }) {
         <button className="btn btn-soft" onClick={() => ctx.toast("Saved. Come back whenever you're ready — that's a fine choice.")}>I'm not ready to choose yet — save &amp; come back</button>
       </div>
       <FooterLinks ctx={ctx} />
+    </section>
+  );
+}
+
+export function Aspire({ ctx }: { ctx: Ctx }) {
+  return (
+    <section className="screen">
+      <div className="topbar"><button className="back" onClick={() => ctx.go("mode")}><Icon name="back" size={22} /></button><div className="wordmark" style={{ fontSize: 17 }}>A goal in mind</div></div>
+      <h1 style={{ fontSize: 24 }}>Where would you like to head?</h1>
+      <p className="lead" style={{ marginTop: 6 }}>Pick one to start. We'll keep it open, not fixed.</p>
+      <div className="stack" style={{ marginTop: 16 }}>
+        {ctx.pathways.map((p) => (
+          <button key={p.id} className="opt" style={{ minHeight: "auto" }} onClick={() => ctx.go("why", p.id)}>
+            <div style={{ display: "flex", gap: 11, alignItems: "center" }}>
+              <div className="dot" style={{ background: "var(--violet-tint)", color: "var(--violet)" }}><Icon name="target" size={17} /></div>
+              <h3>{p.ambition}</h3>
+            </div>
+          </button>
+        ))}
+      </div>
+      <FooterLinks ctx={ctx} />
+    </section>
+  );
+}
+
+export function WhyGoal({ ctx }: { ctx: Ctx }) {
+  const p = ctx.pathways.find((x) => x.id === ctx.param);
+  if (!p) return <Aspire ctx={ctx} />;
+  const label = p.ambition.toLowerCase().replace(/^become (a |an )?/, "").replace(/^work in /, "");
+  return (
+    <section className="screen">
+      <div className="topbar"><button className="back" onClick={() => ctx.go("aspire")}><Icon name="back" size={22} /></button><span className="muted" style={{ fontSize: 14 }}>One quick reflection</span></div>
+      <div className="spacer" />
+      <div className="ic" style={{ background: "var(--violet-tint)", color: "var(--violet)", width: 52, height: 52 }}><Icon name="target" size={26} stroke={1.8} /></div>
+      <h1 style={{ fontSize: 26, marginTop: 16 }}>Why {label}?</h1>
+      <p className="lead" style={{ marginTop: 10 }}>Before we plan, it helps to know what draws you. Goals often shift as you learn more — and that's completely fine.</p>
+      <div className="spacer" />
+      <div className="stack">
+        <button className="btn btn-primary" onClick={() => ctx.go("plan", p.id)}>I've thought about it — show me the path</button>
+        <button className="btn btn-ghost" onClick={() => ctx.go("explore")}>Actually, let me explore my options first</button>
+      </div>
+    </section>
+  );
+}
+
+export function Plan({ ctx }: { ctx: Ctx }) {
+  const p = ctx.pathways.find((x) => x.id === ctx.param);
+  const [ai, setAi] = useState<PlanReflection | null>(null);
+  useEffect(() => {
+    if (!p) return;
+    setAi(planLocal(p, ctx.profile));
+    let live = true;
+    api.plan(p.id).then((res) => { if (live && res.ok && res.data?.plan) setAi(res.data.plan); });
+    return () => { live = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [p?.id]);
+  if (!p) return <Aspire ctx={ctx} />;
+  const steps = p.next_horizon_steps || [];
+  return (
+    <section className="screen">
+      <div className="topbar"><button className="back" onClick={() => ctx.go("why", p.id)}><Icon name="back" size={22} /></button><span style={{ fontSize: 12, fontWeight: 700, color: "var(--violet)", background: "var(--violet-tint)", padding: "4px 9px", borderRadius: 999 }}>PREVIEW</span></div>
+      <h1 style={{ fontSize: 25 }}>{p.ambition} — a possible path</h1>
+      <p className="lead" style={{ marginTop: 8 }}>This is one way there, and it can change as you do.</p>
+
+      <div className="section-k" style={{ marginTop: 20 }}>YOUR NEXT 1–2 YEARS</div>
+      <div style={{ marginTop: 12 }}>
+        {steps.map((s, i) => {
+          const last = i === steps.length - 1;
+          return (
+            <div className="step" key={i}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", alignSelf: "stretch" }}>
+                <div className="num">{i + 1}</div>{!last && <div className="stem" />}
+              </div>
+              <div style={{ paddingBottom: last ? 0 : 16 }}><div style={{ fontSize: 14.5, lineHeight: 1.5 }}>{s}</div></div>
+            </div>
+          );
+        })}
+      </div>
+
+      {p.honest_cost_effort && (
+        <div className="card band-amber" style={{ marginTop: 18 }}>
+          <div style={{ display: "inline-flex", gap: 7, alignItems: "center", fontSize: 11.5, fontWeight: 700, color: "var(--amber)", letterSpacing: ".3px" }}><Icon name="warn" size={15} stroke={2} style={{ color: "var(--amber)" }} /> HONEST ABOUT WHAT IT TAKES</div>
+          <p style={{ fontSize: 14, lineHeight: 1.55, marginTop: 10 }}>{p.honest_cost_effort}</p>
+          {p.real_routes_through_cost && p.real_routes_through_cost.length > 0 && (
+            <>
+              <div className="muted" style={{ fontSize: 12.5, marginTop: 8, marginBottom: 6 }}>Real routes through it:</div>
+              <div className="chips">{p.real_routes_through_cost.map((r) => <span key={r} className="chip" style={{ cursor: "default" }}>{r}</span>)}</div>
+            </>
+          )}
+        </div>
+      )}
+
+      {p.adjacent_destinations && p.adjacent_destinations.length > 0 && (
+        <>
+          <div className="section-k" style={{ marginTop: 18 }}>IF THIS CHANGES, YOU'RE NOT STUCK</div>
+          <div className="chips" style={{ marginTop: 10 }}>{p.adjacent_destinations.map((a) => <span key={a} className="chip" style={{ cursor: "default" }}>{a}</span>)}</div>
+        </>
+      )}
+
+      {ai && (
+        <div className="card" style={{ marginTop: 18, background: "var(--violet-tint)", borderColor: "var(--violet-bd)" }}>
+          <div style={{ display: "inline-flex", gap: 7, alignItems: "center", fontSize: 11.5, fontWeight: 700, color: "var(--violet)", letterSpacing: ".3px" }}><Icon name="star" size={15} stroke={2} /> A GENTLE READ FOR YOU</div>
+          <p style={{ fontSize: 14, lineHeight: 1.55, marginTop: 10 }}>{ai.opening}</p>
+          {ai.reconciliation && <p style={{ fontSize: 13.5, lineHeight: 1.55, marginTop: 8 }}>{ai.reconciliation}</p>}
+          {ai.watch && <div className="muted" style={{ fontSize: 12.5, marginTop: 8 }}>Worth watching: {ai.watch}</div>}
+          <div className="disc" style={{ marginTop: 10, fontSize: 12, color: "var(--muted)", display: "flex", gap: 7, alignItems: "center" }}><Icon name="info" size={13} style={{ color: "var(--muted)" }} /> An AI suggestion, not a guarantee — you decide.</div>
+        </div>
+      )}
+
+      <div className="disclaimer-foot">{p.what_if_it_changes}<br />A preview — full step-by-step planning comes later.</div>
     </section>
   );
 }

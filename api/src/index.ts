@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import { db } from "./db.js";
 import { auth, id, now, hash, verify, newToken, type AuthedRequest } from "./auth.js";
-import { options, optById, pathById, scholarships } from "./dataset.js";
+import { options, optById, pathById, scholarships, pathways } from "./dataset.js";
 import { reflect, planReflect, MODEL, hasKey, PROVIDER } from "./llm.js";
 
 const app = express();
@@ -31,7 +31,7 @@ function logEvent(userId: string | null, name: string, props: any) {
 
 // ---- health & content ----
 app.get("/api/health", (_req, res) => res.json({ ok: true, provider: PROVIDER, model: MODEL, ai_key_detected: hasKey, options: options.length }));
-app.get("/api/options", (_req, res) => res.json({ options, scholarships }));
+app.get("/api/options", (_req, res) => res.json({ options, scholarships, pathways }));
 app.get("/api/option/:id", (req, res) => {
   const o = optById.get(req.params.id);
   return o ? res.json({ option: o }) : res.status(404).json({ error: "unknown_option" });

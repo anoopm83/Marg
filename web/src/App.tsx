@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { api, getToken, clearToken, type Option, type Profile, type ShortlistItem } from "./api";
+import { api, getToken, clearToken, type Option, type Profile, type ShortlistItem, type Pathway } from "./api";
 import { HELPLINES } from "./lib";
 import {
-  Welcome, Consent, Register, Intake, Mode, Explore, Detail, Shortlist, DeleteConfirm, type Ctx,
+  Welcome, Consent, Register, Intake, Mode, Explore, Detail, Shortlist, DeleteConfirm,
+  Aspire, WhyGoal, Plan, type Ctx,
 } from "./screens";
 
 type View = { name: string; param: string | null };
@@ -14,6 +15,7 @@ export default function App() {
   const [consent, setConsent] = useState<{ path: string; school_code?: string }>({ path: "self_serve" });
   const [shortlist, setShortlist] = useState<ShortlistItem[]>([]);
   const [scholarshipNames, setScholarshipNames] = useState<Record<string, string>>({});
+  const [pathways, setPathways] = useState<Pathway[]>([]);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [safety, setSafety] = useState<{ open: boolean; distress: boolean }>({ open: false, distress: false });
   const [booted, setBooted] = useState(false);
@@ -28,6 +30,7 @@ export default function App() {
       const opt = await api.getOptions();
       if (opt.data?.options) setOptions(opt.data.options);
       if (opt.data?.scholarships) setScholarshipNames(Object.fromEntries(opt.data.scholarships.map((s) => [s.id, s.name])));
+      if (opt.data?.pathways) setPathways(opt.data.pathways);
       if (getToken()) {
         const [ik, sl] = await Promise.all([api.getIntake(), api.getShortlist()]);
         if (ik.status === 401) {
@@ -45,7 +48,7 @@ export default function App() {
     })();
   }, []);
 
-  const ctx: Ctx = { go, param: view.param, toast, openSafety, options, profile, setProfile, consent, setConsent, shortlist, setShortlist, scholarshipNames };
+  const ctx: Ctx = { go, param: view.param, toast, openSafety, options, profile, setProfile, consent, setConsent, shortlist, setShortlist, scholarshipNames, pathways };
 
   function screen() {
     switch (view.name) {
@@ -56,6 +59,9 @@ export default function App() {
       case "explore": return <Explore ctx={ctx} />;
       case "detail": return <Detail ctx={ctx} />;
       case "shortlist": return <Shortlist ctx={ctx} />;
+      case "aspire": return <Aspire ctx={ctx} />;
+      case "why": return <WhyGoal ctx={ctx} />;
+      case "plan": return <Plan ctx={ctx} />;
       case "delete-confirm": return <DeleteConfirm ctx={ctx} />;
       default: return <Welcome ctx={ctx} />;
     }

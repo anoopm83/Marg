@@ -41,6 +41,10 @@ const HELP_TEEN = [
   ...HELP_GENERAL,
   { name: "Childline (for under-18s)", num: "1098", tel: "1098" },
 ];
+const HELP_SENIOR = [
+  { name: "Elderline (senior citizens)", num: "14567", tel: "14567" },
+  ...HELP_GENERAL,
+];
 
 const CONFIGS: Record<string, PersonaConfig> = {
   class10: {
@@ -97,11 +101,39 @@ const CONFIGS: Record<string, PersonaConfig> = {
     success_metric: "Informed next-step rate (explore realistic routes → reach a considered, self-owned direction) — prototype, not computed",
     disclosure: "Experimental prototype — this persona's information is illustrative and unverified. Don't rely on any figure or route here.",
   },
+  retiree: {
+    id: "retiree",
+    label: "Retiree (prototype)",
+    age_band: "55+",
+    category: "later-life",
+    experimental: true,
+    audience: "an Indian retiree or senior (55+) thinking about purpose, wellbeing, community, faith and direction in this chapter of life",
+    tagline: "Later life · purpose, calm & community",
+    framing: {
+      exploreTitle: "Ways to shape this chapter",
+      exploreLead: "Nothing here is ranked, and there's no rush. Look around gently.",
+      modeExploreLabel: "I'm exploring what's next",
+      modeExploreDesc: "Help me see the ways I could shape this chapter.",
+      modeAspireLabel: "I have something in mind",
+      modeAspireDesc: "I have a direction in mind — help me think it through.",
+    },
+    intake: {
+      title: "A little about this chapter",
+      lead: "No right answers, and no hurry. This just helps me show what might suit you. Skip anything you like.",
+      interests: { title: "What draws you now?", options: ["Purpose & contribution", "Health & calm", "Faith & reflection", "Learning & hobbies", "Family & community", "Peace of mind about money"] },
+      values: { title: "What matters most right now?", options: ["Staying active & useful", "Peace and calm", "Time with family", "Independence", "Giving back"] },
+    },
+    helplines: HELP_SENIOR,
+    consent_rule: "adult_self",
+    success_metric: "Reached a considered, self-owned next step for this chapter (prototype, not computed)",
+    disclosure: "Experimental prototype — illustrative and unverified. This chapter touches health, money and wellbeing: treat everything as information, not advice, and check anything important with a qualified professional.",
+  },
 };
 
 const PACKS: Record<string, Pack> = {
   class10: buildPack(class10Raw),
   midcareer: buildPack(loadRaw("api/personas/midcareer.json")),
+  retiree: buildPack(loadRaw("api/personas/retiree.json")),
 };
 
 export const DEFAULT_PERSONA = "class10";

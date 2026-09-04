@@ -220,6 +220,21 @@
         "status": "to_source",
         "idea": "Story from someone who went independent from a salaried role."
       }
+    },
+    {
+      "id": "territorial_army",
+      "name": "Territorial Army (part-time service)",
+      "type": "service",
+      "summary": "Serve the nation part-time as a Territorial Army officer while keeping your civilian job or business — annual training and short embodiment periods, without leaving your career.",
+      "leads_to": ["Commissioned Territorial Army officer (part-time)", "Purpose and service alongside your career", "Leadership and discipline that carry back into your work"],
+      "keeps_open": "You keep your day job — the TA is a parallel commitment, not a career change.",
+      "eligibility": { "text": "Gainfully employed or self-employed Indian citizens, typically 18-42, graduate, medically fit. Selection is via a written test and an SSB-style interview." },
+      "duration": "Ongoing, part-time (annual training plus short embodiment)",
+      "where_in_bangalore": { "examples": ["Territorial Army recruitment (Indian Army)", "TA units"], "note": "Illustrative; confirm current eligibility and units." },
+      "approx_cost_inr": { "note": "No course cost — you're paid for training and embodiment periods." },
+      "related_scholarships": [],
+      "honest_notes": "A meaningful way to serve without giving up your career — but selection is competitive and there are fitness and age limits. It is not a full-time income.",
+      "human_touchpoint": { "status": "to_source", "idea": "Story from a working professional who serves in the Territorial Army." }
     }
   ],
   "specialized_pathways": [

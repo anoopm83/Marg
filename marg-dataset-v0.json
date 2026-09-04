@@ -864,6 +864,40 @@
         "status": "to_source",
         "idea": "Story from a student who used NIOS or switched to an international curriculum."
       }
+    },
+    {
+      "id": "defence_forces",
+      "name": "Defence & the armed forces",
+      "type": "service",
+      "tier": "expansion",
+      "summary": "A career serving in the Army, Navy or Air Force — as an officer, a military doctor, or in allied roles. Entry usually runs through 10+2 first, then a defence entrance and selection.",
+      "leads_to": ["Officer in the Army / Navy / Air Force (NDA, CDS)", "Military doctor via AFMC", "A disciplined, purpose-driven career with strong benefits"],
+      "frame": "A respected, purpose-driven route — but plan the steps realistically. NDA is after Class 12 (PCM for Navy/Air Force; any stream for the Army), AFMC needs 10+2 with Biology plus NEET, and CDS is after graduation. All involve a written exam (UPSC NDA/CDS), an SSB interview, and strict physical & medical fitness standards.",
+      "eligibility": { "text": "After Class 10, PU keeps these open (Science for NDA-technical / Navy / Air Force and for AFMC). NDA: 10+2, age ~16.5-19.5, unmarried, fitness standards. AFMC: 10+2 with PCB via NEET. CDS: after graduation." },
+      "duration": "2 years PU, then entrance + academy training (NDA ~3 years)",
+      "where_in_bangalore": { "examples": ["PU (Science) colleges as the base", "NDA, Khadakwasla (via UPSC)", "AFMC Pune (via NEET)", "SSB selection centres"], "note": "Illustrative; entry is national, not Bengaluru-specific." },
+      "approx_cost_inr": { "note": "Training is largely state-funded/stipended; the main cost is PU plus exam preparation." },
+      "related_scholarships": ["pm_yasasvi", "nsp", "ssp_karnataka"],
+      "related_core_options": ["pu_science", "pu_commerce", "pu_humanities"],
+      "honest_notes": "Highly competitive, with strict fitness and medical standards. Keep a parallel academic path (PU keeps degrees open) as a backup — selection is tough.",
+      "human_touchpoint": { "status": "to_source", "idea": "Story from someone who cleared NDA / SSB and joined the forces." }
+    },
+    {
+      "id": "police_uniformed",
+      "name": "Police, customs & uniformed services",
+      "type": "service",
+      "tier": "expansion",
+      "summary": "Government service careers in the police, customs, border and paramilitary forces (BSF, CRPF, CISF), and the merchant navy — different routes, mostly after 10+2 or graduation.",
+      "leads_to": ["State police / IPS", "Customs & central excise (SSC / IRS)", "Paramilitary & border forces — BSF, CRPF, CISF", "Merchant navy (deck / engine officer)"],
+      "frame": "A broad family of service careers with different doors: police constable/SI via state exams (after 12); IPS, customs and paramilitary officers via UPSC/SSC after graduation; paramilitary constables (CAPF) via SSC GD after Class 10/12; and the merchant navy via IMU-CET after 10+2 with Physics/Maths. Most involve competitive exams plus physical & medical standards.",
+      "eligibility": { "text": "Varies by service: constable/GD roles after Class 10/12; officer roles (IPS, customs, CAPF) after graduation via UPSC/SSC; merchant navy after 10+2 with PCM via IMU-CET. Check the specific exam." },
+      "duration": "Varies (exam preparation + training)",
+      "where_in_bangalore": { "examples": ["Karnataka State Police recruitment", "SSC / UPSC exam routes", "IMU-CET / DG-Shipping approved maritime institutes"], "note": "Illustrative; confirm current eligibility and standards per service." },
+      "approx_cost_inr": { "note": "Government roles have low course cost (mainly exam prep); merchant navy training can be expensive — verify DG-Shipping approval." },
+      "related_scholarships": ["nsp", "ssp_karnataka", "pm_yasasvi"],
+      "related_core_options": ["pu_science", "pu_commerce", "pu_humanities", "iti"],
+      "honest_notes": "Many of these come after Class 12 or a degree — so from Class 10 the practical step is choosing a PU stream that keeps the target exam open (e.g. Science with Maths for merchant navy). Verify physical/medical standards early.",
+      "human_touchpoint": { "status": "to_source", "idea": "Story from someone serving in the police, a paramilitary force, or the merchant navy." }
     }
   ],
   "scholarships": [

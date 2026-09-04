@@ -53,10 +53,18 @@ export interface AdminMetrics {
   northStar: { name: string; numerator: number; denominator: number; rate: number; definition: string };
   funnel: { entered: number; completedIntake: number; exploredUnconsidered: number; savedShortlist: number };
   engagement: { reflections: number; chats: number; shortlistItems: number; usersWithShortlist: number };
-  feedback: { up: number; down: number };
+  feedback: { up: number; down: number; helpfulnessRate: number; rated: number };
+  voice: { total: number; open: number; topThemes: { theme: string; count: number }[]; sentiment: Record<string, number> };
   guardrail: { distressFlags: number };
   chatsByPersona: Record<string, number>;
   generatedAt: string;
+}
+export interface FeedbackItem {
+  id: string; user_id: string | null; persona: string | null; context: string | null;
+  rating: string; category: string | null; text: string;
+  ai_theme: string | null; ai_sentiment: string | null; ai_severity: string | null;
+  ai_summary: string | null; ai_suggestion: string | null;
+  status: "new" | "triaged" | "actioned" | "dismissed"; created_at: string;
 }
 
 interface Res<T> { status: number; data: T | null; ok: boolean }
@@ -94,6 +102,12 @@ export const api = {
   removeShortlist: (optionId: string) => req<{ shortlist: ShortlistItem[] }>("/shortlist/" + optionId, { method: "DELETE" }),
   deleteMe: () => req("/me", { method: "DELETE" }),
   event: (name: string, props?: unknown) => req("/event", { method: "POST", body: JSON.stringify({ name, props }) }),
+  feedback: (body: { text: string; rating?: string | null; category?: string | null; context?: string; persona?: string }) =>
+    req<{ ok: boolean }>("/feedback", { method: "POST", body: JSON.stringify(body) }),
   adminLogin: (userId: string, password: string) => req<{ token: string }>("/admin/login", { method: "POST", body: JSON.stringify({ userId, password }) }),
-  adminMetrics: () => req<AdminMetrics>("/admin/metrics", { headers: getAdmin() ? { Authorization: "Bearer " + getAdmin() } : {} }),
+  adminMetrics: () => req<AdminMetrics>("/admin/metrics", { headers: adminHead() }),
+  adminFeedback: (status?: string) => req<{ feedback: FeedbackItem[] }>("/admin/feedback" + (status ? "?status=" + status : ""), { headers: adminHead() }),
+  adminFeedbackStatus: (id: string, status: string) => req("/admin/feedback/" + id, { method: "POST", headers: adminHead(), body: JSON.stringify({ status }) }),
 };
+
+const adminHead = (): Record<string, string> => (getAdmin() ? { Authorization: "Bearer " + getAdmin() } : {});

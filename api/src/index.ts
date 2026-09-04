@@ -5,7 +5,7 @@ import { db } from "./db.js";
 import { auth, id, now, hash, verify, newToken, type AuthedRequest } from "./auth.js";
 import { options } from "./dataset.js";
 import { getPack, getConfig, personaList } from "./personas.js";
-import { reflect, planReflect, chat, type ChatMsg, MODEL, hasKey, PROVIDER } from "./llm.js";
+import { reflect, planReflect, chat, interpretFeedback, type ChatMsg, MODEL, hasKey, PROVIDER } from "./llm.js";
 import { checkDistress, HELPLINES } from "./safety.js";
 
 const app = express();
@@ -26,6 +26,10 @@ const insShortlist = db.prepare("INSERT INTO shortlist_items (id, user_id, optio
 const delShortlist = db.prepare("DELETE FROM shortlist_items WHERE user_id = ? AND option_id = ?");
 const insEvent = db.prepare("INSERT INTO events (id, user_id, name, props, ts) VALUES (?,?,?,?,?)");
 const delUserCascade = db.prepare("DELETE FROM users WHERE id = ?");
+const insFeedback = db.prepare("INSERT INTO feedback (id, user_id, persona, context, rating, category, text, status, created_at) VALUES (?,?,?,?,?,?,?, 'new', ?)");
+const setFeedbackAI = db.prepare("UPDATE feedback SET ai_theme=?, ai_sentiment=?, ai_severity=?, ai_summary=?, ai_suggestion=? WHERE id=?");
+const setFeedbackStatus = db.prepare("UPDATE feedback SET status=? WHERE id=?");
+const anonFeedback = db.prepare("UPDATE feedback SET user_id=NULL WHERE user_id=?");
 
 function logEvent(userId: string | null, name: string, props: any) {
   try { insEvent.run(id(), userId, name, props ? JSON.stringify(props) : null, now()); } catch { /* non-fatal */ }
@@ -188,8 +192,27 @@ app.delete("/api/shortlist/:optionId", auth, (req: AuthedRequest, res) => {
 
 // ---- DPDP: delete everything ----
 app.delete("/api/me", auth, (req: AuthedRequest, res) => {
-  delUserCascade.run(req.userId!); // cascades to consent/intake/shortlist/sessions
+  anonFeedback.run(req.userId!);     // keep the anonymous improvement signal, drop the linkage
+  delUserCascade.run(req.userId!);   // cascades to consent/intake/shortlist/sessions
   res.json({ ok: true });
+});
+
+// ---- feedback loop: user tells Marg what to improve ----
+// The note is stored immediately; Marg interprets it in the background (theme,
+// sentiment, severity, a summary, and a DRAFT suggestion) for the admin triage
+// inbox. Interpretation never changes any product data — a human admin actions it.
+app.post("/api/feedback", auth, (req: AuthedRequest, res) => {
+  const { text, rating, category, context, persona } = req.body || {};
+  const body = String(text || "").trim().slice(0, 2000);
+  if (!body) return res.status(400).json({ error: "empty_feedback" });
+  const fid = id();
+  insFeedback.run(fid, req.userId!, persona || null, context || null, rating || "", category || null, body, now());
+  logEvent(req.userId!, "feedback_submitted", { persona, category, hasRating: !!rating });
+  res.json({ ok: true });
+  // Fire-and-forget interpretation (response already sent; failures are swallowed).
+  interpretFeedback(body, { persona, context, category, rating })
+    .then((ai) => { if (ai) setFeedbackAI.run(ai.theme, ai.sentiment, ai.severity, ai.summary, ai.suggestion, fid); })
+    .catch(() => { /* best-effort; raw note remains visible to admin */ });
 });
 
 app.post("/api/event", auth, (req: AuthedRequest, res) => {
@@ -230,25 +253,40 @@ app.get("/api/admin/metrics", adminAuth, (_req, res) => {
   const shortlistItems = n("SELECT COUNT(*) n FROM shortlist_items");
   const usersWithShortlist = n("SELECT COUNT(DISTINCT user_id) n FROM shortlist_items");
   const savedShortlist = n("SELECT COUNT(*) n FROM (SELECT user_id FROM shortlist_items GROUP BY user_id HAVING COUNT(*) BETWEEN 2 AND 3)");
-  const exploredUnconsidered = n("SELECT COUNT(DISTINCT user_id) n FROM events WHERE name='specialized_viewed'");
+  // "Engaged an option they hadn't considered" = opened a specialized path OR acted
+  // on the "have you considered" nudge. Both are the broadening moment the North Star
+  // is about, so both count (the nudge was previously invisible to the metric).
+  const UNCONSIDERED = "name IN ('specialized_viewed','nudge_engaged')";
+  const exploredUnconsidered = n(`SELECT COUNT(DISTINCT user_id) n FROM events WHERE ${UNCONSIDERED}`);
   const distress = n("SELECT COUNT(*) n FROM events WHERE name='distress_flag_raised'");
   // North Star — Informed-Convergence Rate: completed intake AND engaged an option
   // they hadn't considered AND saved a 2-3 shortlist, over everyone who entered.
   const nsmNum = n(`SELECT COUNT(*) n FROM (
     SELECT u.id FROM users u
     WHERE EXISTS(SELECT 1 FROM intake i WHERE i.user_id = u.id)
-      AND EXISTS(SELECT 1 FROM events e WHERE e.user_id = u.id AND e.name='specialized_viewed')
+      AND EXISTS(SELECT 1 FROM events e WHERE e.user_id = u.id AND ${UNCONSIDERED})
       AND (SELECT COUNT(*) FROM shortlist_items s WHERE s.user_id = u.id) BETWEEN 2 AND 3)`);
   const nsmDen = totalUsers;
-  // feedback + persona breakdown (props is JSON text — aggregate in JS)
+  // helpfulness: 👍/👎 ratings live in events; count them for a direct benefit read.
   let up = 0, down = 0;
   for (const r of db.prepare("SELECT props FROM events WHERE name='feedback'").all() as any[]) {
     try { const p = JSON.parse(r.props || "{}"); if (p.rating === "up") up++; else if (p.rating === "down") down++; } catch { /* skip */ }
   }
+  const rated = up + down;
   const chatsByPersona: Record<string, number> = {};
   for (const r of db.prepare("SELECT props FROM events WHERE name='chat_message'").all() as any[]) {
     try { const p = JSON.parse(r.props || "{}"); const k = p.persona || "unknown"; chatsByPersona[k] = (chatsByPersona[k] || 0) + 1; } catch { /* skip */ }
   }
+  // free-text feedback aggregates (from the feedback table)
+  const feedbackTotal = n("SELECT COUNT(*) n FROM feedback");
+  const feedbackOpen = n("SELECT COUNT(*) n FROM feedback WHERE status IN ('new','triaged')");
+  const themes: Record<string, number> = {};
+  const sentiment: Record<string, number> = { positive: 0, neutral: 0, negative: 0 };
+  for (const r of db.prepare("SELECT ai_theme, ai_sentiment FROM feedback").all() as any[]) {
+    const t = r.ai_theme || "Unclassified"; themes[t] = (themes[t] || 0) + 1;
+    if (r.ai_sentiment && sentiment[r.ai_sentiment] != null) sentiment[r.ai_sentiment]++;
+  }
+  const topThemes = Object.entries(themes).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([theme, count]) => ({ theme, count }));
   res.json({
     northStar: {
       name: "Informed-Convergence Rate",
@@ -257,11 +295,27 @@ app.get("/api/admin/metrics", adminAuth, (_req, res) => {
     },
     funnel: { entered: totalUsers, completedIntake, exploredUnconsidered, savedShortlist },
     engagement: { reflections, chats, shortlistItems, usersWithShortlist },
-    feedback: { up, down },
+    feedback: { up, down, helpfulnessRate: rated ? up / rated : 0, rated },
+    voice: { total: feedbackTotal, open: feedbackOpen, topThemes, sentiment },
     guardrail: { distressFlags: distress },
     chatsByPersona,
     generatedAt: new Date().toISOString(),
   });
+});
+
+// ---- admin: feedback triage inbox ----
+app.get("/api/admin/feedback", adminAuth, (req, res) => {
+  const status = String(req.query.status || "");
+  const rows = status
+    ? db.prepare("SELECT * FROM feedback WHERE status=? ORDER BY created_at DESC LIMIT 200").all(status)
+    : db.prepare("SELECT * FROM feedback ORDER BY created_at DESC LIMIT 200").all();
+  res.json({ feedback: rows });
+});
+app.post("/api/admin/feedback/:id", adminAuth, (req, res) => {
+  const { status } = req.body || {};
+  if (!["new", "triaged", "actioned", "dismissed"].includes(status)) return res.status(400).json({ error: "bad_status" });
+  setFeedbackStatus.run(status, req.params.id);
+  res.json({ ok: true });
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

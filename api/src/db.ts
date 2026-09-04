@@ -55,4 +55,22 @@ db.exec(`
     props TEXT,
     ts TEXT NOT NULL
   );
+  -- Free-text "how can Marg improve" feedback. Kept in its own table (not events)
+  -- because triage state is mutable: Marg interprets it, a human admin actions it.
+  CREATE TABLE IF NOT EXISTS feedback (
+    id TEXT PRIMARY KEY,
+    user_id TEXT,                       -- nullable: keep the note if the user is later deleted (DPDP: no PII in the text)
+    persona TEXT,
+    context TEXT,                       -- where in the app it came from
+    rating TEXT,                        -- up | down | '' (a suggestion may carry no rating)
+    category TEXT,                      -- user-picked bucket (wrong_info | missing | confusing | broken | other)
+    text TEXT NOT NULL,
+    ai_theme TEXT,                      -- Marg's interpretation (filled async; may stay null if the LLM is down)
+    ai_sentiment TEXT,                  -- positive | neutral | negative
+    ai_severity TEXT,                   -- low | medium | high
+    ai_summary TEXT,
+    ai_suggestion TEXT,                 -- a DRAFT action for the admin — never auto-applied
+    status TEXT NOT NULL DEFAULT 'new', -- new | triaged | actioned | dismissed
+    created_at TEXT NOT NULL
+  );
 `);

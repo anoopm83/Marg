@@ -264,3 +264,51 @@ export async function chat(groundCtx: any, messages: ChatMsg[], audience: string
   else raw = await chatOpenAICompat(system, messages); // groq | openai | ollama
   return raw.trim();
 }
+
+// ---- feedback interpreter (triage only, never an action) ----
+// Marg reads a free-text "how can we improve" note and classifies it so an admin
+// can triage fast. It DRAFTS a suggested action — it does NOT (and must not) apply
+// anything: the founding rule ("the LLM never authors a fact") means data/product
+// changes stay a human decision. Best-effort: callers must tolerate a null result.
+export interface FeedbackInsight {
+  theme: string; sentiment: "positive" | "neutral" | "negative";
+  severity: "low" | "medium" | "high"; summary: string; suggestion: string;
+}
+const FeedbackSchema = z.object({
+  theme: z.string(),
+  sentiment: z.enum(["positive", "neutral", "negative"]),
+  severity: z.enum(["low", "medium", "high"]),
+  summary: z.string(),
+  suggestion: z.string(),
+});
+const feedbackGeminiSchema = {
+  type: "object",
+  properties: {
+    theme: { type: "string" },
+    sentiment: { type: "string", enum: ["positive", "neutral", "negative"] },
+    severity: { type: "string", enum: ["low", "medium", "high"] },
+    summary: { type: "string" },
+    suggestion: { type: "string" },
+  },
+  required: ["theme", "sentiment", "severity", "summary", "suggestion"],
+};
+const feedbackSystem = [
+  "You are the product-triage assistant for Marg, an AI guide that helps people at life's crossroads choose a path.",
+  "You are given ONE piece of free-text user feedback plus light context (which persona, where in the app, any category the user picked).",
+  "Classify it for a human product admin. Do NOT reply to the user and do NOT propose changing any factual data yourself.",
+  "theme: a short 2-4 word product-area label (e.g. 'Data accuracy', 'Missing option', 'Confusing UI', 'Chat quality', 'Praise', 'Tone').",
+  "sentiment: positive | neutral | negative.",
+  "severity: how much this hurts the user's decision — high (blocks/misleads), medium (friction), low (nice-to-have/praise).",
+  "summary: one neutral sentence restating the point.",
+  "suggestion: ONE concrete next step FOR THE ADMIN to consider (e.g. 'Verify the polytechnic fee figure against DTE Karnataka'). Frame it as a recommendation to a human, never as done.",
+  'Return ONLY JSON: {"theme": string, "sentiment": "positive"|"neutral"|"negative", "severity": "low"|"medium"|"high", "summary": string, "suggestion": string}. No markdown.',
+].join("\n");
+
+export async function interpretFeedback(text: string, context: Record<string, unknown>): Promise<FeedbackInsight | null> {
+  if (!hasKey) return null;
+  try {
+    return await complete(feedbackSystem, { feedback: text, context }, feedbackGeminiSchema, FeedbackSchema);
+  } catch {
+    return null; // triage is best-effort; the raw note is still saved and visible to the admin
+  }
+}

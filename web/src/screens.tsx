@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { api, setAdmin, getAdmin, clearAdmin, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, type ChatMsg, type Specialized, type PersonaPublic, type AdminMetrics } from "./api";
+import { api, setAdmin, getAdmin, clearAdmin, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, type ChatMsg, type Specialized, type PersonaPublic, type AdminMetrics, type FeedbackItem } from "./api";
 import { Icon, Compass, Bookmark } from "./icons";
 import { INTERESTS, VALUES, localReflect, planLocal, pickNudge, costText, checkDistress, shortName, optIconName } from "./lib";
 
@@ -27,13 +27,69 @@ export interface Ctx {
 }
 
 function FooterLinks({ ctx }: { ctx: Ctx }) {
+  const [open, setOpen] = useState(false);
   return (
-    <div className="footlinks">
-      <button className="help-link" onClick={() => ctx.openSafety(false)}>Get help</button>
-      <span>·</span>
-      <button className="help-link" onClick={() => ctx.go("delete-confirm")}>Delete my data</button>
-      <span>·</span>
-      <button className="help-link" onClick={() => ctx.logout()}>Start over</button>
+    <>
+      <div className="footlinks">
+        <button className="help-link" onClick={() => setOpen(true)}>Suggest an improvement</button>
+        <span>·</span>
+        <button className="help-link" onClick={() => ctx.openSafety(false)}>Get help</button>
+        <span>·</span>
+        <button className="help-link" onClick={() => ctx.go("delete-confirm")}>Delete my data</button>
+        <span>·</span>
+        <button className="help-link" onClick={() => ctx.logout()}>Start over</button>
+      </div>
+      {open && <ImproveMarg ctx={ctx} where="footer" onClose={() => setOpen(false)} />}
+    </>
+  );
+}
+
+// The deliberate "tell Marg what to improve" channel. Free text + an optional
+// category. It goes to the same interpreted feedback loop as the 👍/👎 note —
+// Marg tags it for the admin; it never auto-changes the product.
+const FB_CATS: { id: string; label: string }[] = [
+  { id: "wrong_info", label: "Wrong or outdated info" },
+  { id: "missing", label: "A missing option or path" },
+  { id: "confusing", label: "Something was confusing" },
+  { id: "broken", label: "Something didn't work" },
+  { id: "other", label: "Something else" },
+];
+export function ImproveMarg({ ctx, where, onClose }: { ctx: Ctx; where: string; onClose: () => void }) {
+  const [cat, setCat] = useState<string | null>(null);
+  const [text, setText] = useState("");
+  const [sent, setSent] = useState(false);
+  const submit = () => {
+    if (!text.trim()) return;
+    api.feedback({ text: text.trim(), category: cat, context: where, persona: ctx.persona?.id });
+    setSent(true);
+  };
+  return (
+    <div className="modal-scrim" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Suggest an improvement">
+        {sent ? (
+          <div className="im-done">
+            <div className="im-check"><Icon name="check" size={22} /></div>
+            <h3>Thank you — Marg is listening</h3>
+            <p>Your note goes straight to the people improving Marg. If it points to a fact we should fix, a human checks it before anything changes.</p>
+            <button className="btn" onClick={onClose}>Close</button>
+          </div>
+        ) : (
+          <>
+            <h3 style={{ margin: "0 0 4px" }}>Help make Marg better</h3>
+            <p className="im-lead">What felt off, missing, or wrong? Every note is read.</p>
+            <div className="im-cats">
+              {FB_CATS.map((c) => (
+                <button key={c.id} className={"im-cat" + (cat === c.id ? " on" : "")} onClick={() => setCat(cat === c.id ? null : c.id)}>{c.label}</button>
+              ))}
+            </div>
+            <textarea className="ta" rows={4} value={text} placeholder="Tell us in your own words…" onChange={(e) => setText(e.target.value)} style={{ marginTop: 10 }} />
+            <div className="im-actions">
+              <button className="help-link" onClick={onClose}>Cancel</button>
+              <button className="btn" onClick={submit} disabled={!text.trim()}>Send to Marg</button>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -92,7 +148,7 @@ export function Feedback({ ctx, where, prompt }: { ctx: Ctx; where: string; prom
   const [note, setNote] = useState("");
   const [sent, setSent] = useState(false);
   const rate = (r: "up" | "down") => { setRating(r); api.event("feedback", { where, rating: r, persona: ctx.persona?.id }); };
-  const submit = () => { if (note.trim()) api.event("feedback_note", { where, rating, note: note.trim(), persona: ctx.persona?.id }); setSent(true); };
+  const submit = () => { if (note.trim()) api.feedback({ text: note.trim(), rating, context: where, persona: ctx.persona?.id }); setSent(true); };
   if (sent) return <div className="fb-done"><Icon name="check" size={14} /> Thanks — that helps us learn.</div>;
   return (
     <div className="fb">
@@ -436,7 +492,7 @@ export function Explore({ ctx }: { ctx: Ctx }) {
         </div>
       )}
       {nudge && nudgeOpt && (
-        <button className="nudge" style={{ marginTop: 16, width: "100%", alignItems: "flex-start" }} onClick={() => ctx.go(nudge.spec ? "specialized" : "detail", nudge.id)}>
+        <button className="nudge" style={{ marginTop: 16, width: "100%", alignItems: "flex-start" }} onClick={() => { api.event("nudge_engaged", { id: nudge.id, spec: nudge.spec, persona: ctx.persona?.id }); ctx.go(nudge.spec ? "specialized" : "detail", nudge.id); }}>
           <div style={{ width: 34, height: 34, borderRadius: 9, background: "var(--surface)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--violet)", flex: "none", marginTop: 1 }}><Icon name="star" size={18} stroke={2} /></div>
           <div style={{ flex: 1, textAlign: "left" }}>
             <div className="k">HAVE YOU CONSIDERED</div>
@@ -916,12 +972,26 @@ export function AdminDashboard({ ctx }: { ctx: Ctx }) {
         {stat("Users with a shortlist", m.engagement.usersWithShortlist)}
       </div>
 
-      <div className="section-k" style={{ marginTop: 22 }}>FEEDBACK & SAFETY</div>
+      <div className="section-k" style={{ marginTop: 22 }}>HELPFULNESS & SAFETY</div>
       <div className="adm-grid">
-        {stat("Rated helpful", m.feedback.up)}
-        {stat("Rated not helpful", m.feedback.down)}
+        {stat("Helpfulness rate", m.feedback.rated ? Math.round(m.feedback.helpfulnessRate * 100) + "%" : "—")}
+        {stat("Ratings (👍 / 👎)", `${m.feedback.up} / ${m.feedback.down}`)}
         {stat("Distress flags (watched)", m.guardrail.distressFlags, m.guardrail.distressFlags > 0)}
       </div>
+
+      <div className="section-k" style={{ marginTop: 22 }}>VOICE OF THE USER</div>
+      <div className="adm-grid">
+        {stat("Suggestions received", m.voice.total)}
+        {stat("Open (to triage)", m.voice.open, m.voice.open > 0)}
+      </div>
+      {m.voice.topThemes.length > 0 && (
+        <div className="adm-themes">
+          {m.voice.topThemes.map((t) => (
+            <span key={t.theme} className="adm-theme">{t.theme}<b>{t.count}</b></span>
+          ))}
+        </div>
+      )}
+      <FeedbackInbox onChange={load} />
 
       {Object.keys(m.chatsByPersona).length > 0 && (
         <>
@@ -930,7 +1000,48 @@ export function AdminDashboard({ ctx }: { ctx: Ctx }) {
         </>
       )}
 
-      <div className="disclaimer-foot" style={{ marginTop: 22 }}>Live sessions (guest accounts). Generated {new Date(m.generatedAt).toLocaleString()}. Prototype login (admin/admin) — not for public deploy.</div>
+      <div className="disclaimer-foot" style={{ marginTop: 22 }}>Live sessions (guest accounts). Generated {new Date(m.generatedAt).toLocaleString()}. Marg tags each note; a human actions anything that changes facts. Prototype login (admin/admin) — not for public deploy.</div>
     </section>
+  );
+}
+
+// Admin triage inbox for free-text feedback. Marg's interpretation (theme,
+// severity, sentiment, a drafted suggestion) rides along; the admin sets status.
+function FeedbackInbox({ onChange }: { onChange: () => void }) {
+  const [items, setItems] = useState<FeedbackItem[] | null>(null);
+  const [filter, setFilter] = useState<string>("");
+  const load = async () => { const r = await api.adminFeedback(filter); if (r.data) setItems(r.data.feedback); };
+  useEffect(() => { load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [filter]);
+  const setStatus = async (id: string, status: string) => { await api.adminFeedbackStatus(id, status); load(); onChange(); };
+  const filters = [["", "All"], ["new", "New"], ["triaged", "Triaged"], ["actioned", "Actioned"], ["dismissed", "Dismissed"]];
+  return (
+    <div className="adm-inbox">
+      <div className="adm-fbtabs">
+        {filters.map(([v, l]) => (
+          <button key={v} className={"adm-fbtab" + (filter === v ? " on" : "")} onClick={() => setFilter(v)}>{l}</button>
+        ))}
+      </div>
+      {items === null ? <div className="adm-l" style={{ padding: "8px 2px" }}>Loading…</div>
+        : items.length === 0 ? <div className="adm-l" style={{ padding: "8px 2px" }}>No feedback in this view yet.</div>
+        : items.map((it) => (
+          <div key={it.id} className={"adm-fb sev-" + (it.ai_severity || "none") + " st-" + it.status}>
+            <div className="adm-fb-head">
+              {it.ai_theme && <span className="adm-fb-theme">{it.ai_theme}</span>}
+              {it.ai_severity && <span className={"adm-fb-sev sev-" + it.ai_severity}>{it.ai_severity}</span>}
+              {it.ai_sentiment && <span className="adm-fb-sent">{it.ai_sentiment}</span>}
+              {it.category && <span className="adm-fb-cat">{it.category.replace(/_/g, " ")}</span>}
+              <span className="adm-fb-status">{it.status}</span>
+            </div>
+            <div className="adm-fb-text">“{it.text}”</div>
+            {it.ai_suggestion && <div className="adm-fb-sug"><b>Marg suggests (draft):</b> {it.ai_suggestion}</div>}
+            <div className="adm-fb-meta">{it.persona || "—"} · {it.context || "—"} · {new Date(it.created_at).toLocaleDateString()}</div>
+            <div className="adm-fb-acts">
+              {it.status !== "triaged" && <button className="adm-fb-act" onClick={() => setStatus(it.id, "triaged")}>Triaged</button>}
+              {it.status !== "actioned" && <button className="adm-fb-act ok" onClick={() => setStatus(it.id, "actioned")}>Actioned</button>}
+              {it.status !== "dismissed" && <button className="adm-fb-act mute" onClick={() => setStatus(it.id, "dismissed")}>Dismiss</button>}
+            </div>
+          </div>
+        ))}
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import type { Option, Profile, Reflection, Pathway, PlanReflection } from "./api";
+import type { Option, Profile, Reflection, Pathway, PlanReflection, Specialized } from "./api";
 
 export const INTERESTS = ["Making & art", "Numbers", "Biology", "Building things", "Helping people", "Business"];
 export const VALUES = ["A steady income", "Doing work I love", "Helping my family soon", "Making an impact"];
@@ -40,12 +40,28 @@ export function planLocal(pathway: Pathway, profile: Profile): PlanReflection {
   };
 }
 
-// surface a legitimate option the student's stated interests did NOT point to
-export function expansionId(options: Option[], profile: Profile): string {
-  const pointed = new Set<string>();
-  profile.interests.forEach((i) => (FIT[i] || []).forEach((id) => pointed.add(id)));
-  const prefer = ["polytechnic_diploma", "nios", "iti", "vocational", "pu_humanities"];
-  return prefer.find((id) => !pointed.has(id) && options.some((o) => o.id === id)) || "polytechnic_diploma";
+// The "have you considered" nudge: surface ONE strong-but-overlooked option that
+// genuinely connects to an interest the student actually picked, WITH the reason.
+// Each maps an interest to a non-obvious route (not the default PU stream) + why.
+// If nothing maps to their interests, we return null and show no nudge — better
+// nothing than an arbitrary suggestion.
+export type Nudge = { id: string; spec: boolean; why: string };
+const NUDGE_MAP: Record<string, Nudge> = {
+  "Building things": { id: "polytechnic_diploma", spec: false, why: "you like building things — a Polytechnic diploma is hands-on and employable, and it bridges into BTech a year early." },
+  "Biology": { id: "paramedical_allied_health", spec: true, why: "you're drawn to Biology — paramedical & allied-health diplomas open real healthcare careers without the NEET marathon." },
+  "Making & art": { id: "creative_design_school", spec: true, why: "you enjoy making & art — early-entry design and animation courses are a direct, portfolio-led route many overlook." },
+  "Business": { id: "entrepreneurship_startup", spec: true, why: "you're drawn to business — an early entrepreneurship track builds real venture experience while you study." },
+  "Helping people": { id: "paramedical_allied_health", spec: true, why: "you want to help people — paramedical & allied-health roles are an employable care career beyond just medicine." },
+  "Numbers": { id: "polytechnic_diploma", spec: false, why: "you like numbers — a Polytechnic in computer science or electronics is a hands-on, employable route with a BTech bridge." },
+};
+export function pickNudge(profile: Profile, options: Option[], specialized: Specialized[]): Nudge | null {
+  for (const interest of profile.interests) {
+    const n = NUDGE_MAP[interest];
+    if (!n) continue;
+    const exists = n.spec ? specialized.some((s) => s.id === n.id) : options.some((o) => o.id === n.id);
+    if (exists) return n;
+  }
+  return null;
 }
 
 export function costText(o: Option): string {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { api, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, type ChatMsg, type Specialized, type PersonaPublic } from "./api";
 import { Icon, Compass, Bookmark } from "./icons";
-import { INTERESTS, VALUES, localReflect, planLocal, expansionId, costText, checkDistress, shortName, optIconName } from "./lib";
+import { INTERESTS, VALUES, localReflect, planLocal, pickNudge, costText, checkDistress, shortName, optIconName } from "./lib";
 
 export interface Ctx {
   go: (name: string, param?: string | null) => void;
@@ -418,8 +418,10 @@ export function Mode({ ctx }: { ctx: Ctx }) {
 
 export function Explore({ ctx }: { ctx: Ctx }) {
   const academic = new Set(["pu_science", "pu_commerce", "pu_humanities"]);
-  const exId = expansionId(ctx.options, ctx.profile);
-  const ex = ctx.options.find((o) => o.id === exId);
+  // Personalised "have you considered" — only shows when a picked interest maps to a
+  // genuinely-overlooked option; otherwise nothing (no arbitrary suggestion).
+  const nudge = pickNudge(ctx.profile, ctx.options, ctx.specialized);
+  const nudgeOpt = nudge ? (nudge.spec ? ctx.specialized.find((s) => s.id === nudge.id) : ctx.options.find((o) => o.id === nudge.id)) : null;
   const [showMore, setShowMore] = useState(false); // expansion tier collapsed by default — don't overwhelm
   return (
     <section className="screen">
@@ -432,11 +434,15 @@ export function Explore({ ctx }: { ctx: Ctx }) {
           <span>{ctx.disclaimer}</span>
         </div>
       )}
-      {ex && (
-        <button className="nudge" style={{ marginTop: 16, width: "100%" }} onClick={() => ctx.go("detail", ex.id)}>
-          <div style={{ width: 34, height: 34, borderRadius: 9, background: "var(--surface)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--violet)" }}><Icon name="star" size={18} stroke={2} /></div>
-          <div style={{ flex: 1, textAlign: "left" }}><div className="k">HAVE YOU CONSIDERED</div><div style={{ fontWeight: 600, fontSize: 15 }}>{ex.name}</div></div>
-          <span style={{ color: "var(--violet)" }}><Icon name="chev" size={18} stroke={2} /></span>
+      {nudge && nudgeOpt && (
+        <button className="nudge" style={{ marginTop: 16, width: "100%", alignItems: "flex-start" }} onClick={() => ctx.go(nudge.spec ? "specialized" : "detail", nudge.id)}>
+          <div style={{ width: 34, height: 34, borderRadius: 9, background: "var(--surface)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--violet)", flex: "none", marginTop: 1 }}><Icon name="star" size={18} stroke={2} /></div>
+          <div style={{ flex: 1, textAlign: "left" }}>
+            <div className="k">HAVE YOU CONSIDERED</div>
+            <div style={{ fontWeight: 600, fontSize: 15 }}>{nudgeOpt.name}</div>
+            <div className="nudge-why">Because {nudge.why}</div>
+          </div>
+          <span style={{ color: "var(--violet)", flex: "none", alignSelf: "center" }}><Icon name="chev" size={18} stroke={2} /></span>
         </button>
       )}
       <div className="grid" style={{ marginTop: 14 }}>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { api, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, type ChatMsg, type Specialized, setToken } from "./api";
+import { api, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, type ChatMsg, type Specialized, type PersonaPublic, setToken } from "./api";
 import { Icon, Compass, Bookmark } from "./icons";
 import { INTERESTS, VALUES, localReflect, planLocal, expansionId, costText, checkDistress, shortName, optIconName } from "./lib";
 
@@ -19,6 +19,9 @@ export interface Ctx {
   scholarshipNames: Record<string, string>;
   pathways: Pathway[];
   specialized: Specialized[];
+  personas: PersonaPublic[];
+  persona: PersonaPublic | null;
+  setPersona: (p: PersonaPublic) => void | Promise<void>;
 }
 
 function FooterLinks({ ctx }: { ctx: Ctx }) {
@@ -52,7 +55,7 @@ export function Chat({ ctx, mode, contextId, goal, placeholder, seedAssistant }:
     if (checkDistress(text)) ctx.openSafety(true); // instant local pre-check; server re-checks authoritatively
     const next: ChatMsg[] = [...msgs, { role: "user", content: text }];
     setMsgs(next); setInput(""); setBusy(true);
-    const res = await api.chat({ mode, contextId, goal, messages: next });
+    const res = await api.chat({ mode, contextId, goal, messages: next, persona: ctx.persona?.id });
     setBusy(false);
     if (res.data?.safety) {
       ctx.openSafety(true);
@@ -80,24 +83,55 @@ export function Chat({ ctx, mode, contextId, goal, placeholder, seedAssistant }:
   );
 }
 
-export function Welcome({ ctx }: { ctx: Ctx }) {
+export function PersonaPick({ ctx }: { ctx: Ctx }) {
   return (
     <section className="screen">
+      <div className="wordmark" style={{ fontSize: 20, marginBottom: 6 }}>Marg</div>
+      <h1 style={{ fontSize: 26 }}>Who is this for?</h1>
+      <p className="lead" style={{ marginTop: 8 }}>Marg adapts to your stage of life. Pick one to begin.</p>
+      <div className="stack" style={{ marginTop: 22, gap: 14 }}>
+        {ctx.personas.map((p) => (
+          <button key={p.id} className="choice" style={{ alignItems: "flex-start", textAlign: "left" }}
+            onClick={async () => { await ctx.setPersona(p); ctx.go("welcome"); }}>
+            <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center", gap: 10 }}>
+              <div style={{ fontFamily: "Spectral, Georgia, serif", fontWeight: 600, fontSize: 19 }}>{p.label}</div>
+              <span className={p.experimental ? "badge-exp" : "badge-ok"}>{p.experimental ? "EXPERIMENTAL" : "READY"}</span>
+            </div>
+            <div className="muted" style={{ fontSize: 13.5, marginTop: 4 }}>{p.tagline} · ages {p.age_band}</div>
+            {p.disclosure && <div className="note" style={{ marginTop: 10, fontSize: 12 }}>{p.disclosure}</div>}
+          </button>
+        ))}
+      </div>
+      <div className="disclaimer-foot" style={{ marginTop: 18 }}>Class 10 is the built, verified experience. Others are early prototypes of Marg's one-engine vision.</div>
+    </section>
+  );
+}
+
+export function Welcome({ ctx }: { ctx: Ctx }) {
+  const p = ctx.persona;
+  const adult = p?.consent_rule === "adult_self";
+  const isClass10 = (p?.id ?? "class10") === "class10";
+  const start = () => { if (adult) { ctx.setConsent({ path: "self_serve" }); ctx.go("register"); } else ctx.go("consent"); };
+  return (
+    <section className="screen">
+      {ctx.personas.length > 1 && (
+        <div className="topbar"><button className="back" onClick={() => ctx.go("personas")}><Icon name="back" size={22} /></button><span className="muted" style={{ fontSize: 14 }}>Change stage</span></div>
+      )}
       <div className="wordmark"><Compass /><span>Marg</span></div>
       <div className="spacer" />
       <div className="stack" style={{ gap: 16 }}>
-        <div className="eyebrow">For Class 10 · CBSE · Bengaluru</div>
-        <h1 style={{ fontSize: 33 }}>See all your paths after Class 10 — then choose, without being boxed in.</h1>
+        <div className="eyebrow">{p?.tagline ?? "For Class 10 · CBSE · Bengaluru"}</div>
+        <h1 style={{ fontSize: 33 }}>{isClass10 ? "See all your paths after Class 10 — then choose, without being boxed in." : "See your real options — then choose your next step, without being boxed in."}</h1>
         <p className="lead">A calm way to explore your real options and plan your next steps. No pressure, no verdicts.</p>
       </div>
       <div className="spacer" />
       <div className="stack">
-        <button className="btn btn-primary" onClick={() => ctx.go("consent")}>Start</button>
+        <button className="btn btn-primary" onClick={start}>Start</button>
         <div className="card" style={{ padding: 15 }}>
           <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
             <span style={{ color: "var(--muted)" }}><Icon name="lock" size={16} /></span>
             <div style={{ fontSize: 13, lineHeight: 1.5, color: "var(--muted)" }}>
-              <strong style={{ color: "var(--ink)" }}>Private &amp; judgment-free.</strong> A parent or guardian consents first (DPDP), and you can delete everything anytime.
+              <strong style={{ color: "var(--ink)" }}>Private &amp; judgment-free.</strong> {adult ? "You're in control of your data, and you can delete everything anytime." : "A parent or guardian consents first (DPDP), and you can delete everything anytime."}
             </div>
           </div>
         </div>
@@ -229,6 +263,13 @@ export function Intake({ ctx }: { ctx: Ctx }) {
   const [mind, setMind] = useState("");
   const [busy, setBusy] = useState(false);
   const p = ctx.profile;
+  // Persona-driven intake; falls back to the Class-10 question set.
+  const pi = ctx.persona?.intake ?? {
+    title: "A few things about you",
+    lead: "There are no right answers, and this isn't a test. It just helps me show you the right options. Skip anything you like.",
+    interests: { title: "What do you enjoy right now?", options: INTERESTS },
+    values: { title: "What matters most to you?", options: VALUES },
+  };
   const toggle = (key: "interests" | "values", v: string) => {
     const arr = p[key];
     const next = arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v];
@@ -249,11 +290,11 @@ export function Intake({ ctx }: { ctx: Ctx }) {
   return (
     <section className="screen">
       <div className="topbar"><button className="back" onClick={() => ctx.go("mode")}><Icon name="back" size={22} /></button><div className="bar"><span style={{ transform: `scaleX(${pct / 100})` }} /></div></div>
-      <h1 style={{ fontSize: 25 }}>A few things about you</h1>
-      <p className="lead" style={{ marginTop: 8 }}>There are no right answers, and this isn't a test. It just helps me show you the right options. Skip anything you like.</p>
+      <h1 style={{ fontSize: 25 }}>{pi.title}</h1>
+      <p className="lead" style={{ marginTop: 8 }}>{pi.lead}</p>
       <div className="stack" style={{ marginTop: 20 }}>
-        <div className="card"><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 12 }}>What do you enjoy right now?</div><div className="chips">{chips(INTERESTS, "interests")}</div><div className="muted" style={{ fontSize: 12.5, marginTop: 12 }}>These can change over time — that's normal.</div></div>
-        <div className="card"><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>What matters most to you?</div><div className="muted" style={{ fontSize: 13, marginBottom: 12 }}>Pick what feels true today.</div><div className="chips">{chips(VALUES, "values")}</div></div>
+        <div className="card"><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 12 }}>{pi.interests.title}</div><div className="chips">{chips(pi.interests.options, "interests")}</div><div className="muted" style={{ fontSize: 12.5, marginTop: 12 }}>These can change over time — that's normal.</div></div>
+        <div className="card"><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>{pi.values.title}</div><div className="muted" style={{ fontSize: 13, marginBottom: 12 }}>Pick what feels true today.</div><div className="chips">{chips(pi.values.options, "values")}</div></div>
         <div className="card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div><div style={{ fontWeight: 700, fontSize: 15 }}>Add your marks?</div><div className="muted" style={{ fontSize: 12.5, marginTop: 2 }}>Optional — we don't lead with these.</div></div>
           <button className={"chip" + (p.marks === "skipped" ? " on" : "")} onClick={() => ctx.setProfile({ ...p, marks: p.marks === "skipped" ? null : "skipped" })}>{p.marks === "skipped" ? "Skipped" : "Skip"}</button>
@@ -268,6 +309,7 @@ export function Intake({ ctx }: { ctx: Ctx }) {
 }
 
 export function Mode({ ctx }: { ctx: Ctx }) {
+  const f = ctx.persona?.framing;
   return (
     <section className="screen">
       <div className="wordmark" style={{ fontSize: 18, marginBottom: 24 }}>Marg</div>
@@ -276,13 +318,13 @@ export function Mode({ ctx }: { ctx: Ctx }) {
       <div className="stack" style={{ marginTop: 24, gap: 16 }}>
         <button className="choice" onClick={() => ctx.go("explore")}>
           <div className="ic" style={{ background: "var(--primary-tint)", color: "var(--primary)" }}><Icon name="search" size={24} stroke={1.8} /></div>
-          <div style={{ fontFamily: "Spectral, Georgia, serif", fontWeight: 600, fontSize: 19 }}>I'm not sure yet</div>
-          <div className="muted" style={{ fontSize: 14.5, lineHeight: 1.5 }}>Help me explore all my options and see what fits.</div>
+          <div style={{ fontFamily: "Spectral, Georgia, serif", fontWeight: 600, fontSize: 19 }}>{f?.modeExploreLabel ?? "I'm not sure yet"}</div>
+          <div className="muted" style={{ fontSize: 14.5, lineHeight: 1.5 }}>{f?.modeExploreDesc ?? "Help me explore all my options and see what fits."}</div>
         </button>
         <button className="choice" onClick={() => ctx.go("aspire")}>
           <div className="ic" style={{ background: "var(--violet-tint)", color: "var(--violet)" }}><Icon name="target" size={24} stroke={1.8} /></div>
-          <div style={{ fontFamily: "Spectral, Georgia, serif", fontWeight: 600, fontSize: 19 }}>I have a goal in mind</div>
-          <div className="muted" style={{ fontSize: 14.5, lineHeight: 1.5 }}>Help me plan the next steps toward it.</div>
+          <div style={{ fontFamily: "Spectral, Georgia, serif", fontWeight: 600, fontSize: 19 }}>{f?.modeAspireLabel ?? "I have a goal in mind"}</div>
+          <div className="muted" style={{ fontSize: 14.5, lineHeight: 1.5 }}>{f?.modeAspireDesc ?? "Help me plan the next steps toward it."}</div>
         </button>
       </div>
       <FooterLinks ctx={ctx} />
@@ -297,8 +339,8 @@ export function Explore({ ctx }: { ctx: Ctx }) {
   return (
     <section className="screen">
       <div className="topbar"><button className="back" onClick={() => ctx.go("mode")}><Icon name="back" size={22} /></button><div className="wordmark" style={{ fontSize: 17 }}>Your options</div></div>
-      <h1 style={{ fontSize: 24 }}>Everything open to you after Class 10</h1>
-      <p className="lead" style={{ marginTop: 6 }}>Nothing here is ranked. Look around freely.</p>
+      <h1 style={{ fontSize: 24 }}>{ctx.persona?.framing.exploreTitle ?? "Everything open to you after Class 10"}</h1>
+      <p className="lead" style={{ marginTop: 6 }}>{ctx.persona?.framing.exploreLead ?? "Nothing here is ranked. Look around freely."}</p>
       {ex && (
         <button className="nudge" style={{ marginTop: 16, width: "100%" }} onClick={() => ctx.go("detail", ex.id)}>
           <div style={{ width: 34, height: 34, borderRadius: 9, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--violet)" }}><Icon name="star" size={18} stroke={2} /></div>
@@ -350,7 +392,7 @@ export function Detail({ ctx }: { ctx: Ctx }) {
     setRefl(localReflect(o, ctx.profile));
     setLoading(true);
     let live = true;
-    api.reflect(o.id).then((res) => {
+    api.reflect(o.id, ctx.persona?.id).then((res) => {
       if (!live) return;
       if (res.ok && res.data?.reflection) setRefl(res.data.reflection);
       setLoading(false);
@@ -364,7 +406,7 @@ export function Detail({ ctx }: { ctx: Ctx }) {
   const exams = (o.entrance_exams_it_feeds || []).join(", ");
   const schs = (o.related_scholarships || []).map((id) => ctx.scholarshipNames[id] || id).join(", ");
   async function toggleSave() {
-    const res = saved ? await api.removeShortlist(o!.id) : await api.addShortlist(o!.id);
+    const res = saved ? await api.removeShortlist(o!.id) : await api.addShortlist(o!.id, ctx.persona?.id);
     if (res.data?.shortlist) ctx.setShortlist(res.data.shortlist);
     ctx.toast(saved ? "Removed from shortlist" : "Added to your shortlist");
   }
@@ -600,7 +642,7 @@ export function Plan({ ctx }: { ctx: Ctx }) {
     if (!p) return;
     setAi(planLocal(p, ctx.profile));
     let live = true;
-    api.plan(p.id).then((res) => { if (live && res.ok && res.data?.plan) setAi(res.data.plan); });
+    api.plan(p.id, ctx.persona?.id).then((res) => { if (live && res.ok && res.data?.plan) setAi(res.data.plan); });
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [p?.id]);

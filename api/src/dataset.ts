@@ -1,25 +1,28 @@
-// Loads the curated options/pathways dataset (single source of truth for content).
+// Turns a raw persona data pack (options/pathways/scholarships/specialized) into the
+// shape the engine consumes. The SAME factory serves every persona — a new persona
+// is a new pack, not new engine code. Class-10 remains the default pack so existing
+// callers keep working unchanged.
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const here = dirname(fileURLToPath(import.meta.url));
-// api/src -> project root
-const raw = JSON.parse(readFileSync(join(here, "..", "..", "marg-dataset-v0.json"), "utf-8"));
 
-export const dataset = raw;
-export const options: any[] = raw.options;
-export const pathways: any[] = raw.pathways;
-export const scholarships: any[] = raw.scholarships;
-export const specializedPathways: any[] = raw.specialized_pathways || [];
-export const optById = new Map<string, any>(raw.options.map((o: any) => [o.id, o]));
-export const pathById = new Map<string, any>(raw.pathways.map((p: any) => [p.id, p]));
+export function loadRaw(relPathFromRoot: string): any {
+  return JSON.parse(readFileSync(join(here, "..", "..", relPathFromRoot), "utf-8"));
+}
 
-// Grounding for the chat. The model may cite ONLY from what we send it. Because
-// Groq's free tier caps at ~8k tokens/min and a multi-turn chat re-sends grounding
-// every turn, we send the SMALLEST slice each mode needs (trimmed fields), not the
-// whole dataset — Explore doesn't need the ambition-pathways; Aspire doesn't need
-// each option's full record. This keeps full breadth while staying under budget.
+export interface Pack {
+  raw: any;
+  options: any[];
+  pathways: any[];
+  scholarships: any[];
+  specializedPathways: any[];
+  optById: Map<string, any>;
+  pathById: Map<string, any>;
+  groundingFor: (mode: "explore" | "aspire") => Record<string, unknown>;
+}
+
 const trimOption = (o: any) => ({
   id: o.id, name: o.name, type: o.type, summary: o.summary, leads_to: o.leads_to,
   eligibility: o.eligibility?.text, duration: o.duration,
@@ -35,23 +38,50 @@ const trimAmbition = (p: any) => ({
   honest_cost_effort: p.honest_cost_effort, real_routes_through_cost: p.real_routes_through_cost,
   adjacent_destinations: p.adjacent_destinations, what_if_it_changes: p.what_if_it_changes,
 });
-const schIndex = raw.scholarships.map((s: any) => ({ id: s.id, name: s.name, amount: s.amount, needs_verification: s.needs_verification }));
 
-export function groundingFor(mode: "explore" | "aspire"): Record<string, unknown> {
+// Build a Pack from raw JSON. Grounding sends the SMALLEST slice each mode needs
+// (trimmed fields) so the chat stays under provider token budgets.
+export function buildPack(raw: any): Pack {
+  const options: any[] = raw.options || [];
+  const pathways: any[] = raw.pathways || [];
+  const scholarships: any[] = raw.scholarships || [];
+  const specializedPathways: any[] = raw.specialized_pathways || [];
+  const schIndex = scholarships.map((s: any) => ({ id: s.id, name: s.name, amount: s.amount, needs_verification: s.needs_verification }));
   const context = raw.meta?.context;
-  if (mode === "aspire") {
+  const groundingFor = (mode: "explore" | "aspire"): Record<string, unknown> => {
+    if (mode === "aspire") {
+      return {
+        context,
+        ambition_pathways: pathways.map(trimAmbition),
+        specialized_pathways: specializedPathways.map(trimSpecial),
+        options_index: options.map((o: any) => ({ id: o.id, name: o.name, summary: o.summary })),
+        scholarships: schIndex,
+      };
+    }
     return {
       context,
-      ambition_pathways: raw.pathways.map(trimAmbition),
+      options: options.map(trimOption),
       specialized_pathways: specializedPathways.map(trimSpecial),
-      options_index: raw.options.map((o: any) => ({ id: o.id, name: o.name, summary: o.summary })),
       scholarships: schIndex,
     };
-  }
+  };
   return {
-    context,
-    options: raw.options.map(trimOption),
-    specialized_pathways: specializedPathways.map(trimSpecial),
-    scholarships: schIndex,
+    raw, options, pathways, scholarships, specializedPathways,
+    optById: new Map(options.map((o: any) => [o.id, o])),
+    pathById: new Map(pathways.map((p: any) => [p.id, p])),
+    groundingFor,
   };
 }
+
+// ---- default (Class-10) pack + backward-compatible exports ----
+const rawClass10 = loadRaw("marg-dataset-v0.json");
+const class10 = buildPack(rawClass10);
+
+export const dataset = rawClass10;
+export const options = class10.options;
+export const pathways = class10.pathways;
+export const scholarships = class10.scholarships;
+export const specializedPathways = class10.specializedPathways;
+export const optById = class10.optById;
+export const pathById = class10.pathById;
+export const groundingFor = class10.groundingFor;

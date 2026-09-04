@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
-import { api, getToken, clearToken, type Option, type Profile, type ShortlistItem, type Pathway, type Specialized } from "./api";
+import { api, getToken, clearToken, type Option, type Profile, type ShortlistItem, type Pathway, type Specialized, type PersonaPublic } from "./api";
 import { HELPLINES } from "./lib";
 import {
   Welcome, Consent, Register, Login, Intake, Mode, Explore, Detail, SpecializedDetail, Shortlist, DeleteConfirm,
-  Aspire, WhyGoal, Plan, GoalChat, type Ctx,
+  Aspire, WhyGoal, Plan, GoalChat, PersonaPick, type Ctx,
 } from "./screens";
 
 type View = { name: string; param: string | null };
 
 export default function App() {
-  const [view, setView] = useState<View>({ name: "welcome", param: null });
+  const [view, setView] = useState<View>({ name: "personas", param: null });
   const [options, setOptions] = useState<Option[]>([]);
   const [profile, setProfile] = useState<Profile>({ interests: [], values: [], marks: null });
   const [consent, setConsent] = useState<{ path: string; school_code?: string }>({ path: "self_serve" });
@@ -17,6 +17,8 @@ export default function App() {
   const [scholarshipNames, setScholarshipNames] = useState<Record<string, string>>({});
   const [pathways, setPathways] = useState<Pathway[]>([]);
   const [specialized, setSpecialized] = useState<Specialized[]>([]);
+  const [personas, setPersonas] = useState<PersonaPublic[]>([]);
+  const [persona, setPersonaState] = useState<PersonaPublic | null>(null);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [safety, setSafety] = useState<{ open: boolean; distress: boolean }>({ open: false, distress: false });
   const [booted, setBooted] = useState(false);
@@ -24,22 +26,39 @@ export default function App() {
   const go = useCallback((name: string, param: string | null = null) => { setView({ name, param }); window.scrollTo(0, 0); }, []);
   const toast = useCallback((m: string) => setToastMsg(m), []);
   const openSafety = useCallback((d = false) => setSafety({ open: true, distress: d }), []);
+
+  // Load a persona's data pack (options/pathways/specialized/scholarships).
+  const loadPacks = useCallback(async (personaId: string) => {
+    const opt = await api.getOptions(personaId);
+    setOptions(opt.data?.options ?? []);
+    setScholarshipNames(Object.fromEntries((opt.data?.scholarships ?? []).map((s) => [s.id, s.name])));
+    setPathways(opt.data?.pathways ?? []);
+    setSpecialized(opt.data?.specialized ?? []);
+  }, []);
+
+  const setPersona = useCallback(async (p: PersonaPublic) => {
+    setPersonaState(p);
+    await loadPacks(p.id);
+  }, [loadPacks]);
+
   const logout = useCallback(async () => {
     try { await api.logout(); } catch { /* best-effort; clear locally regardless */ }
     clearToken();
     setProfile({ interests: [], values: [], marks: null });
     setShortlist([]);
-    go("welcome");
+    go("personas");
   }, [go]);
+
   useEffect(() => { if (!toastMsg) return; const t = setTimeout(() => setToastMsg(null), 1900); return () => clearTimeout(t); }, [toastMsg]);
 
   useEffect(() => {
     (async () => {
-      const opt = await api.getOptions();
-      if (opt.data?.options) setOptions(opt.data.options);
-      if (opt.data?.scholarships) setScholarshipNames(Object.fromEntries(opt.data.scholarships.map((s) => [s.id, s.name])));
-      if (opt.data?.pathways) setPathways(opt.data.pathways);
-      if (opt.data?.specialized) setSpecialized(opt.data.specialized);
+      const pr = await api.getPersonas();
+      const list = pr.data?.personas ?? [];
+      setPersonas(list);
+      const def = list.find((p) => p.id === "class10") ?? list[0] ?? null;
+      // Default to Class-10 so the fallback persona is loaded even before any pick.
+      if (def) { setPersonaState(def); await loadPacks(def.id); }
       if (getToken()) {
         const [ik, sl] = await Promise.all([api.getIntake(), api.getShortlist()]);
         if (ik.status === 401) {
@@ -50,17 +69,19 @@ export default function App() {
             setProfile({ interests: it.interests ?? [], values: it.values ?? [], marks: it.marks ?? null, mind_flagged: it.mind_flagged });
           }
           if (sl.data?.shortlist) setShortlist(sl.data.shortlist);
-          setView({ name: "mode", param: null });
+          setView({ name: "mode", param: null }); // returning user keeps the default persona
         }
       }
       setBooted(true);
     })();
-  }, []);
+  }, [loadPacks]);
 
-  const ctx: Ctx = { go, param: view.param, toast, openSafety, logout, options, profile, setProfile, consent, setConsent, shortlist, setShortlist, scholarshipNames, pathways, specialized };
+  const ctx: Ctx = { go, param: view.param, toast, openSafety, logout, options, profile, setProfile, consent, setConsent, shortlist, setShortlist, scholarshipNames, pathways, specialized, personas, persona, setPersona };
 
   function screen() {
     switch (view.name) {
+      case "personas": return <PersonaPick ctx={ctx} />;
+      case "welcome": return <Welcome ctx={ctx} />;
       case "consent": return <Consent ctx={ctx} />;
       case "register": return <Register ctx={ctx} />;
       case "login": return <Login ctx={ctx} />;
@@ -75,12 +96,17 @@ export default function App() {
       case "why": return <WhyGoal ctx={ctx} />;
       case "plan": return <Plan ctx={ctx} />;
       case "delete-confirm": return <DeleteConfirm ctx={ctx} />;
-      default: return <Welcome ctx={ctx} />;
+      default: return <PersonaPick ctx={ctx} />;
     }
   }
 
+  const showRibbon = booted && persona?.experimental && view.name !== "personas";
+
   return (
     <div className="frame">
+      {showRibbon && (
+        <div className="exp-ribbon">⚗ Experimental persona ({persona!.label}) — illustrative &amp; unverified. Class 10 stays the safe default.</div>
+      )}
       <main>
         {booted ? screen() : (
           <section className="screen"><div className="spacer" /><div className="center-note">Loading…</div><div className="spacer" /></section>

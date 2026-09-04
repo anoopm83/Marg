@@ -3,7 +3,8 @@ import express from "express";
 import cors from "cors";
 import { db } from "./db.js";
 import { auth, id, now, hash, verify, newToken, type AuthedRequest } from "./auth.js";
-import { options, optById, pathById, scholarships, pathways, specializedPathways, groundingFor } from "./dataset.js";
+import { options } from "./dataset.js";
+import { getPack, getConfig, personaList } from "./personas.js";
 import { reflect, planReflect, chat, type ChatMsg, MODEL, hasKey, PROVIDER } from "./llm.js";
 import { checkDistress, HELPLINES } from "./safety.js";
 
@@ -32,13 +33,18 @@ function logEvent(userId: string | null, name: string, props: any) {
 
 // ---- health & content ----
 app.get("/api/health", (_req, res) => res.json({ ok: true, provider: PROVIDER, model: MODEL, ai_key_detected: hasKey, options: options.length }));
-app.get("/api/options", (_req, res) => res.json({ options, scholarships, pathways, specialized: specializedPathways }));
+// Persona registry for the picker (config only, no data pack).
+app.get("/api/personas", (_req, res) => res.json({ personas: personaList }));
+app.get("/api/options", (req, res) => {
+  const pack = getPack(req.query.persona); // unknown/absent → class10 (default + fallback)
+  res.json({ options: pack.options, scholarships: pack.scholarships, pathways: pack.pathways, specialized: pack.specializedPathways });
+});
 app.get("/api/option/:id", (req, res) => {
-  const o = optById.get(req.params.id);
+  const o = getPack(req.query.persona).optById.get(req.params.id);
   return o ? res.json({ option: o }) : res.status(404).json({ error: "unknown_option" });
 });
 app.get("/api/pathway/:id", (req, res) => {
-  const p = pathById.get(req.params.id);
+  const p = getPack(req.query.persona).pathById.get(req.params.id);
   return p ? res.json({ pathway: p }) : res.status(404).json({ error: "unknown_pathway" });
 });
 
@@ -90,14 +96,14 @@ app.post("/api/intake", auth, (req: AuthedRequest, res) => {
 
 // ---- reflections (grounded Claude) ----
 app.post("/api/reflect", auth, async (req: AuthedRequest, res) => {
-  const { optionId } = req.body || {};
-  const option = optById.get(optionId);
+  const { optionId, persona } = req.body || {};
+  const option = getPack(persona).optById.get(optionId);
   if (!option) return res.status(400).json({ error: "unknown_option" });
   if (!hasKey) return res.status(503).json({ error: "no_ai_key", message: `No key for LLM_PROVIDER='${PROVIDER}'. Set it in api/.env (see api/.env.example) to enable live reflections.` });
   const row = getIntake.get(req.userId!) as { data: string } | undefined;
   const profile = row ? JSON.parse(row.data) : {};
   try {
-    const reflection = await reflect(profile, option);
+    const reflection = await reflect(profile, option, getConfig(persona).audience);
     logEvent(req.userId!, "option_reflected", { option_id: optionId });
     res.json({ source: PROVIDER, model: MODEL, reflection });
   } catch (e: any) {
@@ -106,14 +112,14 @@ app.post("/api/reflect", auth, async (req: AuthedRequest, res) => {
 });
 
 app.post("/api/plan", auth, async (req: AuthedRequest, res) => {
-  const { pathwayId } = req.body || {};
-  const pathway = pathById.get(pathwayId);
+  const { pathwayId, persona } = req.body || {};
+  const pathway = getPack(persona).pathById.get(pathwayId);
   if (!pathway) return res.status(400).json({ error: "unknown_pathway" });
   if (!hasKey) return res.status(503).json({ error: "no_ai_key", message: `No key for LLM_PROVIDER='${PROVIDER}'. Set it in api/.env (see api/.env.example) to enable live reflections.` });
   const row = getIntake.get(req.userId!) as { data: string } | undefined;
   const profile = row ? JSON.parse(row.data) : {};
   try {
-    const plan = await planReflect(profile, pathway);
+    const plan = await planReflect(profile, pathway, getConfig(persona).audience);
     res.json({ source: PROVIDER, model: MODEL, plan });
   } catch (e: any) {
     res.status(e?.status || 500).json({ error: "plan_failed", message: String(e?.message || e) });
@@ -122,28 +128,30 @@ app.post("/api/plan", auth, async (req: AuthedRequest, res) => {
 
 // ---- conversational chat (grounded, no-verdict; safety-gated) ----
 app.post("/api/chat", auth, async (req: AuthedRequest, res) => {
-  const { mode, contextId, goal, messages } = req.body || {};
+  const { mode, contextId, goal, messages, persona } = req.body || {};
   if (!Array.isArray(messages) || messages.length === 0) return res.status(400).json({ error: "no_messages" });
 
   // SAFETY GATE — server-side, before any LLM call. Scan the latest user turn.
+  // Helplines are persona-appropriate (config-driven), falling back to the default set.
   const lastUser = [...messages].reverse().find((m: any) => m?.role === "user");
   if (lastUser && checkDistress(String(lastUser.content || ""))) {
-    logEvent(req.userId!, "distress_flag_raised", { source: "chat", mode });
-    return res.json({ safety: true, helplines: HELPLINES });
+    logEvent(req.userId!, "distress_flag_raised", { source: "chat", mode, persona });
+    return res.json({ safety: true, helplines: getConfig(persona).helplines || HELPLINES });
   }
 
   if (!hasKey) return res.status(503).json({ error: "no_ai_key", message: `No key for LLM_PROVIDER='${PROVIDER}'. Set it in api/.env to enable chat.` });
 
+  const pack = getPack(persona);
   const row = getIntake.get(req.userId!) as { data: string } | undefined;
   const profile = row ? JSON.parse(row.data) : {};
   const chatMode: "explore" | "aspire" = mode === "aspire" ? "aspire" : "explore";
-  const currentOption = chatMode === "explore" && contextId ? optById.get(contextId) : null;
+  const currentOption = chatMode === "explore" && contextId ? pack.optById.get(contextId) : null;
   const groundCtx = {
     student: { interests: profile?.interests ?? [], values: profile?.values ?? [] },
     current_focus: chatMode === "aspire"
       ? { kind: "goal", goal: goal || "(unspecified)" }
       : { kind: "option", option: currentOption ? { id: currentOption.id, name: currentOption.name } : null },
-    ...groundingFor(chatMode),
+    ...pack.groundingFor(chatMode),
   };
   // Trim history sent to the model (keep it bounded); Zod-free prose output.
   const history: ChatMsg[] = messages.slice(-10).map((m: any) => ({
@@ -151,7 +159,7 @@ app.post("/api/chat", auth, async (req: AuthedRequest, res) => {
     content: String(m.content || "").slice(0, 1000),
   }));
   try {
-    const reply = await chat(groundCtx, history);
+    const reply = await chat(groundCtx, history, getConfig(persona).audience);
     logEvent(req.userId!, "chat_message", { mode, turns: history.length });
     res.json({ source: PROVIDER, model: MODEL, reply });
   } catch (e: any) {
@@ -164,8 +172,8 @@ app.get("/api/shortlist", auth, (req: AuthedRequest, res) => {
   res.json({ shortlist: getShortlist.all(req.userId!) });
 });
 app.post("/api/shortlist", auth, (req: AuthedRequest, res) => {
-  const { optionId, note } = req.body || {};
-  if (!optById.get(optionId)) return res.status(400).json({ error: "unknown_option" });
+  const { optionId, note, persona } = req.body || {};
+  if (!getPack(persona).optById.get(optionId)) return res.status(400).json({ error: "unknown_option" });
   if (!hasShortlistItem.get(req.userId!, optionId)) {
     insShortlist.run(id(), req.userId!, optionId, note || null, now());
     logEvent(req.userId!, "shortlist_saved", { option_id: optionId });

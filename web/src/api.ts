@@ -13,6 +13,13 @@ export interface Reflection {
   band: "Worth exploring" | "Strong fit" | "A stretch";
   why_this_connects: string; what_to_watch: string; confidence: string;
 }
+export interface PersonaPublic {
+  id: string; label: string; age_band: string; category: string; experimental: boolean;
+  tagline: string;
+  framing: { exploreTitle: string; exploreLead: string; modeExploreLabel: string; modeExploreDesc: string; modeAspireLabel: string; modeAspireDesc: string };
+  intake: { title: string; lead: string; interests: { title: string; options: string[] }; values: { title: string; options: string[] } };
+  consent_rule: string; disclosure: string | null;
+}
 export interface Specialized {
   id: string; name: string; type?: string; summary: string; frame?: string;
   leads_to?: string[]; eligibility?: { text: string }; duration?: string;
@@ -59,15 +66,16 @@ export const api = {
   login: (body: { userId: string; password: string }) =>
     req<{ token: string; userId: string }>("/login", { method: "POST", body: JSON.stringify(body) }),
   logout: () => req("/logout", { method: "POST" }),
-  getOptions: () => req<{ options: Option[]; scholarships: { id: string; name: string }[]; pathways: Pathway[]; specialized: Specialized[] }>("/options"),
+  getPersonas: () => req<{ personas: PersonaPublic[] }>("/personas"),
+  getOptions: (persona?: string) => req<{ options: Option[]; scholarships: { id: string; name: string }[]; pathways: Pathway[]; specialized: Specialized[] }>("/options" + (persona ? "?persona=" + encodeURIComponent(persona) : "")),
   getIntake: () => req<{ intake: Profile | null }>("/intake"),
   saveIntake: (data: Profile) => req("/intake", { method: "POST", body: JSON.stringify(data) }),
-  reflect: (optionId: string) => req<{ reflection: Reflection }>("/reflect", { method: "POST", body: JSON.stringify({ optionId }) }),
-  plan: (pathwayId: string) => req<{ plan: PlanReflection }>("/plan", { method: "POST", body: JSON.stringify({ pathwayId }) }),
-  chat: (body: { mode: "explore" | "aspire"; contextId?: string | null; goal?: string; messages: ChatMsg[] }) =>
+  reflect: (optionId: string, persona?: string) => req<{ reflection: Reflection }>("/reflect", { method: "POST", body: JSON.stringify({ optionId, persona }) }),
+  plan: (pathwayId: string, persona?: string) => req<{ plan: PlanReflection }>("/plan", { method: "POST", body: JSON.stringify({ pathwayId, persona }) }),
+  chat: (body: { mode: "explore" | "aspire"; contextId?: string | null; goal?: string; messages: ChatMsg[]; persona?: string }) =>
     req<ChatReply>("/chat", { method: "POST", body: JSON.stringify(body) }),
   getShortlist: () => req<{ shortlist: ShortlistItem[] }>("/shortlist"),
-  addShortlist: (optionId: string, note?: string) => req<{ shortlist: ShortlistItem[] }>("/shortlist", { method: "POST", body: JSON.stringify({ optionId, note }) }),
+  addShortlist: (optionId: string, persona?: string, note?: string) => req<{ shortlist: ShortlistItem[] }>("/shortlist", { method: "POST", body: JSON.stringify({ optionId, persona, note }) }),
   removeShortlist: (optionId: string) => req<{ shortlist: ShortlistItem[] }>("/shortlist/" + optionId, { method: "DELETE" }),
   deleteMe: () => req("/me", { method: "DELETE" }),
   event: (name: string, props?: unknown) => req("/event", { method: "POST", body: JSON.stringify({ name, props }) }),

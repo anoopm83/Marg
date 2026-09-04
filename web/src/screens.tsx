@@ -110,10 +110,149 @@ export function Feedback({ ctx, where, prompt }: { ctx: Ctx; where: string; prom
   );
 }
 
+// Landing / front door — the page anyone with the app link reaches. Persuade mode:
+// warm citizen-first pitch, an inline login, and a government-alignment trust band.
+// Design: "dawn over the road" — the logo's sunrise mapped onto the stages of life.
+function SunMark({ size = 96 }: { size?: number }) {
+  return (
+    <svg className="sunmark" width={size} height={size * 0.62} viewBox="0 0 120 74" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="sunfill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FBBF3B" /><stop offset="1" stopColor="#F0872E" />
+        </linearGradient>
+        <linearGradient id="roadfill" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#3E9C63" /><stop offset="1" stopColor="#1E63C9" />
+        </linearGradient>
+      </defs>
+      <g className="rays" stroke="#F4A62A" strokeWidth="3" strokeLinecap="round">
+        <path d="M60 8V2" /><path d="M42 12l-3-5" /><path d="M78 12l3-5" /><path d="M28 24l-5-3" /><path d="M92 24l5-3" />
+      </g>
+      <path d="M36 40a24 24 0 0 1 48 0z" fill="url(#sunfill)" />
+      <path d="M18 72c14-2 22-10 42-10s28 8 42 10" stroke="url(#roadfill)" strokeWidth="7" strokeLinecap="round" fill="none" opacity=".9" />
+    </svg>
+  );
+}
+
+export function Home({ ctx }: { ctx: Ctx }) {
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  async function login() {
+    if (!userId.trim() || !password) { setErr("Enter your username and password."); return; }
+    setErr(""); setBusy(true);
+    const res = await api.login({ userId: userId.trim(), password });
+    if (!res.ok || !res.data?.token) { setBusy(false); setErr(res.status === 401 ? "Incorrect username or password." : "Something went wrong. Please try again."); return; }
+    setToken(res.data.token);
+    const [ik, sl] = await Promise.all([api.getIntake(), api.getShortlist()]);
+    if (ik.data?.intake) { const it = ik.data.intake; ctx.setProfile({ interests: it.interests ?? [], values: it.values ?? [], marks: it.marks ?? null, mind_flagged: it.mind_flagged }); }
+    if (sl.data?.shortlist) ctx.setShortlist(sl.data.shortlist);
+    setBusy(false); ctx.go("mode");
+  }
+  const start = () => ctx.go("personas");
+  const openStage = (id: string) => { const p = ctx.personas.find((x) => x.id === id); if (p) { ctx.setPersona(p); ctx.go("welcome"); } else start(); };
+  const stages = [
+    { id: "class10", when: "After Class 10", line: "Choosing a stream, a course, a direction.", ready: true },
+    { id: "midcareer", when: "Mid-career", line: "A switch, growth, or more meaning at work.", ready: false },
+    { id: "retiree", when: "Later life", line: "Purpose, calm and community, this chapter.", ready: false },
+  ];
+  const principle = (name: string, h: string, t: string) => (
+    <div className="principle">
+      <span className="p-ic"><Icon name={name} size={20} stroke={2} /></span>
+      <div><h3>{h}</h3><p>{t}</p></div>
+    </div>
+  );
+
+  return (
+    <div className="home">
+      <nav className="home-nav"><img className="home-logo" src="/marg-logo.png" alt="Marg — Guiding India's Life Choices" /></nav>
+
+      <header className="home-hero">
+        <div className="dawn" aria-hidden="true" />
+        <div className="hero-inner">
+          <SunMark size={104} />
+          <h1>See every path ahead — then choose your own.</h1>
+          <p className="hero-sub">Marg lays out your real options at life's crossroads — clearly, honestly, and never tells you what to pick. From Class 10 to retirement, the choice stays yours.</p>
+          <button className="btn btn-primary hero-cta" onClick={start}>Explore your paths <Icon name="chev" size={18} stroke={2.4} style={{ color: "#fff" }} /></button>
+          <div className="hero-trust"><Icon name="lock" size={14} /> Private by design · nothing is ranked · you decide, always</div>
+        </div>
+      </header>
+
+      <section className="home-login">
+        <div className="login-card">
+          <h2>Welcome back</h2>
+          <p className="muted" style={{ fontSize: 13.5, marginTop: 4 }}>Log in to pick up where you left off.</p>
+          <div className="stack" style={{ marginTop: 16 }}>
+            <input className="ta" autoCapitalize="none" value={userId} onChange={(e) => setUserId(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") login(); }} placeholder="Username" aria-label="Username" />
+            <input className="ta" type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") login(); }} placeholder="Password" aria-label="Password" />
+          </div>
+          {err && <div className="err">{err}</div>}
+          <button className="btn btn-primary" style={{ marginTop: 14 }} disabled={busy} onClick={login}>{busy ? "Logging in…" : "Log in"}</button>
+          <div className="login-sep"><span>new to Marg?</span></div>
+          <button className="btn btn-ghost" onClick={start}>Create an account &amp; start</button>
+        </div>
+      </section>
+
+      <section className="home-intent">
+        <h2>A calmer way to decide.</h2>
+        <div className="principles">
+          {principle("search", "The whole field, in view", "Every real option, side by side. Nothing hidden, nothing ranked for you.")}
+          {principle("star", "Paths you hadn't considered", "We gently surface at least one route you might have missed — no pressure.")}
+          {principle("check", "Honest about the cost", "The real effort and money each path takes — and the routes through it.")}
+        </div>
+      </section>
+
+      <section className="home-journey">
+        <h2>One companion, every stage of life.</h2>
+        <p className="muted" style={{ fontSize: 14, marginTop: 6, lineHeight: 1.5 }}>The same calm guidance, shaped to where you are.</p>
+        <div className="journey">
+          <div className="journey-line" aria-hidden="true" />
+          {stages.map((s, i) => (
+            <button key={s.id} className="stage" onClick={() => openStage(s.id)}>
+              <span className={"stage-dot d" + i} aria-hidden="true" />
+              <div className="stage-body">
+                <div className="stage-head">
+                  <h3>{s.when}</h3>
+                  <span className={s.ready ? "chip-ready" : "chip-proto"}>{s.ready ? "Ready" : "Preview"}</span>
+                </div>
+                <p>{s.line}</p>
+              </div>
+              <span className="stage-chev"><Icon name="chev" size={17} stroke={2.2} /></span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="home-gov">
+        <div className="gov-glow" aria-hidden="true" />
+        <h2>Aligned with the initiatives built to help you.</h2>
+        <p className="gov-lead">Scholarships and schemes go unused because people don't know they exist. Marg connects your choices to the public programmes made for them.</p>
+        <div className="pillars">
+          <div className="pillar"><h3>NEP 2020</h3><p>Life-skills &amp; holistic growth</p></div>
+          <div className="pillar"><h3>Skill India</h3><p>Careers &amp; employability</p></div>
+          <div className="pillar"><h3>Digital India</h3><p>Citizen-first services</p></div>
+        </div>
+        <div className="gov-portals"><Icon name="building" size={16} /><span>Points you to real portals — the National Scholarship Portal, state education boards (DTE / PUE), and senior support like Elderline.</span></div>
+      </section>
+
+      <section className="home-cta">
+        <h2>Your road, your pace.</h2>
+        <button className="btn btn-primary" style={{ marginTop: 16 }} onClick={start}>Explore your paths <Icon name="chev" size={18} stroke={2.4} style={{ color: "#fff" }} /></button>
+        <p className="home-fine">An early preview — information is provisional, so double-check the important details. Private by design (DPDP-ready), and you can delete everything anytime.</p>
+      </section>
+
+      <footer className="home-foot">
+        <img className="foot-logo" src="/marg-logo.png" alt="Marg" />
+        <span>Guiding India's Life Choices</span>
+      </footer>
+    </div>
+  );
+}
+
 export function PersonaPick({ ctx }: { ctx: Ctx }) {
   return (
     <section className="screen">
-      <div className="wordmark" style={{ fontSize: 20, marginBottom: 6 }}>Marg</div>
+      <div className="topbar"><button className="back" onClick={() => ctx.go("home")}><Icon name="back" size={22} /></button><div className="wordmark" style={{ fontSize: 18 }}>Marg</div></div>
       <h1 style={{ fontSize: 26 }}>Who is this for?</h1>
       <p className="lead" style={{ marginTop: 8 }}>Marg adapts to your stage of life. Pick one to begin.</p>
       <div className="stack" style={{ marginTop: 22, gap: 14 }}>

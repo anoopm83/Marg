@@ -2,14 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import { api, getToken, clearToken, type Option, type Profile, type ShortlistItem, type Pathway, type Specialized, type PersonaPublic } from "./api";
 import { HELPLINES } from "./lib";
 import {
-  Welcome, Consent, Register, Login, Intake, Mode, Explore, Detail, SpecializedDetail, Shortlist, DeleteConfirm,
+  Home, Welcome, Consent, Register, Login, Intake, Mode, Explore, Detail, SpecializedDetail, Shortlist, DeleteConfirm,
   Aspire, WhyGoal, Plan, GoalChat, PersonaPick, type Ctx,
 } from "./screens";
 
 type View = { name: string; param: string | null };
 
 export default function App() {
-  const [view, setView] = useState<View>({ name: "personas", param: null });
+  const [view, setView] = useState<View>({ name: "home", param: null });
   const [options, setOptions] = useState<Option[]>([]);
   const [profile, setProfile] = useState<Profile>({ interests: [], values: [], marks: null });
   const [consent, setConsent] = useState<{ path: string; school_code?: string }>({ path: "self_serve" });
@@ -48,7 +48,7 @@ export default function App() {
     clearToken();
     setProfile({ interests: [], values: [], marks: null });
     setShortlist([]);
-    go("personas");
+    go("home");
   }, [go]);
 
   useEffect(() => { if (!toastMsg) return; const t = setTimeout(() => setToastMsg(null), 1900); return () => clearTimeout(t); }, [toastMsg]);
@@ -82,6 +82,7 @@ export default function App() {
 
   function screen() {
     switch (view.name) {
+      case "home": return <Home ctx={ctx} />;
       case "personas": return <PersonaPick ctx={ctx} />;
       case "welcome": return <Welcome ctx={ctx} />;
       case "consent": return <Consent ctx={ctx} />;
@@ -98,7 +99,7 @@ export default function App() {
       case "why": return <WhyGoal ctx={ctx} />;
       case "plan": return <Plan ctx={ctx} />;
       case "delete-confirm": return <DeleteConfirm ctx={ctx} />;
-      default: return <PersonaPick ctx={ctx} />;
+      default: return <Home ctx={ctx} />;
     }
   }
 

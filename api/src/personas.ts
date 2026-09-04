@@ -26,6 +26,7 @@ export interface PersonaConfig {
     modeAspireDesc: string;
   };
   intake: { title: string; lead: string; interests: IntakeGroup; values: IntakeGroup };
+  where_label: string;           // label for the "where to look" row (region-specific)
   helplines: { name: string; num: string; tel: string }[];
   consent_rule: "minor_parental" | "adult_self";
   success_metric: string;        // recorded for the design; not computed in the prototype
@@ -69,6 +70,7 @@ const CONFIGS: Record<string, PersonaConfig> = {
       interests: { title: "What do you enjoy right now?", options: ["Making & art", "Numbers", "Biology", "Building things", "Helping people", "Business"] },
       values: { title: "What matters most to you?", options: ["A steady income", "Doing work I love", "Helping my family soon", "Making an impact"] },
     },
+    where_label: "In Bengaluru",
     helplines: HELP_TEEN,
     consent_rule: "minor_parental",
     success_metric: "Informed-Convergence Rate (complete intake → explore incl. an unconsidered option → save a 2-3 shortlist)",
@@ -96,6 +98,7 @@ const CONFIGS: Record<string, PersonaConfig> = {
       interests: { title: "What's pulling you right now?", options: ["Growth & pay", "A change of field", "More meaning", "More flexibility", "Leadership", "Building something of my own"] },
       values: { title: "What matters most right now?", options: ["Financial security", "Doing work I care about", "Time & balance", "Autonomy", "Impact"] },
     },
+    where_label: "Where to look",
     helplines: HELP_GENERAL,
     consent_rule: "adult_self",
     success_metric: "Informed next-step rate (explore realistic routes → reach a considered, self-owned direction) — prototype, not computed",
@@ -123,6 +126,7 @@ const CONFIGS: Record<string, PersonaConfig> = {
       interests: { title: "What draws you now?", options: ["Purpose & contribution", "Health & calm", "Faith & reflection", "Learning & hobbies", "Family & community", "Peace of mind about money"] },
       values: { title: "What matters most right now?", options: ["Staying active & useful", "Peace and calm", "Time with family", "Independence", "Giving back"] },
     },
+    where_label: "Where to look",
     helplines: HELP_SENIOR,
     consent_rule: "adult_self",
     success_metric: "Reached a considered, self-owned next step for this chapter (prototype, not computed)",
@@ -151,5 +155,5 @@ export function getPack(id: unknown): Pack {
 export const personaList = Object.values(CONFIGS).map((c) => ({
   id: c.id, label: c.label, age_band: c.age_band, category: c.category,
   experimental: c.experimental, tagline: c.tagline, framing: c.framing,
-  intake: c.intake, consent_rule: c.consent_rule, disclosure: c.disclosure,
+  intake: c.intake, where_label: c.where_label, consent_rule: c.consent_rule, disclosure: c.disclosure,
 }));

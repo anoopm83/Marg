@@ -75,12 +75,14 @@ export default function App() {
 
   const setPersona = useCallback(async (p: PersonaPublic) => {
     setPersonaState(p);
+    try { localStorage.setItem("marg_persona", p.id); } catch { /* private mode */ }
     await loadPacks(p.id);
   }, [loadPacks]);
 
   const logout = useCallback(async () => {
     try { await api.logout(); } catch { /* best-effort; clear locally regardless */ }
     clearToken();
+    try { localStorage.removeItem("marg_persona"); } catch { /* private mode */ }
     setProfile({ interests: [], values: [], marks: null });
     setShortlist([]);
     go("home");
@@ -93,9 +95,11 @@ export default function App() {
       const pr = await api.getPersonas();
       const list = pr.data?.personas ?? [];
       setPersonas(list);
-      const def = list.find((p) => p.id === "class10") ?? list[0] ?? null;
-      // Default to Class-10 so the fallback persona is loaded even before any pick.
-      if (def) { setPersonaState(def); await loadPacks(def.id); }
+      // Restore the last-chosen persona (so a returning user keeps their stage);
+      // fall back to Class-10 as the default.
+      let chosen = list.find((p) => p.id === "class10") ?? list[0] ?? null;
+      try { const sp = localStorage.getItem("marg_persona"); const f = sp && list.find((p) => p.id === sp); if (f) chosen = f; } catch { /* private mode */ }
+      if (chosen) { setPersonaState(chosen); await loadPacks(chosen.id); }
       if (getToken()) {
         const [ik, sl] = await Promise.all([api.getIntake(), api.getShortlist()]);
         if (ik.status === 401) {

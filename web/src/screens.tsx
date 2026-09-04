@@ -603,7 +603,7 @@ export function Detail({ ctx }: { ctx: Ctx }) {
       <div className="card" style={{ marginTop: 18, paddingTop: 2, paddingBottom: 2 }}>
         {row("check", "Eligibility", o.eligibility?.text || "See college")}
         {row("clock", "Duration", o.duration || "Varies")}
-        {row("pin", "In Bengaluru", where)}
+        {row("pin", ctx.persona?.where_label ?? "In Bengaluru", where)}
         {row("rupee", "Approx. cost", costText(o))}
         {exams && row("list", "Exams / entry", exams)}
         {schs && row("sch", "Scholarships", schs)}
@@ -675,7 +675,7 @@ export function SpecializedDetail({ ctx }: { ctx: Ctx }) {
       <div className="card" style={{ marginTop: 16, paddingTop: 2, paddingBottom: 2 }}>
         {s.eligibility?.text && row("check", "Eligibility", s.eligibility.text)}
         {s.duration && row("clock", "Duration", s.duration)}
-        {where && row("pin", "In Bengaluru", where)}
+        {where && row("pin", ctx.persona?.where_label ?? "In Bengaluru", where)}
         {cost && cost !== "Varies" && row("rupee", "Approx. cost", cost)}
         {schs && row("sch", "Scholarships", schs)}
       </div>

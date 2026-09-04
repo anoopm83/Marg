@@ -18,7 +18,7 @@ export interface PersonaPublic {
   tagline: string;
   framing: { exploreTitle: string; exploreLead: string; modeExploreLabel: string; modeExploreDesc: string; modeAspireLabel: string; modeAspireDesc: string };
   intake: { title: string; lead: string; interests: { title: string; options: string[] }; values: { title: string; options: string[] } };
-  consent_rule: string; disclosure: string | null;
+  where_label: string; consent_rule: string; disclosure: string | null;
 }
 export interface Specialized {
   id: string; name: string; type?: string; summary: string; frame?: string;

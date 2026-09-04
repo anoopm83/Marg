@@ -372,10 +372,17 @@ export function Intake({ ctx }: { ctx: Ctx }) {
       <div className="stack" style={{ marginTop: 20 }}>
         <div className="card"><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 12 }}>{pi.interests.title}</div><div className="chips">{chips(pi.interests.options, "interests")}</div><div className="muted" style={{ fontSize: 12.5, marginTop: 12 }}>These can change over time — that's normal.</div></div>
         <div className="card"><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>{pi.values.title}</div><div className="muted" style={{ fontSize: 13, marginBottom: 12 }}>Pick what feels true today.</div><div className="chips">{chips(pi.values.options, "values")}</div></div>
-        <div className="card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div><div style={{ fontWeight: 700, fontSize: 15 }}>Add your marks?</div><div className="muted" style={{ fontSize: 12.5, marginTop: 2 }}>Optional — we don't lead with these.</div></div>
-          <button className={"chip" + (p.marks === "skipped" ? " on" : "")} onClick={() => ctx.setProfile({ ...p, marks: p.marks === "skipped" ? null : "skipped" })}>{p.marks === "skipped" ? "Skipped" : "Skip"}</button>
-        </div>
+        {ctx.persona?.id === "class10" && (
+          <div className="card">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+              <div><div style={{ fontWeight: 700, fontSize: 15 }}>Add your marks?</div><div className="muted" style={{ fontSize: 12.5, marginTop: 2 }}>Optional — we don't lead with these.</div></div>
+              <button className={"chip" + (p.marks === "skipped" ? " on" : "")} onClick={() => ctx.setProfile({ ...p, marks: p.marks === "skipped" ? null : "skipped" })}>{p.marks === "skipped" ? "Skipped" : "Skip"}</button>
+            </div>
+            {p.marks !== "skipped" && (
+              <input className="ta" value={p.marks ?? ""} onChange={(e) => ctx.setProfile({ ...p, marks: e.target.value || null })} placeholder="e.g. 85% or 9.2 CGPA (optional)" aria-label="Your marks" style={{ marginTop: 12 }} />
+            )}
+          </div>
+        )}
         <div className="card"><label className="field-label">Anything on your mind? <span className="muted" style={{ fontWeight: 400 }}>(optional)</span></label><textarea className="ta" value={mind} onChange={(e) => setMind(e.target.value)} placeholder="Type here if you'd like…" /></div>
       </div>
       <div className="spacer" style={{ minHeight: 12 }} />

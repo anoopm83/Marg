@@ -37,7 +37,7 @@ app.get("/api/health", (_req, res) => res.json({ ok: true, provider: PROVIDER, m
 app.get("/api/personas", (_req, res) => res.json({ personas: personaList }));
 app.get("/api/options", (req, res) => {
   const pack = getPack(req.query.persona); // unknown/absent → class10 (default + fallback)
-  res.json({ options: pack.options, scholarships: pack.scholarships, pathways: pack.pathways, specialized: pack.specializedPathways });
+  res.json({ options: pack.options, scholarships: pack.scholarships, pathways: pack.pathways, specialized: pack.specializedPathways, disclaimer: pack.disclaimer });
 });
 app.get("/api/option/:id", (req, res) => {
   const o = getPack(req.query.persona).optById.get(req.params.id);

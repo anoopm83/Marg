@@ -67,7 +67,7 @@ export const api = {
     req<{ token: string; userId: string }>("/login", { method: "POST", body: JSON.stringify(body) }),
   logout: () => req("/logout", { method: "POST" }),
   getPersonas: () => req<{ personas: PersonaPublic[] }>("/personas"),
-  getOptions: (persona?: string) => req<{ options: Option[]; scholarships: { id: string; name: string }[]; pathways: Pathway[]; specialized: Specialized[] }>("/options" + (persona ? "?persona=" + encodeURIComponent(persona) : "")),
+  getOptions: (persona?: string) => req<{ options: Option[]; scholarships: { id: string; name: string }[]; pathways: Pathway[]; specialized: Specialized[]; disclaimer: string }>("/options" + (persona ? "?persona=" + encodeURIComponent(persona) : "")),
   getIntake: () => req<{ intake: Profile | null }>("/intake"),
   saveIntake: (data: Profile) => req("/intake", { method: "POST", body: JSON.stringify(data) }),
   reflect: (optionId: string, persona?: string) => req<{ reflection: Reflection }>("/reflect", { method: "POST", body: JSON.stringify({ optionId, persona }) }),

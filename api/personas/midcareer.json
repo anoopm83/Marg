@@ -2,9 +2,13 @@
   "meta": {
     "dataset": "Marg AI — Mid-career (PROTOTYPE)",
     "version": "proto-0",
-    "context": { "stage": "Mid-career (~25-45)", "region": "India / Bangalore", "focus": "Rethinking work, a switch, or growth" },
+    "context": {
+      "stage": "Mid-career (~25-45)",
+      "region": "India / Bangalore",
+      "focus": "Rethinking work, a switch, or growth"
+    },
     "created": "2026-09-04",
-    "disclaimer": "EXPERIMENTAL PROTOTYPE PACK. This content is illustrative and UNVERIFIED — hand-written to demo the multi-persona engine, not researched or fact-checked. Every figure and route here needs verification before it could be shown to a real user. Do not treat anything here as advice."
+    "disclaimer": "MVP + EXPERIMENTAL PERSONA. MVP disclaimer: Everything shown in Marg AI is provisional and for guidance only. It has not been fully verified — always double-check every detail (fees, eligibility, dates, links) against the official source before you rely on it or make a decision."
   },
   "options": [
     {
@@ -12,90 +16,210 @@
       "name": "Upskill in your current field",
       "type": "growth_in_place",
       "summary": "Deepen expertise where you already are — advanced certifications, a specialisation, or a senior-track skill — to grow without changing domain.",
-      "leads_to": ["Senior / specialist roles", "Higher pay in the same field", "A stronger base before any later pivot"],
+      "leads_to": [
+        "Senior / specialist roles",
+        "Higher pay in the same field",
+        "A stronger base before any later pivot"
+      ],
       "keeps_open": "Lowest-disruption path; compounds what you already have.",
-      "eligibility": { "text": "Anyone currently working who wants depth over change. No entry barrier.", "needs_verification": true },
+      "eligibility": {
+        "text": "Anyone currently working who wants depth over change. No entry barrier."
+      },
       "duration": "3-12 months alongside work",
-      "where_in_bangalore": { "examples": ["Employer L&D", "industry certification bodies", "online specialisations"], "note": "Illustrative, unverified.", "needs_verification": true },
-      "approx_cost_inr": { "note": "Often employer-funded; self-paid certifications vary widely.", "needs_verification": true },
-      "related_scholarships": ["employer_sponsorship", "edu_loan"],
+      "where_in_bangalore": {
+        "examples": [
+          "Employer L&D",
+          "industry certification bodies",
+          "online specialisations"
+        ],
+        "note": "Illustrative, unverified."
+      },
+      "approx_cost_inr": {
+        "note": "Often employer-funded; self-paid certifications vary widely."
+      },
+      "related_scholarships": [
+        "employer_sponsorship",
+        "edu_loan"
+      ],
       "honest_notes": "Underrated: growth in place is often faster and safer than a full switch. Weigh it honestly against the urge to start over.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from someone who leveled up without switching." }
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from someone who leveled up without switching."
+      }
     },
     {
       "id": "pivot_tech_data",
       "name": "Pivot into tech / data",
       "type": "career_change",
       "summary": "Move toward software, data, analytics or product via structured reskilling — bootcamps, certifications, or a guided self-study path.",
-      "leads_to": ["Developer / analyst / data roles", "Product / project roles", "Higher-growth industry"],
+      "leads_to": [
+        "Developer / analyst / data roles",
+        "Product / project roles",
+        "Higher-growth industry"
+      ],
       "keeps_open": "Broad demand; many adjacent roles if the first target doesn't fit.",
-      "eligibility": { "text": "Open to career changers; aptitude and consistent practice matter more than a prior tech degree.", "needs_verification": true },
+      "eligibility": {
+        "text": "Open to career changers; aptitude and consistent practice matter more than a prior tech degree."
+      },
       "duration": "6-18 months (part-time to full-time)",
-      "where_in_bangalore": { "examples": ["Reputable bootcamps", "university certificate programmes", "employer apprenticeships"], "note": "Verify placement claims — this space has many over-promising providers.", "needs_verification": true },
-      "approx_cost_inr": { "note": "Free/low-cost self-study up to expensive bootcamps; verify outcomes before paying.", "needs_verification": true },
-      "related_scholarships": ["income_share", "edu_loan", "employer_sponsorship"],
+      "where_in_bangalore": {
+        "examples": [
+          "Reputable bootcamps",
+          "university certificate programmes",
+          "employer apprenticeships"
+        ],
+        "note": "Verify placement claims — this space has many over-promising providers."
+      },
+      "approx_cost_inr": {
+        "note": "Free/low-cost self-study up to expensive bootcamps; verify outcomes before paying."
+      },
+      "related_scholarships": [
+        "income_share",
+        "edu_loan",
+        "employer_sponsorship"
+      ],
       "honest_notes": "Real, but the 'quit and bootcamp' story is survivorship-biased. Test interest with a small project first; keep income while you transition.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from a non-tech professional who switched to data/dev." }
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a non-tech professional who switched to data/dev."
+      }
     },
     {
       "id": "management_route",
       "name": "Management / leadership route",
       "type": "growth_in_place",
       "summary": "Grow toward people-leadership or general management — via an MBA, executive education, or moving into a lead role on the job.",
-      "leads_to": ["Team lead / manager", "General management", "Cross-functional leadership"],
+      "leads_to": [
+        "Team lead / manager",
+        "General management",
+        "Cross-functional leadership"
+      ],
       "keeps_open": "Opens leadership across industries; not all of it needs a degree.",
-      "eligibility": { "text": "Some routes (executive MBA) expect a few years of experience; on-the-job leadership needs none.", "needs_verification": true },
+      "eligibility": {
+        "text": "Some routes (executive MBA) expect a few years of experience; on-the-job leadership needs none."
+      },
       "duration": "On-the-job ongoing; formal programmes 1-2 years",
-      "where_in_bangalore": { "examples": ["Executive MBA programmes", "management certificates", "internal leadership tracks"], "note": "Illustrative, unverified.", "needs_verification": true },
-      "approx_cost_inr": { "note": "On-the-job: low. Executive MBA: can be very expensive — weigh ROI honestly.", "needs_verification": true },
-      "related_scholarships": ["employer_sponsorship", "edu_loan"],
+      "where_in_bangalore": {
+        "examples": [
+          "Executive MBA programmes",
+          "management certificates",
+          "internal leadership tracks"
+        ],
+        "note": "Illustrative, unverified."
+      },
+      "approx_cost_inr": {
+        "note": "On-the-job: low. Executive MBA: can be very expensive — weigh ROI honestly."
+      },
+      "related_scholarships": [
+        "employer_sponsorship",
+        "edu_loan"
+      ],
       "honest_notes": "A degree is one route, not the only one. Many strong managers grow in-role — try leading before you spend on a programme.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from someone who moved into management without an MBA." }
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from someone who moved into management without an MBA."
+      }
     },
     {
       "id": "entrepreneurship",
       "name": "Start your own venture",
       "type": "independent",
       "summary": "Build a business or product of your own — full-time, or as a side venture you grow before leaving a job.",
-      "leads_to": ["Founder / owner", "Self-employment", "Later re-entry to a role with venture experience"],
+      "leads_to": [
+        "Founder / owner",
+        "Self-employment",
+        "Later re-entry to a role with venture experience"
+      ],
       "keeps_open": "Highest autonomy and upside; also highest variance.",
-      "eligibility": { "text": "No barrier to starting; success depends on demand, runway and resilience.", "needs_verification": true },
+      "eligibility": {
+        "text": "No barrier to starting; success depends on demand, runway and resilience."
+      },
       "duration": "Open-ended",
-      "where_in_bangalore": { "examples": ["Startup ecosystem", "incubators / accelerators", "small-business support schemes"], "note": "Illustrative, unverified.", "needs_verification": true },
-      "approx_cost_inr": { "note": "Highly variable; protect a financial runway before going full-time.", "needs_verification": true },
-      "related_scholarships": ["startup_schemes"],
+      "where_in_bangalore": {
+        "examples": [
+          "Startup ecosystem",
+          "incubators / accelerators",
+          "small-business support schemes"
+        ],
+        "note": "Illustrative, unverified."
+      },
+      "approx_cost_inr": {
+        "note": "Highly variable; protect a financial runway before going full-time."
+      },
+      "related_scholarships": [
+        "startup_schemes"
+      ],
       "honest_notes": "Be honest about runway and dependants. Many start as a side venture and only leave the job once it's proven — a valid, lower-risk route.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from someone who bootstrapped a venture while employed." }
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from someone who bootstrapped a venture while employed."
+      }
     },
     {
       "id": "stable_sector",
       "name": "Stable / public sector move",
       "type": "career_change",
       "summary": "Shift toward stability — government roles, PSUs, or established sectors — often via competitive exams or lateral moves.",
-      "leads_to": ["Government / PSU roles", "Stable long-tenure employment", "Predictable growth and benefits"],
+      "leads_to": [
+        "Government / PSU roles",
+        "Stable long-tenure employment",
+        "Predictable growth and benefits"
+      ],
       "keeps_open": "Security and predictability; some routes have age limits worth checking.",
-      "eligibility": { "text": "Varies widely by exam/role — several have age and qualification limits. Verify per specific exam.", "needs_verification": true },
+      "eligibility": {
+        "text": "Varies widely by exam/role — several have age and qualification limits. Verify per specific exam."
+      },
       "duration": "Exam prep varies (months to years)",
-      "where_in_bangalore": { "examples": ["Government exam bodies", "PSU recruitment", "state services"], "note": "Illustrative; confirm current eligibility and age limits.", "needs_verification": true },
-      "approx_cost_inr": { "note": "Low course cost; the real cost is prep time and opportunity cost.", "needs_verification": true },
+      "where_in_bangalore": {
+        "examples": [
+          "Government exam bodies",
+          "PSU recruitment",
+          "state services"
+        ],
+        "note": "Illustrative; confirm current eligibility and age limits."
+      },
+      "approx_cost_inr": {
+        "note": "Low course cost; the real cost is prep time and opportunity cost."
+      },
       "related_scholarships": [],
       "honest_notes": "Stability is a real value, not a lesser choice. But check age limits early — some doors close by the late 30s.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from someone who moved from private to public sector mid-career." }
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from someone who moved from private to public sector mid-career."
+      }
     },
     {
       "id": "freelance_consulting",
       "name": "Freelance / independent consulting",
       "type": "independent",
       "summary": "Take your existing expertise independent — consulting, contracting or freelancing — for flexibility and control over your work.",
-      "leads_to": ["Independent consultant", "Portfolio of clients", "Flexible / remote work"],
+      "leads_to": [
+        "Independent consultant",
+        "Portfolio of clients",
+        "Flexible / remote work"
+      ],
       "keeps_open": "Flexibility and higher day-rates; trades away salary stability.",
-      "eligibility": { "text": "Best with a few years of a marketable skill and some network to start from.", "needs_verification": true },
+      "eligibility": {
+        "text": "Best with a few years of a marketable skill and some network to start from."
+      },
       "duration": "Can start immediately, part-time",
-      "where_in_bangalore": { "examples": ["Consulting networks", "freelance platforms", "your existing network"], "note": "Illustrative, unverified.", "needs_verification": true },
-      "approx_cost_inr": { "note": "Low to start; budget for irregular income early on.", "needs_verification": true },
+      "where_in_bangalore": {
+        "examples": [
+          "Consulting networks",
+          "freelance platforms",
+          "your existing network"
+        ],
+        "note": "Illustrative, unverified."
+      },
+      "approx_cost_inr": {
+        "note": "Low to start; budget for irregular income early on."
+      },
       "related_scholarships": [],
       "honest_notes": "Freedom comes with irregular income and self-marketing. Many start on the side to build a client base before going full independent.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from someone who went independent from a salaried role." }
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from someone who went independent from a salaried role."
+      }
     }
   ],
   "specialized_pathways": [
@@ -105,14 +229,22 @@
       "type": "encore",
       "tier": "expansion",
       "summary": "Turn hard-won experience into teaching, corporate training, mentoring or coaching — as a second act or a portfolio addition.",
-      "leads_to": ["Trainer / educator", "Executive or life coach", "Mentor / advisor roles"],
+      "leads_to": [
+        "Trainer / educator",
+        "Executive or life coach",
+        "Mentor / advisor roles"
+      ],
       "frame": "A meaningful pivot for those drawn to helping others grow. Coaching credentials vary a lot in quality — verify recognition before paying for one.",
-      "eligibility": { "text": "Depends on the route; domain experience is the main asset.", "needs_verification": true },
+      "eligibility": {
+        "text": "Depends on the route; domain experience is the main asset."
+      },
       "duration": "Varies",
       "related_scholarships": [],
-      "related_core_options": ["freelance_consulting", "upskill_current"],
-      "honest_notes": "Verify any coaching 'certification' carefully — it's a space with many low-value paid programmes.",
-      "needs_verification": true
+      "related_core_options": [
+        "freelance_consulting",
+        "upskill_current"
+      ],
+      "honest_notes": "Verify any coaching 'certification' carefully — it's a space with many low-value paid programmes."
     },
     {
       "id": "social_sector",
@@ -120,14 +252,22 @@
       "type": "encore",
       "tier": "expansion",
       "summary": "Move toward nonprofit, development, or impact-focused work — often a pay trade-off for greater meaning.",
-      "leads_to": ["Nonprofit / development roles", "CSR / impact roles", "Social entrepreneurship"],
+      "leads_to": [
+        "Nonprofit / development roles",
+        "CSR / impact roles",
+        "Social entrepreneurship"
+      ],
       "frame": "For a values-led shift. Be honest about the pay change and plan for it; meaning and money both matter.",
-      "eligibility": { "text": "Varies; transferable professional skills are in demand in the sector.", "needs_verification": true },
+      "eligibility": {
+        "text": "Varies; transferable professional skills are in demand in the sector."
+      },
       "duration": "Varies",
       "related_scholarships": [],
-      "related_core_options": ["management_route", "entrepreneurship"],
-      "honest_notes": "Genuine demand for professional skills in the social sector; weigh the income change realistically.",
-      "needs_verification": true
+      "related_core_options": [
+        "management_route",
+        "entrepreneurship"
+      ],
+      "honest_notes": "Genuine demand for professional skills in the social sector; weigh the income change realistically."
     }
   ],
   "pathways": [
@@ -140,10 +280,17 @@
         "Add a targeted credential ONLY if a specific door needs it."
       ],
       "honest_cost_effort": "Mostly time and visible ownership, not money — unless you choose an executive programme, which is a real expense to justify.",
-      "real_routes_through_cost": ["On-the-job leadership (low cost)", "Employer-sponsored programmes", "Selective executive education"],
-      "adjacent_destinations": ["Specialist/expert track", "Consulting", "Founding a venture"],
-      "what_if_it_changes": "Leadership skills transfer everywhere — the effort is not wasted if the destination shifts.",
-      "needs_verification": true
+      "real_routes_through_cost": [
+        "On-the-job leadership (low cost)",
+        "Employer-sponsored programmes",
+        "Selective executive education"
+      ],
+      "adjacent_destinations": [
+        "Specialist/expert track",
+        "Consulting",
+        "Founding a venture"
+      ],
+      "what_if_it_changes": "Leadership skills transfer everywhere — the effort is not wasted if the destination shifts."
     },
     {
       "id": "into_tech",
@@ -154,10 +301,17 @@
         "Transition while keeping income where possible; target adjacent roles first."
       ],
       "honest_cost_effort": "6-18 months of consistent effort; cost ranges from near-zero self-study to expensive bootcamps — verify outcomes before paying.",
-      "real_routes_through_cost": ["Free/low-cost self-study", "Income-share or employer-sponsored programmes", "Apprenticeship-style roles"],
-      "adjacent_destinations": ["Product/project roles", "Analytics", "Tech-adjacent roles in your current domain"],
-      "what_if_it_changes": "Digital skills strengthen almost any career, so partial progress still pays off.",
-      "needs_verification": true
+      "real_routes_through_cost": [
+        "Free/low-cost self-study",
+        "Income-share or employer-sponsored programmes",
+        "Apprenticeship-style roles"
+      ],
+      "adjacent_destinations": [
+        "Product/project roles",
+        "Analytics",
+        "Tech-adjacent roles in your current domain"
+      ],
+      "what_if_it_changes": "Digital skills strengthen almost any career, so partial progress still pays off."
     },
     {
       "id": "own_business",
@@ -168,10 +322,17 @@
         "Grow it on the side until it can carry you, if you can."
       ],
       "honest_cost_effort": "High variance and real personal risk; the biggest cost is runway and resilience, not just capital.",
-      "real_routes_through_cost": ["Side-venture first (lowest risk)", "Bootstrapping", "Startup support schemes / incubators"],
-      "adjacent_destinations": ["Freelance/consulting", "Intrapreneurship inside a company", "Return to a role with venture experience"],
-      "what_if_it_changes": "Even a venture that doesn't last builds rare, transferable skills — not a dead end.",
-      "needs_verification": true
+      "real_routes_through_cost": [
+        "Side-venture first (lowest risk)",
+        "Bootstrapping",
+        "Startup support schemes / incubators"
+      ],
+      "adjacent_destinations": [
+        "Freelance/consulting",
+        "Intrapreneurship inside a company",
+        "Return to a role with venture experience"
+      ],
+      "what_if_it_changes": "Even a venture that doesn't last builds rare, transferable skills — not a dead end."
     },
     {
       "id": "balance_meaning",
@@ -182,16 +343,47 @@
         "Explore purpose-led or flexible routes that fit your finances."
       ],
       "honest_cost_effort": "Often less about money than about trade-offs in income, status or security — name the trade-off you're willing to make.",
-      "real_routes_through_cost": ["Flexible/remote arrangements", "Freelance/portfolio work", "Social-sector or teaching roles"],
-      "adjacent_destinations": ["Consulting", "Teaching/coaching", "A calmer role in the same field"],
-      "what_if_it_changes": "Clarity about what you actually want is the real outcome — it holds even if the path changes.",
-      "needs_verification": true
+      "real_routes_through_cost": [
+        "Flexible/remote arrangements",
+        "Freelance/portfolio work",
+        "Social-sector or teaching roles"
+      ],
+      "adjacent_destinations": [
+        "Consulting",
+        "Teaching/coaching",
+        "A calmer role in the same field"
+      ],
+      "what_if_it_changes": "Clarity about what you actually want is the real outcome — it holds even if the path changes."
     }
   ],
   "scholarships": [
-    { "id": "employer_sponsorship", "name": "Employer sponsorship / L&D", "who": "Employees whose company funds learning", "amount": "Varies by employer", "link": "", "needs_verification": true },
-    { "id": "edu_loan", "name": "Education / skilling loan", "who": "Working professionals funding a course", "amount": "Varies", "link": "", "needs_verification": true },
-    { "id": "income_share", "name": "Income-share agreements (bootcamps)", "who": "Career changers in some programmes", "amount": "Pay-after-placement models — verify terms carefully", "link": "", "needs_verification": true },
-    { "id": "startup_schemes", "name": "Startup / small-business support schemes", "who": "Early founders", "amount": "Varies", "link": "", "needs_verification": true }
+    {
+      "id": "employer_sponsorship",
+      "name": "Employer sponsorship / L&D",
+      "who": "Employees whose company funds learning",
+      "amount": "Varies by employer",
+      "link": ""
+    },
+    {
+      "id": "edu_loan",
+      "name": "Education / skilling loan",
+      "who": "Working professionals funding a course",
+      "amount": "Varies",
+      "link": ""
+    },
+    {
+      "id": "income_share",
+      "name": "Income-share agreements (bootcamps)",
+      "who": "Career changers in some programmes",
+      "amount": "Pay-after-placement models — verify terms carefully",
+      "link": ""
+    },
+    {
+      "id": "startup_schemes",
+      "name": "Startup / small-business support schemes",
+      "who": "Early founders",
+      "amount": "Varies",
+      "link": ""
+    }
   ]
 }

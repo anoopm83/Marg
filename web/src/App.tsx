@@ -17,6 +17,7 @@ export default function App() {
   const [scholarshipNames, setScholarshipNames] = useState<Record<string, string>>({});
   const [pathways, setPathways] = useState<Pathway[]>([]);
   const [specialized, setSpecialized] = useState<Specialized[]>([]);
+  const [disclaimer, setDisclaimer] = useState<string>("");
   const [personas, setPersonas] = useState<PersonaPublic[]>([]);
   const [persona, setPersonaState] = useState<PersonaPublic | null>(null);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
@@ -34,6 +35,7 @@ export default function App() {
     setScholarshipNames(Object.fromEntries((opt.data?.scholarships ?? []).map((s) => [s.id, s.name])));
     setPathways(opt.data?.pathways ?? []);
     setSpecialized(opt.data?.specialized ?? []);
+    setDisclaimer(opt.data?.disclaimer ?? "");
   }, []);
 
   const setPersona = useCallback(async (p: PersonaPublic) => {
@@ -76,7 +78,7 @@ export default function App() {
     })();
   }, [loadPacks]);
 
-  const ctx: Ctx = { go, param: view.param, toast, openSafety, logout, options, profile, setProfile, consent, setConsent, shortlist, setShortlist, scholarshipNames, pathways, specialized, personas, persona, setPersona };
+  const ctx: Ctx = { go, param: view.param, toast, openSafety, logout, options, profile, setProfile, consent, setConsent, shortlist, setShortlist, scholarshipNames, pathways, specialized, disclaimer, personas, persona, setPersona };
 
   function screen() {
     switch (view.name) {

@@ -19,6 +19,7 @@ export interface Ctx {
   scholarshipNames: Record<string, string>;
   pathways: Pathway[];
   specialized: Specialized[];
+  disclaimer: string;
   personas: PersonaPublic[];
   persona: PersonaPublic | null;
   setPersona: (p: PersonaPublic) => void | Promise<void>;
@@ -341,6 +342,12 @@ export function Explore({ ctx }: { ctx: Ctx }) {
       <div className="topbar"><button className="back" onClick={() => ctx.go("mode")}><Icon name="back" size={22} /></button><div className="wordmark" style={{ fontSize: 17 }}>Your options</div></div>
       <h1 style={{ fontSize: 24 }}>{ctx.persona?.framing.exploreTitle ?? "Everything open to you after Class 10"}</h1>
       <p className="lead" style={{ marginTop: 6 }}>{ctx.persona?.framing.exploreLead ?? "Nothing here is ranked. Look around freely."}</p>
+      {ctx.disclaimer && (
+        <div className="note" style={{ marginTop: 12, display: "flex", gap: 8, alignItems: "flex-start" }}>
+          <span style={{ color: "var(--muted)", flex: "none", marginTop: 1 }}><Icon name="info" size={14} /></span>
+          <span>{ctx.disclaimer}</span>
+        </div>
+      )}
       {ex && (
         <button className="nudge" style={{ marginTop: 16, width: "100%" }} onClick={() => ctx.go("detail", ex.id)}>
           <div style={{ width: 34, height: 34, borderRadius: 9, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--violet)" }}><Icon name="star" size={18} stroke={2} /></div>
@@ -427,7 +434,7 @@ export function Detail({ ctx }: { ctx: Ctx }) {
         {exams && row("list", "Exams / entry", exams)}
         {schs && row("sch", "Scholarships", schs)}
       </div>
-      <div className="verify"><Icon name="refresh" size={14} style={{ color: "var(--muted)" }} />Figures shown are being verified — confirm before you rely on them.</div>
+      <div className="verify"><Icon name="refresh" size={14} style={{ color: "var(--muted)" }} />{ctx.disclaimer || "Figures shown are provisional — confirm before you rely on them."}</div>
       {!!o.human_touchpoint && (
         <button className="touch" style={{ width: "100%" }} onClick={() => ctx.toast("Coming soon: a short, real story from someone on this path.")}>
           <span style={{ color: "var(--primary)" }}><Icon name="user" size={20} /></span><span style={{ flex: 1, textAlign: "left" }}>Hear from someone who took this path</span><span style={{ color: "var(--primary)" }}><Icon name="chev" size={18} stroke={2} /></span>
@@ -497,7 +504,7 @@ export function SpecializedDetail({ ctx }: { ctx: Ctx }) {
         {cost && cost !== "Varies" && row("rupee", "Approx. cost", cost)}
         {schs && row("sch", "Scholarships", schs)}
       </div>
-      <div className="verify"><Icon name="refresh" size={14} style={{ color: "var(--muted)" }} />An unverified path — confirm details with the official source before you rely on them.</div>
+      <div className="verify"><Icon name="refresh" size={14} style={{ color: "var(--muted)" }} />{ctx.disclaimer || "An unverified path — confirm details with the official source before you rely on them."}</div>
 
       {s.honest_notes && (
         <div className="note" style={{ marginTop: 14 }}>{s.honest_notes}</div>

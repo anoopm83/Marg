@@ -14,6 +14,7 @@ export function loadRaw(relPathFromRoot: string): any {
 
 export interface Pack {
   raw: any;
+  disclaimer: string;
   options: any[];
   pathways: any[];
   scholarships: any[];
@@ -31,7 +32,7 @@ const trimOption = (o: any) => ({
 });
 const trimSpecial = (p: any) => ({
   id: p.id, name: p.name, summary: p.summary, frame: p.frame, leads_to: p.leads_to,
-  eligibility: p.eligibility?.text, needs_verification: p.needs_verification,
+  eligibility: p.eligibility?.text,
 });
 const trimAmbition = (p: any) => ({
   id: p.id, ambition: p.ambition, next_horizon_steps: p.next_horizon_steps,
@@ -46,7 +47,7 @@ export function buildPack(raw: any): Pack {
   const pathways: any[] = raw.pathways || [];
   const scholarships: any[] = raw.scholarships || [];
   const specializedPathways: any[] = raw.specialized_pathways || [];
-  const schIndex = scholarships.map((s: any) => ({ id: s.id, name: s.name, amount: s.amount, needs_verification: s.needs_verification }));
+  const schIndex = scholarships.map((s: any) => ({ id: s.id, name: s.name, amount: s.amount }));
   const context = raw.meta?.context;
   const groundingFor = (mode: "explore" | "aspire"): Record<string, unknown> => {
     if (mode === "aspire") {
@@ -66,7 +67,7 @@ export function buildPack(raw: any): Pack {
     };
   };
   return {
-    raw, options, pathways, scholarships, specializedPathways,
+    raw, disclaimer: raw.meta?.disclaimer ?? "", options, pathways, scholarships, specializedPathways,
     optById: new Map(options.map((o: any) => [o.id, o])),
     pathById: new Map(pathways.map((p: any) => [p.id, p])),
     groundingFor,

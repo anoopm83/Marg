@@ -8,7 +8,7 @@
       "transition": "After Class 10 (Class X to XI)"
     },
     "created": "2026-09-02",
-    "disclaimer": "V0 DRAFT. Facts are sourced from public web pages and are NOT officially verified. Any field marked needs_verification=true MUST be confirmed against an official/primary source (college, DTE Karnataka, CBSE, scholarship portal) before it is shown to a real student. The app must never present an unverified figure as a guarantee, and must display a 'last verified' date per record (see verification.last_verified).",
+    "disclaimer": "MVP disclaimer: Everything shown in Marg AI is provisional and for guidance only. It has not been fully verified — always double-check every detail (fees, eligibility, dates, links) against the official source before you rely on it or make a decision.",
     "verification": {
       "status": "partially_verified",
       "last_verified": "2026-09-03",
@@ -27,11 +27,12 @@
         "  • SSP Karnataka canonical portal corrected to ssp.karnataka.gov.in.",
         "Added specialized_pathways[] expansion tier (9 entries: integrated PU+coaching, NSDC/PMKVY skill dev, creative/design, sports academy, agriculture/allied, paramedical/allied health, aviation/maritime, entrepreneurship, alternative education NIOS/IB-IGCSE) — ALL unverified (needs_verification=true), LLM-sourced, pending primary confirmation. Aviation/maritime carries a scam-risk + post-12-entry caution; entrepreneurship framed as an enrichment add-on; IB/IGCSE flagged out-of-Phase-1-scope.",
         "STILL NEEDS OFFICIAL/PRIMARY CONFIRMATION: current-year per-college private & coaching fees, exhaustive college lists, NIOS fee specifics, all specialized_pathways[] entries, and each scholarship's live cycle/deadline. Corroboration above is from multiple secondary aggregators, not primary portals — before go-live, confirm against DTE Karnataka (dtetech.karnataka.gov.in), PUE (pue.karnataka.gov.in), KEA (cetonline.karnataka.gov.in), scholarships.gov.in, ssp.karnataka.gov.in and vidyadhan.org."
-      ]
+      ],
+      "note": "INTERNAL audit trail only — not shown to users. Retained so a data owner keeps the Sep-2026 verification findings."
     },
     "usage_notes": [
       "options[] powers Mode A (Explore): show the full set (the 7 core options), never eliminate one, always surface at least one the student had not considered.",
-      "specialized_pathways[] is the EXPANSION TIER: do NOT show in the primary option wall. Surface these under a distinct 'Paths you might not have considered' section so Explore leads with the core 7 and keeps decision fatigue low. Every entry here is unverified (needs_verification=true) and must display as such. This is where the 'surface ≥1 unconsidered option' principle lives without overwhelming the core decision.",
+      "specialized_pathways[] is the EXPANSION TIER: do NOT show in the primary option wall. Surface these under a distinct 'Paths you might not have considered' section so Explore leads with the core 7 and keeps decision fatigue low. As with all facts in this MVP, treat these as provisional under the blanket disclaimer. This is where the 'surface ≥1 unconsidered option' principle lives without overwhelming the core decision.",
       "pathways[] powers Mode B (Aspire/Plan, thin preview): next-horizon steps only, honest cost + real routes, adjacent destinations, and a 'what if this changes' fallback.",
       "AI weighting sits ON TOP of this data as a light, disclaimered overlay — it must not invent options, scholarships, or links beyond what is listed here."
     ],
@@ -55,129 +56,350 @@
       "NOTE: aggregator sources (buddy4study, collegedekho, schemesinindia) are secondary corroboration, not primary portals."
     ]
   },
-
   "options": [
     {
       "id": "pu_science",
       "name": "Pre-University (PU) — Science",
       "type": "academic_stream",
-      "combinations": ["PCM (Physics, Chemistry, Maths)", "PCB (Physics, Chemistry, Biology)", "PCMB (all four)"],
+      "combinations": [
+        "PCM (Physics, Chemistry, Maths)",
+        "PCB (Physics, Chemistry, Biology)",
+        "PCMB (all four)"
+      ],
       "summary": "Two-year pre-degree, Science stream. The widest-keeping option: engineering, medicine, research, and still allows a later pivot to commerce or arts at degree level.",
-      "leads_to": ["Engineering", "Medicine & allied health", "Pure/applied sciences", "Research"],
+      "leads_to": [
+        "Engineering",
+        "Medicine & allied health",
+        "Pure/applied sciences",
+        "Research"
+      ],
       "keeps_open": "Broadest downstream range of the academic streams.",
-      "eligibility": { "text": "Passed CBSE Class 10. College-specific cutoffs; PCM typically expects comfort with Maths, PCB with Biology.", "needs_verification": true },
+      "eligibility": {
+        "text": "Passed CBSE Class 10. College-specific cutoffs; PCM typically expects comfort with Maths, PCB with Biology."
+      },
       "duration": "2 years",
-      "where_in_bangalore": { "examples": ["MES PU College (Malleswaram)", "St Joseph's PU College", "BGS PU College", "Deeksha (coaching-integrated)"], "note": "Illustrative, not exhaustive.", "needs_verification": true },
-      "approx_cost_per_year_inr": { "government": "~1,500–6,500", "private_typical_science": "40,000–60,000", "coaching_integrated": "80,000–3,50,000 (residential higher)", "needs_verification": true, "verified_note": "Government PU range (~₹1,500–6,500/yr, nominal, stream-dependent) corroborated Sep 2026. Private and coaching-integrated figures are indicative only and vary widely by college — still need per-college confirmation before display." },
-      "entrance_exams_it_feeds": ["NEET (medicine)", "JEE Main/Advanced (engineering, national)", "KCET (Karnataka engg/medical)", "COMEDK"],
-      "related_scholarships": ["pm_yasasvi", "nmms", "nsp", "ssp_karnataka", "vidyadhan"],
+      "where_in_bangalore": {
+        "examples": [
+          "MES PU College (Malleswaram)",
+          "St Joseph's PU College",
+          "BGS PU College",
+          "Deeksha (coaching-integrated)"
+        ],
+        "note": "Illustrative, not exhaustive."
+      },
+      "approx_cost_per_year_inr": {
+        "government": "~1,500–6,500",
+        "private_typical_science": "40,000–60,000",
+        "coaching_integrated": "80,000–3,50,000 (residential higher)"
+      },
+      "entrance_exams_it_feeds": [
+        "NEET (medicine)",
+        "JEE Main/Advanced (engineering, national)",
+        "KCET (Karnataka engg/medical)",
+        "COMEDK"
+      ],
+      "related_scholarships": [
+        "pm_yasasvi",
+        "nmms",
+        "nsp",
+        "ssp_karnataka",
+        "vidyadhan"
+      ],
       "honest_notes": "Cost variance is huge; coaching-integrated PU can be very expensive. Science does not 'lock you in' — but a strong aversion to Maths/Science is a real signal to weigh, not ignore.",
-      "human_touchpoint": { "status": "to_source", "idea": "Short story from a current PU Science student or recent alum." }
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Short story from a current PU Science student or recent alum."
+      }
     },
     {
       "id": "pu_commerce",
       "name": "Pre-University (PU) — Commerce",
       "type": "academic_stream",
-      "combinations": ["Commerce with Maths", "Commerce without Maths (with Statistics/Economics/Business Studies etc.)"],
+      "combinations": [
+        "Commerce with Maths",
+        "Commerce without Maths (with Statistics/Economics/Business Studies etc.)"
+      ],
       "summary": "Two-year pre-degree, Commerce stream. Route to finance, accountancy, business, economics and law.",
-      "leads_to": ["Chartered Accountancy (CA)", "B.Com / BBA / BMS", "Economics", "Company Secretary (CS)", "Law (via CLAT)"],
+      "leads_to": [
+        "Chartered Accountancy (CA)",
+        "B.Com / BBA / BMS",
+        "Economics",
+        "Company Secretary (CS)",
+        "Law (via CLAT)"
+      ],
       "keeps_open": "Strong for business/finance; 'with Maths' keeps more analytics/economics doors open.",
-      "eligibility": { "text": "Passed CBSE Class 10. 'With Maths' combinations may expect reasonable Maths marks.", "needs_verification": true },
+      "eligibility": {
+        "text": "Passed CBSE Class 10. 'With Maths' combinations may expect reasonable Maths marks."
+      },
       "duration": "2 years",
-      "where_in_bangalore": { "examples": ["Jain College", "St Joseph's PU College", "MES PU College", "Christ PU College"], "note": "Illustrative, not exhaustive.", "needs_verification": true },
-      "approx_cost_per_year_inr": { "government": "~1,500–6,500", "private_typical_commerce": "35,000–50,000", "needs_verification": true, "verified_note": "Government PU range (~₹1,500–6,500/yr) corroborated Sep 2026; govt Commerce fees observed ~₹5,400–6,500/yr. Private figures indicative only — confirm per college." },
-      "entrance_exams_it_feeds": ["CA Foundation (after 12)", "CLAT (law)", "University BBA/BMS entrances"],
-      "related_scholarships": ["pm_yasasvi", "nmms", "nsp", "ssp_karnataka", "vidyadhan"],
+      "where_in_bangalore": {
+        "examples": [
+          "Jain College",
+          "St Joseph's PU College",
+          "MES PU College",
+          "Christ PU College"
+        ],
+        "note": "Illustrative, not exhaustive."
+      },
+      "approx_cost_per_year_inr": {
+        "government": "~1,500–6,500",
+        "private_typical_commerce": "35,000–50,000"
+      },
+      "entrance_exams_it_feeds": [
+        "CA Foundation (after 12)",
+        "CLAT (law)",
+        "University BBA/BMS entrances"
+      ],
+      "related_scholarships": [
+        "pm_yasasvi",
+        "nmms",
+        "nsp",
+        "ssp_karnataka",
+        "vidyadhan"
+      ],
       "honest_notes": "Often wrongly seen as 'lesser' than Science; it is a strong, distinct path. Only ~14% choose it nationally (see PRD S4) — scarcity is not weakness.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from a CA aspirant or B.Com student." }
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a CA aspirant or B.Com student."
+      }
     },
     {
       "id": "pu_humanities",
       "name": "Pre-University (PU) — Humanities / Arts",
       "type": "academic_stream",
-      "combinations": ["History, Economics, Political Science, Sociology, Psychology, Languages, Fine Arts (varies by college)"],
+      "combinations": [
+        "History, Economics, Political Science, Sociology, Psychology, Languages, Fine Arts (varies by college)"
+      ],
       "summary": "Two-year pre-degree, Humanities stream. Route to law, civil services, design, media, psychology, social sciences and the arts.",
-      "leads_to": ["Law (CLAT)", "Civil services", "Journalism/Media", "Psychology", "Design & Fine Arts", "Social work"],
+      "leads_to": [
+        "Law (CLAT)",
+        "Civil services",
+        "Journalism/Media",
+        "Psychology",
+        "Design & Fine Arts",
+        "Social work"
+      ],
       "keeps_open": "Best fit for language/creative/social-science strengths; underrated for career breadth.",
-      "eligibility": { "text": "Passed CBSE Class 10. Generally the most open on marks; subject choice varies by college.", "needs_verification": true },
+      "eligibility": {
+        "text": "Passed CBSE Class 10. Generally the most open on marks; subject choice varies by college."
+      },
       "duration": "2 years",
-      "where_in_bangalore": { "examples": ["Christ PU College", "St Joseph's PU College", "Mount Carmel PU College"], "note": "Illustrative, not exhaustive.", "needs_verification": true },
-      "approx_cost_per_year_inr": { "government": "~1,500–6,500", "private_typical": "30,000–50,000", "needs_verification": true, "verified_note": "Government PU range (~₹1,500–6,500/yr) corroborated Sep 2026. Private figures indicative only — confirm per college." },
-      "entrance_exams_it_feeds": ["CLAT (law)", "Design entrances (NID/NIFT/UCEED-adjacent)", "University BA entrances"],
-      "related_scholarships": ["pm_yasasvi", "nmms", "nsp", "ssp_karnataka", "vidyadhan"],
+      "where_in_bangalore": {
+        "examples": [
+          "Christ PU College",
+          "St Joseph's PU College",
+          "Mount Carmel PU College"
+        ],
+        "note": "Illustrative, not exhaustive."
+      },
+      "approx_cost_per_year_inr": {
+        "government": "~1,500–6,500",
+        "private_typical": "30,000–50,000"
+      },
+      "entrance_exams_it_feeds": [
+        "CLAT (law)",
+        "Design entrances (NID/NIFT/UCEED-adjacent)",
+        "University BA entrances"
+      ],
+      "related_scholarships": [
+        "pm_yasasvi",
+        "nmms",
+        "nsp",
+        "ssp_karnataka",
+        "vidyadhan"
+      ],
       "honest_notes": "This is the option most often denied to a creative/maths-averse student under family pressure (see PRD S6 voice-of-user). Present it with genuine career routes, not as a fallback.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from a designer, lawyer, or civil-services aspirant who took Humanities." }
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a designer, lawyer, or civil-services aspirant who took Humanities."
+      }
     },
     {
       "id": "polytechnic_diploma",
       "name": "Polytechnic Diploma",
       "type": "technical_diploma",
-      "combinations": ["Mechanical", "Civil", "Electrical", "Electronics & Communication", "Computer Science", "Polymer Technology (varies)"],
+      "combinations": [
+        "Mechanical",
+        "Civil",
+        "Electrical",
+        "Electronics & Communication",
+        "Computer Science",
+        "Polymer Technology (varies)"
+      ],
       "summary": "Three-year hands-on technical diploma via Karnataka's Department of Technical Education. Employable on completion, and offers lateral entry directly into the 2nd year of BTech.",
-      "leads_to": ["Junior engineer / technician roles", "Lateral entry to BTech (saves one year)", "Government technical jobs"],
+      "leads_to": [
+        "Junior engineer / technician roles",
+        "Lateral entry to BTech (saves one year)",
+        "Government technical jobs"
+      ],
       "keeps_open": "Strong practical + BTech bridge; good for hands-on learners who want earlier employability.",
-      "eligibility": { "text": "Passed SSLC/Class 10 with min 35% marks and Maths & Science as compulsory subjects. First-year admission is merit-based (SSLC marks) via DTE Karnataka online counselling — NO entrance exam, and NOT DCET (DCET is the later lateral-entry-to-BTech test for diploma holders). Admissions portal: dtetech.karnataka.gov.in.", "needs_verification": false, "verified_note": "35% minimum, compulsory Maths+Science, and merit-based (no entrance) admission via DTE Karnataka confirmed for the 2025 cycle, Sep 2026. Removed an unverified 'minimum age 15' claim. dtetech.karnataka.gov.in is the admissions portal; dtek.karnataka.gov.in is the exams/results portal." },
+      "eligibility": {
+        "text": "Passed SSLC/Class 10 with min 35% marks and Maths & Science as compulsory subjects. First-year admission is merit-based (SSLC marks) via DTE Karnataka online counselling — NO entrance exam, and NOT DCET (DCET is the later lateral-entry-to-BTech test for diploma holders). Admissions portal: dtetech.karnataka.gov.in."
+      },
       "duration": "3 years",
-      "where_in_bangalore": { "examples": ["Government Polytechnics (via DTE Karnataka)", "S J Polytechnic", "various private polytechnics"], "note": "Allotted via DTE Karnataka merit/counselling. College list is illustrative, not exhaustive — confirm current participating colleges on dtetech.karnataka.gov.in.", "needs_verification": true },
-      "approx_cost_inr": { "government_per_year": "~6,000–13,000 (branch-dependent; highly subsidised by DTE Karnataka)", "sc_st": "often reduced to nil via post-matric scholarship", "private": "varies widely", "needs_verification": true },
-      "entrance_exams_it_feeds": ["Admission via DTE Karnataka merit/counselling (after Class 10)", "Later: DCET for lateral entry to BTech"],
-      "related_scholarships": ["pm_yasasvi", "nsp", "ssp_karnataka", "aicte_scholarships"],
+      "where_in_bangalore": {
+        "examples": [
+          "Government Polytechnics (via DTE Karnataka)",
+          "S J Polytechnic",
+          "various private polytechnics"
+        ],
+        "note": "Allotted via DTE Karnataka merit/counselling. College list is illustrative, not exhaustive — confirm current participating colleges on dtetech.karnataka.gov.in."
+      },
+      "approx_cost_inr": {
+        "government_per_year": "~6,000–13,000 (branch-dependent; highly subsidised by DTE Karnataka)",
+        "sc_st": "often reduced to nil via post-matric scholarship",
+        "private": "varies widely"
+      },
+      "entrance_exams_it_feeds": [
+        "Admission via DTE Karnataka merit/counselling (after Class 10)",
+        "Later: DCET for lateral entry to BTech"
+      ],
+      "related_scholarships": [
+        "pm_yasasvi",
+        "nsp",
+        "ssp_karnataka",
+        "aicte_scholarships"
+      ],
       "honest_notes": "Often invisible to CBSE families who default to PU. A genuinely strong, low-cost, employable route — worth surfacing as an expansion option.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from a diploma holder who did lateral entry to BTech." }
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a diploma holder who did lateral entry to BTech."
+      }
     },
     {
       "id": "iti",
       "name": "ITI (Industrial Training Institute)",
       "type": "vocational_training",
-      "combinations": ["Electrician", "Fitter", "Turner", "Machinist", "Welder", "COPA (computer operator)"],
+      "combinations": [
+        "Electrician",
+        "Fitter",
+        "Turner",
+        "Machinist",
+        "Welder",
+        "COPA (computer operator)"
+      ],
       "summary": "Trade-focused vocational training, roughly 6 months to 2 years. Fastest route to a skilled job; strong for government/PSU recruitment (Railways, electricity boards).",
-      "leads_to": ["Skilled trade employment", "Apprenticeships", "Government/PSU trade jobs"],
+      "leads_to": [
+        "Skilled trade employment",
+        "Apprenticeships",
+        "Government/PSU trade jobs"
+      ],
       "keeps_open": "Fastest to earning; can be combined with later diploma/further study.",
-      "eligibility": { "text": "Passed Class 10 with min 35% marks for engineering trades (Electrician, Fitter, etc.); some non-engineering/lower trades accept Class 8 pass. Minimum age ~14, no upper age limit. Merit-based admission (state counselling); rural Class 1-10 schooling can earn grace marks.", "needs_verification": false, "verified_note": "35% minimum, 10th-pass for engineering trades, min age ~14 and merit-based selection confirmed for the Karnataka 2025 cycle, Sep 2026." },
+      "eligibility": {
+        "text": "Passed Class 10 with min 35% marks for engineering trades (Electrician, Fitter, etc.); some non-engineering/lower trades accept Class 8 pass. Minimum age ~14, no upper age limit. Merit-based admission (state counselling); rural Class 1-10 schooling can earn grace marks."
+      },
       "duration": "6 months to 2 years (Electrician/Fitter often 2 years)",
-      "where_in_bangalore": { "examples": ["Government ITIs (Karnataka)", "private ITIs"], "note": "Illustrative, not exhaustive.", "needs_verification": true },
-      "approx_cost_inr": { "government": "low", "private": "varies", "needs_verification": true },
-      "entrance_exams_it_feeds": ["Admission via marks/counselling (state process)", "Later: apprenticeship & RRB/PSU trade recruitment"],
-      "related_scholarships": ["pm_yasasvi", "nsp", "ssp_karnataka"],
+      "where_in_bangalore": {
+        "examples": [
+          "Government ITIs (Karnataka)",
+          "private ITIs"
+        ],
+        "note": "Illustrative, not exhaustive."
+      },
+      "approx_cost_inr": {
+        "government": "low",
+        "private": "varies"
+      },
+      "entrance_exams_it_feeds": [
+        "Admission via marks/counselling (state process)",
+        "Later: apprenticeship & RRB/PSU trade recruitment"
+      ],
+      "related_scholarships": [
+        "pm_yasasvi",
+        "nsp",
+        "ssp_karnataka"
+      ],
       "honest_notes": "Best when a student needs to start earning within 1-2 years (an economic-necessity path — pair honestly with routes, per PRD S6). Not 'lesser' — high demand for Electrician/Fitter.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from an ITI Electrician now employed / in a PSU." }
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from an ITI Electrician now employed / in a PSU."
+      }
     },
     {
       "id": "nios",
       "name": "NIOS (National Institute of Open Schooling)",
       "type": "open_schooling",
-      "combinations": ["Flexible subject choice; open/distance mode for 10+2"],
+      "combinations": [
+        "Flexible subject choice; open/distance mode for 10+2"
+      ],
       "summary": "Open-schooling route for 10+2 with flexible subjects and pace. Accepted for polytechnic, ITI, vocational admissions and government jobs.",
-      "leads_to": ["10+2 equivalent", "Polytechnic/ITI/vocational entry", "Continued study at own pace"],
+      "leads_to": [
+        "10+2 equivalent",
+        "Polytechnic/ITI/vocational entry",
+        "Continued study at own pace"
+      ],
       "keeps_open": "Flexibility for students who need a non-standard pace or path; a real safety net, not a last resort.",
-      "eligibility": { "text": "Open eligibility; commonly used after Class 10 for flexible 10+2. Check subject and exam rules on NIOS portal.", "needs_verification": true },
+      "eligibility": {
+        "text": "Open eligibility; commonly used after Class 10 for flexible 10+2. Check subject and exam rules on NIOS portal."
+      },
       "duration": "Flexible",
-      "where_in_bangalore": { "examples": ["NIOS accredited institutions (AI) in Bangalore"], "note": "Verify accredited centres.", "needs_verification": true },
-      "approx_cost_inr": { "note": "NIOS fees; generally low-to-moderate", "needs_verification": true },
-      "entrance_exams_it_feeds": ["Feeds polytechnic/ITI/vocational and general 10+2 pathways"],
-      "related_scholarships": ["nsp", "ssp_karnataka"],
+      "where_in_bangalore": {
+        "examples": [
+          "NIOS accredited institutions (AI) in Bangalore"
+        ],
+        "note": "Verify accredited centres."
+      },
+      "approx_cost_inr": {
+        "note": "NIOS fees; generally low-to-moderate"
+      },
+      "entrance_exams_it_feeds": [
+        "Feeds polytechnic/ITI/vocational and general 10+2 pathways"
+      ],
+      "related_scholarships": [
+        "nsp",
+        "ssp_karnataka"
+      ],
       "honest_notes": "Useful for students under stress or with atypical circumstances; frame supportively, never as failure.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from a student who used NIOS to change direction successfully." }
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a student who used NIOS to change direction successfully."
+      }
     },
     {
       "id": "vocational",
       "name": "Vocational / Skill Courses",
       "type": "vocational_training",
-      "combinations": ["Digital skills (data, web, UI/UX, cybersecurity)", "Healthcare (nursing assistant, lab tech, pharmacy)", "Creative (graphic design, animation, fashion)"],
+      "combinations": [
+        "Digital skills (data, web, UI/UX, cybersecurity)",
+        "Healthcare (nursing assistant, lab tech, pharmacy)",
+        "Creative (graphic design, animation, fashion)"
+      ],
       "summary": "Skill-oriented courses across digital, healthcare and creative fields — some available alongside or instead of a traditional stream.",
-      "leads_to": ["Skill-based employment", "Further specialised study", "Freelance/creative careers"],
+      "leads_to": [
+        "Skill-based employment",
+        "Further specialised study",
+        "Freelance/creative careers"
+      ],
       "keeps_open": "Good for a student with a clear practical/creative interest; verify recognition of the specific course.",
-      "eligibility": { "text": "Varies by course/provider; many accept Class 10 pass.", "needs_verification": true },
+      "eligibility": {
+        "text": "Varies by course/provider; many accept Class 10 pass."
+      },
       "duration": "Varies (months to 2 years)",
-      "where_in_bangalore": { "examples": ["Skill India centres", "recognised vocational institutes"], "note": "Verify provider recognition (this is where scams cluster).", "needs_verification": true },
-      "approx_cost_inr": { "note": "Highly variable", "needs_verification": true },
-      "entrance_exams_it_feeds": ["Mostly direct admission; verify credential recognition"],
-      "related_scholarships": ["pm_yasasvi", "nsp", "ssp_karnataka"],
+      "where_in_bangalore": {
+        "examples": [
+          "Skill India centres",
+          "recognised vocational institutes"
+        ],
+        "note": "Verify provider recognition (this is where scams cluster)."
+      },
+      "approx_cost_inr": {
+        "note": "Highly variable"
+      },
+      "entrance_exams_it_feeds": [
+        "Mostly direct admission; verify credential recognition"
+      ],
+      "related_scholarships": [
+        "pm_yasasvi",
+        "nsp",
+        "ssp_karnataka"
+      ],
       "honest_notes": "Recognition varies wildly — flag unrecognised/for-profit courses honestly. Do not list a course whose credential value cannot be verified.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from someone employed via a recognised vocational course." }
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from someone employed via a recognised vocational course."
+      }
     }
   ],
-
   "pathways": [
     {
       "id": "become_doctor",
@@ -188,10 +410,18 @@
         "Stay aware: NEET is highly competitive — plan realistically and know the alternatives below."
       ],
       "honest_cost_effort": "MBBS is ~5.5 years after Class 12, very competitive, and expensive without a government seat. Scholarships/aid exist — see routes.",
-      "real_routes_through_cost": ["Government medical seats (lower cost)", "PM YASASVI / state scholarships", "Education loans"],
-      "adjacent_destinations": ["Nursing / allied health", "Pharmacy", "Biosciences & research", "Veterinary science"],
-      "what_if_it_changes": "PCB/PCMB still keeps pharmacy, allied health, biosciences and research open — not a dead end.",
-      "needs_verification": true
+      "real_routes_through_cost": [
+        "Government medical seats (lower cost)",
+        "PM YASASVI / state scholarships",
+        "Education loans"
+      ],
+      "adjacent_destinations": [
+        "Nursing / allied health",
+        "Pharmacy",
+        "Biosciences & research",
+        "Veterinary science"
+      ],
+      "what_if_it_changes": "PCB/PCMB still keeps pharmacy, allied health, biosciences and research open — not a dead end."
     },
     {
       "id": "become_engineer",
@@ -202,10 +432,18 @@
         "Alternative entry: a Polytechnic diploma also reaches BTech via lateral entry."
       ],
       "honest_cost_effort": "BE/BTech is 4 years (3 via diploma lateral entry). Cost varies by college; government/aided seats and scholarships lower it.",
-      "real_routes_through_cost": ["KCET/COMEDK government/aided seats", "Polytechnic diploma (low-cost) then lateral BTech", "AICTE scholarships"],
-      "adjacent_destinations": ["Polytechnic diploma + industry", "Design (product/UX)", "Data/analytics", "Pure sciences"],
-      "what_if_it_changes": "PCM keeps most science and analytics paths open; a diploma is a cheaper, employable fallback that still reaches BTech.",
-      "needs_verification": true
+      "real_routes_through_cost": [
+        "KCET/COMEDK government/aided seats",
+        "Polytechnic diploma (low-cost) then lateral BTech",
+        "AICTE scholarships"
+      ],
+      "adjacent_destinations": [
+        "Polytechnic diploma + industry",
+        "Design (product/UX)",
+        "Data/analytics",
+        "Pure sciences"
+      ],
+      "what_if_it_changes": "PCM keeps most science and analytics paths open; a diploma is a cheaper, employable fallback that still reaches BTech."
     },
     {
       "id": "become_ca_finance",
@@ -216,10 +454,17 @@
         "Explore B.Com/BBA as parallel or alternative degree routes."
       ],
       "honest_cost_effort": "CA is a multi-stage, self-study-heavy qualification; low course fee but demanding and long. B.Com/BBA are 3-year degrees.",
-      "real_routes_through_cost": ["CA has relatively low official fees", "State/Vidyadhan scholarships for B.Com"],
-      "adjacent_destinations": ["Company Secretary (CS)", "Economics", "Banking", "Business management"],
-      "what_if_it_changes": "Commerce keeps finance, business, economics and law (via CLAT) open.",
-      "needs_verification": true
+      "real_routes_through_cost": [
+        "CA has relatively low official fees",
+        "State/Vidyadhan scholarships for B.Com"
+      ],
+      "adjacent_destinations": [
+        "Company Secretary (CS)",
+        "Economics",
+        "Banking",
+        "Business management"
+      ],
+      "what_if_it_changes": "Commerce keeps finance, business, economics and law (via CLAT) open."
     },
     {
       "id": "become_designer_artist",
@@ -230,10 +475,18 @@
         "Consider vocational creative courses (animation, graphic/fashion design) as complements."
       ],
       "honest_cost_effort": "Design degrees vary in cost; portfolio and entrance prep matter more than stream. Creative careers reward demonstrated work.",
-      "real_routes_through_cost": ["Government design institutes (NID etc.)", "Scholarships for design", "Start with recognised vocational courses"],
-      "adjacent_destinations": ["Architecture", "Media & communication", "UX/product design", "Fine arts / crafts"],
-      "what_if_it_changes": "A creative direction is buildable from multiple streams — this is the path most wrongly closed off by pressure (see PRD S6).",
-      "needs_verification": true
+      "real_routes_through_cost": [
+        "Government design institutes (NID etc.)",
+        "Scholarships for design",
+        "Start with recognised vocational courses"
+      ],
+      "adjacent_destinations": [
+        "Architecture",
+        "Media & communication",
+        "UX/product design",
+        "Fine arts / crafts"
+      ],
+      "what_if_it_changes": "A creative direction is buildable from multiple streams — this is the path most wrongly closed off by pressure (see PRD S6)."
     },
     {
       "id": "start_earning_soon",
@@ -244,13 +497,19 @@
         "Look at apprenticeships and government/PSU recruitment routes."
       ],
       "honest_cost_effort": "ITI is low-cost and 6 months to 2 years; diploma is 3 years but opens BTech. Both are far cheaper than the degree-first route.",
-      "real_routes_through_cost": ["Government ITIs/polytechnics (low fees)", "Apprenticeship stipends", "PM YASASVI / state scholarships"],
-      "adjacent_destinations": ["Polytechnic diploma then BTech", "Self-employment/trade business", "PSU technical jobs"],
-      "what_if_it_changes": "Skilled trades and diplomas still allow further study later — earning early does not close the door to a degree.",
-      "needs_verification": true
+      "real_routes_through_cost": [
+        "Government ITIs/polytechnics (low fees)",
+        "Apprenticeship stipends",
+        "PM YASASVI / state scholarships"
+      ],
+      "adjacent_destinations": [
+        "Polytechnic diploma then BTech",
+        "Self-employment/trade business",
+        "PSU technical jobs"
+      ],
+      "what_if_it_changes": "Skilled trades and diplomas still allow further study later — earning early does not close the door to a degree."
     }
   ],
-
   "specialized_pathways": [
     {
       "id": "integrated_pu_coaching",
@@ -258,17 +517,43 @@
       "type": "academic_stream_variant",
       "tier": "expansion",
       "summary": "A PU college that bundles the two-year PU syllabus with intensive entrance-exam coaching (medical, engineering, CA or law) under one roof. Common in Bengaluru and Mysuru.",
-      "leads_to": ["Same destinations as the underlying PU stream (Science/Commerce), with structured entrance prep built in"],
+      "leads_to": [
+        "Same destinations as the underlying PU stream (Science/Commerce), with structured entrance prep built in"
+      ],
       "frame": "Not a separate stream — it is a higher-cost, higher-intensity WAY OF DOING PU. Choose the stream first; treat integrated coaching as an add-on for a student who is genuinely exam-focused and can handle the pressure.",
-      "eligibility": { "text": "Passed Class 10; college-specific merit/entrance cutoffs, often stricter than plain PU.", "needs_verification": true },
+      "eligibility": {
+        "text": "Passed Class 10; college-specific merit/entrance cutoffs, often stricter than plain PU."
+      },
       "duration": "2 years",
-      "where_in_bangalore": { "examples": ["Deeksha", "BASE", "Narayana", "Sri Chaitanya", "Aakash-affiliated PU tie-ups"], "note": "Illustrative, not exhaustive; recognition and quality vary widely.", "needs_verification": true },
-      "approx_cost_inr": { "note": "Substantially higher than plain PU — often ₹80,000 to ₹3,50,000/yr (residential higher).", "needs_verification": true },
-      "related_scholarships": ["pm_yasasvi", "nmms", "nsp", "ssp_karnataka", "vidyadhan"],
-      "related_core_options": ["pu_science", "pu_commerce"],
+      "where_in_bangalore": {
+        "examples": [
+          "Deeksha",
+          "BASE",
+          "Narayana",
+          "Sri Chaitanya",
+          "Aakash-affiliated PU tie-ups"
+        ],
+        "note": "Illustrative, not exhaustive; recognition and quality vary widely."
+      },
+      "approx_cost_inr": {
+        "note": "Substantially higher than plain PU — often ₹80,000 to ₹3,50,000/yr (residential higher)."
+      },
+      "related_scholarships": [
+        "pm_yasasvi",
+        "nmms",
+        "nsp",
+        "ssp_karnataka",
+        "vidyadhan"
+      ],
+      "related_core_options": [
+        "pu_science",
+        "pu_commerce"
+      ],
       "honest_notes": "High cost and high pressure. Good for a self-motivated exam aspirant; a poor fit for an unsure student — the intensity can worsen fatigue, not reduce it. Verify the college's actual results before trusting marketing claims.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from a student who did integrated PU — what the pressure was really like." },
-      "needs_verification": true
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a student who did integrated PU — what the pressure was really like."
+      }
     },
     {
       "id": "skill_development_nsdc",
@@ -276,17 +561,39 @@
       "type": "vocational_training",
       "tier": "expansion",
       "summary": "Short-term, national-mission-aligned skill courses — AI/data, robotics, digital marketing, cybersecurity, hospitality and more — via NSDC / PMKVY sector skill councils.",
-      "leads_to": ["Entry-level skilled roles", "Apprenticeships", "A skill stacked on top of a mainstream stream"],
+      "leads_to": [
+        "Entry-level skilled roles",
+        "Apprenticeships",
+        "A skill stacked on top of a mainstream stream"
+      ],
       "frame": "Usually a COMPLEMENT to a mainstream path, not a replacement for one — many are short (weeks to months). Strong for a student with a clear practical interest who wants an employable skill early.",
-      "eligibility": { "text": "Varies by course; many accept Class 10 pass. Prefer PMKVY / NSDC-recognised sector skill council courses.", "needs_verification": true },
+      "eligibility": {
+        "text": "Varies by course; many accept Class 10 pass. Prefer PMKVY / NSDC-recognised sector skill council courses."
+      },
       "duration": "Weeks to ~1 year",
-      "where_in_bangalore": { "examples": ["PMKVY training centres", "NSDC-affiliated / Skill India centres"], "note": "Verify the centre is genuinely PMKVY/NSDC-affiliated — this space has many unrecognised for-profit imitators.", "needs_verification": true },
-      "approx_cost_inr": { "note": "Many PMKVY courses are free/subsidised; private 'skill' courses vary widely.", "needs_verification": true },
-      "related_scholarships": ["nsp", "ssp_karnataka"],
-      "related_core_options": ["vocational", "iti"],
+      "where_in_bangalore": {
+        "examples": [
+          "PMKVY training centres",
+          "NSDC-affiliated / Skill India centres"
+        ],
+        "note": "Verify the centre is genuinely PMKVY/NSDC-affiliated — this space has many unrecognised for-profit imitators."
+      },
+      "approx_cost_inr": {
+        "note": "Many PMKVY courses are free/subsidised; private 'skill' courses vary widely."
+      },
+      "related_scholarships": [
+        "nsp",
+        "ssp_karnataka"
+      ],
+      "related_core_options": [
+        "vocational",
+        "iti"
+      ],
       "honest_notes": "Credential recognition varies wildly (see the 'vocational' core option) — flag unrecognised/for-profit courses honestly. Best paired with, not instead of, a base qualification.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from someone who got a job via a PMKVY/NSDC course." },
-      "needs_verification": true
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from someone who got a job via a PMKVY/NSDC course."
+      }
     },
     {
       "id": "creative_design_school",
@@ -294,17 +601,39 @@
       "type": "vocational_training",
       "tier": "expansion",
       "summary": "Early-entry programmes in fashion design, animation, game design, fine arts, or performing arts (music, theatre, dance) — some foundation/diploma courses accept students after Class 10.",
-      "leads_to": ["Design/creative diplomas and degrees", "Portfolio-based creative careers", "Design entrances later (NID/NIFT/UCEED-adjacent)"],
+      "leads_to": [
+        "Design/creative diplomas and degrees",
+        "Portfolio-based creative careers",
+        "Design entrances later (NID/NIFT/UCEED-adjacent)"
+      ],
       "frame": "For a student with a genuine, demonstrated creative interest. Design is also reachable from Humanities or any stream — this is the specialised, earlier-start route, not the only door.",
-      "eligibility": { "text": "Varies by institute; many foundation courses accept Class 10 pass, some require a portfolio or aptitude test.", "needs_verification": true },
+      "eligibility": {
+        "text": "Varies by institute; many foundation courses accept Class 10 pass, some require a portfolio or aptitude test."
+      },
       "duration": "Varies (foundation/diploma: 1-3 years)",
-      "where_in_bangalore": { "examples": ["Recognised design/animation institutes in Bengaluru", "Fine/performing arts academies"], "note": "Verify credential recognition and placement — this space has many unaccredited private institutes.", "needs_verification": true },
-      "approx_cost_inr": { "note": "Highly variable; private design/animation courses can be expensive.", "needs_verification": true },
-      "related_scholarships": ["nsp", "ssp_karnataka"],
-      "related_core_options": ["pu_humanities", "vocational"],
+      "where_in_bangalore": {
+        "examples": [
+          "Recognised design/animation institutes in Bengaluru",
+          "Fine/performing arts academies"
+        ],
+        "note": "Verify credential recognition and placement — this space has many unaccredited private institutes."
+      },
+      "approx_cost_inr": {
+        "note": "Highly variable; private design/animation courses can be expensive."
+      },
+      "related_scholarships": [
+        "nsp",
+        "ssp_karnataka"
+      ],
+      "related_core_options": [
+        "pu_humanities",
+        "vocational"
+      ],
       "honest_notes": "Recognition varies widely; do not list a course whose credential value cannot be verified. Portfolio and demonstrated work matter more than the stream — see the 'become a designer/artist' Mode-B pathway.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from a working designer/animator who started early." },
-      "needs_verification": true
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a working designer/animator who started early."
+      }
     },
     {
       "id": "sports_academy",
@@ -312,17 +641,40 @@
       "type": "specialised_track",
       "tier": "expansion",
       "summary": "For students serious about professional sport (cricket, hockey, volleyball, athletics and others). Some PU colleges integrate academics with structured sports training.",
-      "leads_to": ["Competitive/professional sport", "Sports scholarships and quotas", "Careers in coaching, physiotherapy, sports science"],
+      "leads_to": [
+        "Competitive/professional sport",
+        "Sports scholarships and quotas",
+        "Careers in coaching, physiotherapy, sports science"
+      ],
       "frame": "Pursue ONLY with an academic backup running in parallel — professional sport is high-variance. Prefer academies/PU colleges that keep the student's 10+2 on track.",
-      "eligibility": { "text": "Trials/selection by the academy; combine with a PU college that supports a sports track.", "needs_verification": true },
+      "eligibility": {
+        "text": "Trials/selection by the academy; combine with a PU college that supports a sports track."
+      },
       "duration": "Ongoing alongside 10+2",
-      "where_in_bangalore": { "examples": ["Sport-integrated PU colleges", "recognised sports academies / SAI centres"], "note": "Illustrative; verify the academy's track record and that academics are genuinely supported.", "needs_verification": true },
-      "approx_cost_inr": { "note": "Varies from subsidised (govt/SAI) to expensive private academies.", "needs_verification": true },
-      "related_scholarships": ["nsp", "ssp_karnataka"],
-      "related_core_options": ["pu_science", "pu_commerce", "pu_humanities"],
+      "where_in_bangalore": {
+        "examples": [
+          "Sport-integrated PU colleges",
+          "recognised sports academies / SAI centres"
+        ],
+        "note": "Illustrative; verify the academy's track record and that academics are genuinely supported."
+      },
+      "approx_cost_inr": {
+        "note": "Varies from subsidised (govt/SAI) to expensive private academies."
+      },
+      "related_scholarships": [
+        "nsp",
+        "ssp_karnataka"
+      ],
+      "related_core_options": [
+        "pu_science",
+        "pu_commerce",
+        "pu_humanities"
+      ],
       "honest_notes": "Frame honestly: the odds of full professional success are low, so protect the academic fallback. Sports science / physiotherapy / coaching are real adjacent careers if playing does not work out.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from an athlete who balanced academics and a sports academy." },
-      "needs_verification": true
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from an athlete who balanced academics and a sports academy."
+      }
     },
     {
       "id": "agriculture_allied",
@@ -330,17 +682,39 @@
       "type": "technical_diploma",
       "tier": "expansion",
       "summary": "Specialised diplomas in agriculture, horticulture, veterinary science, sericulture or fisheries — particularly relevant across Karnataka's agrarian districts.",
-      "leads_to": ["Agri/allied technician and extension roles", "Further study (B.Sc Agriculture and allied degrees)", "Agri-entrepreneurship / farming enterprise"],
+      "leads_to": [
+        "Agri/allied technician and extension roles",
+        "Further study (B.Sc Agriculture and allied degrees)",
+        "Agri-entrepreneurship / farming enterprise"
+      ],
       "frame": "A genuinely underrated, low-visibility route for a student interested in agriculture, animals or the outdoors — especially with a rural/land background.",
-      "eligibility": { "text": "Passed Class 10; specific diplomas offered via Karnataka's agricultural/horticultural universities and polytechnics — cutoffs and subject requirements vary.", "needs_verification": true },
+      "eligibility": {
+        "text": "Passed Class 10; specific diplomas offered via Karnataka's agricultural/horticultural universities and polytechnics — cutoffs and subject requirements vary."
+      },
       "duration": "2-3 years (diploma)",
-      "where_in_bangalore": { "examples": ["University of Agricultural Sciences, Bengaluru (GKVK) and affiliated diploma programmes", "state horticulture/veterinary diploma institutes"], "note": "Verify current diploma offerings and admission route with the relevant Karnataka agricultural university.", "needs_verification": true },
-      "approx_cost_inr": { "note": "Government/university diplomas typically low-cost; verify current fees.", "needs_verification": true },
-      "related_scholarships": ["nsp", "ssp_karnataka", "pm_yasasvi"],
-      "related_core_options": ["polytechnic_diploma"],
+      "where_in_bangalore": {
+        "examples": [
+          "University of Agricultural Sciences, Bengaluru (GKVK) and affiliated diploma programmes",
+          "state horticulture/veterinary diploma institutes"
+        ],
+        "note": "Verify current diploma offerings and admission route with the relevant Karnataka agricultural university."
+      },
+      "approx_cost_inr": {
+        "note": "Government/university diplomas typically low-cost; verify current fees."
+      },
+      "related_scholarships": [
+        "nsp",
+        "ssp_karnataka",
+        "pm_yasasvi"
+      ],
+      "related_core_options": [
+        "polytechnic_diploma"
+      ],
       "honest_notes": "Real demand in agri-tech, food processing and allied services; not just 'farming'. Confirm the specific diploma's recognition and progression to a degree.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from an agriculture diploma holder now in agri-tech or extension work." },
-      "needs_verification": true
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from an agriculture diploma holder now in agri-tech or extension work."
+      }
     },
     {
       "id": "paramedical_allied_health",
@@ -348,17 +722,39 @@
       "type": "technical_diploma",
       "tier": "expansion",
       "summary": "Shorter healthcare-focused diplomas — medical lab technology (DMLT), radiology/imaging, physiotherapy assistant, nursing assistant, and similar — leading into allied-health careers.",
-      "leads_to": ["Allied-health technician and assistant roles", "Hospital/diagnostic-lab employment", "Bridge toward further health-science study"],
+      "leads_to": [
+        "Allied-health technician and assistant roles",
+        "Hospital/diagnostic-lab employment",
+        "Bridge toward further health-science study"
+      ],
       "frame": "A real, employable healthcare route that does NOT require the NEET/MBBS marathon — strong for a student drawn to health/care work who wants earlier employability.",
-      "eligibility": { "text": "Passed Class 10 (some diplomas require 10+2 with Science — verify per course); offered by recognised paramedical institutes/boards.", "needs_verification": true },
+      "eligibility": {
+        "text": "Passed Class 10 (some diplomas require 10+2 with Science — verify per course); offered by recognised paramedical institutes/boards."
+      },
       "duration": "1-3 years depending on the diploma",
-      "where_in_bangalore": { "examples": ["Recognised paramedical institutes / hospital-affiliated training schools in Bengaluru"], "note": "This space has many unrecognised private institutes — verify the course is affiliated to a recognised paramedical board/university before listing.", "needs_verification": true },
-      "approx_cost_inr": { "note": "Varies; government/hospital-affiliated programmes cheaper than private institutes.", "needs_verification": true },
-      "related_scholarships": ["nsp", "ssp_karnataka", "pm_yasasvi"],
-      "related_core_options": ["polytechnic_diploma", "vocational"],
+      "where_in_bangalore": {
+        "examples": [
+          "Recognised paramedical institutes / hospital-affiliated training schools in Bengaluru"
+        ],
+        "note": "This space has many unrecognised private institutes — verify the course is affiliated to a recognised paramedical board/university before listing."
+      },
+      "approx_cost_inr": {
+        "note": "Varies; government/hospital-affiliated programmes cheaper than private institutes."
+      },
+      "related_scholarships": [
+        "nsp",
+        "ssp_karnataka",
+        "pm_yasasvi"
+      ],
+      "related_core_options": [
+        "polytechnic_diploma",
+        "vocational"
+      ],
       "honest_notes": "Recognition is the critical check here (scam-prone sector). Confirm the awarding board and whether the credential is accepted by employers before showing it to a student.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from a lab technician or physiotherapy assistant now employed." },
-      "needs_verification": true
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a lab technician or physiotherapy assistant now employed."
+      }
     },
     {
       "id": "aviation_maritime",
@@ -366,17 +762,34 @@
       "type": "specialised_track",
       "tier": "expansion",
       "summary": "Careers in aviation (pilot, cabin crew) and the merchant navy. Most formal entry is after 10+2 with Science; a few foundation/diploma courses begin after Class 10.",
-      "leads_to": ["Pilot training (post-12, Science)", "Cabin crew / ground staff", "Merchant navy (via 10+2 Science routes)"],
+      "leads_to": [
+        "Pilot training (post-12, Science)",
+        "Cabin crew / ground staff",
+        "Merchant navy (via 10+2 Science routes)"
+      ],
       "frame": "CAUTION: the genuine professional routes (commercial pilot, merchant navy officer) almost always need 10+2 with Physics/Maths — not an after-10th shortcut. After-10th 'aviation/maritime foundation' diplomas exist but are often expensive and this sector has many misleading, scam-prone academies.",
-      "eligibility": { "text": "Professional routes need 10+2 with Physics & Maths and medical fitness; after-10th foundation courses vary. Verify against DGCA (aviation) / DG Shipping (maritime) recognition.", "needs_verification": true },
+      "eligibility": {
+        "text": "Professional routes need 10+2 with Physics & Maths and medical fitness; after-10th foundation courses vary. Verify against DGCA (aviation) / DG Shipping (maritime) recognition."
+      },
       "duration": "Varies; professional licensing is post-12 and multi-year",
-      "where_in_bangalore": { "examples": ["DGCA-approved / DG-Shipping-recognised institutes only"], "note": "Only list institutes with verifiable DGCA or DG Shipping recognition — this is a high-scam sector.", "needs_verification": true },
-      "approx_cost_inr": { "note": "Pilot training is very expensive (₹40 lakh+); flag cost honestly.", "needs_verification": true },
+      "where_in_bangalore": {
+        "examples": [
+          "DGCA-approved / DG-Shipping-recognised institutes only"
+        ],
+        "note": "Only list institutes with verifiable DGCA or DG Shipping recognition — this is a high-scam sector."
+      },
+      "approx_cost_inr": {
+        "note": "Pilot training is very expensive (₹40 lakh+); flag cost honestly."
+      },
       "related_scholarships": [],
-      "related_core_options": ["pu_science"],
+      "related_core_options": [
+        "pu_science"
+      ],
       "honest_notes": "Present this cautiously and truthfully: for most Class 10 students the real preparation is 10+2 Science, not an early diploma. Never surface an unrecognised academy. High cost + high scam risk = show with the strongest disclaimers.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from a pilot or merchant-navy officer on the real (post-12) pathway and costs." },
-      "needs_verification": true
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a pilot or merchant-navy officer on the real (post-12) pathway and costs."
+      }
     },
     {
       "id": "entrepreneurship_startup",
@@ -384,17 +797,35 @@
       "type": "enrichment",
       "tier": "expansion",
       "summary": "Youth entrepreneurship and incubator programmes — Bengaluru's startup ecosystem runs student-focused ventures, workshops and early incubation.",
-      "leads_to": ["Early venture / business experience", "Entrepreneurial and problem-solving skills", "A head start on building something while studying"],
+      "leads_to": [
+        "Early venture / business experience",
+        "Entrepreneurial and problem-solving skills",
+        "A head start on building something while studying"
+      ],
       "frame": "An ENRICHMENT ADD-ON, not a stream you choose instead of PU/diploma/ITI. Pursue it ALONGSIDE a base academic path — a student still needs a foundational qualification.",
-      "eligibility": { "text": "Open programmes; typically no formal cutoff. Pursue in parallel with a mainstream stream.", "needs_verification": true },
+      "eligibility": {
+        "text": "Open programmes; typically no formal cutoff. Pursue in parallel with a mainstream stream."
+      },
       "duration": "Varies (workshops to ongoing incubation)",
-      "where_in_bangalore": { "examples": ["School/youth entrepreneurship programmes", "startup incubators with student tracks"], "note": "Verify the programme is reputable and does not charge large fees for vague promises.", "needs_verification": true },
-      "approx_cost_inr": { "note": "Many youth programmes are low-cost/free; beware expensive 'young-founder' courses.", "needs_verification": true },
+      "where_in_bangalore": {
+        "examples": [
+          "School/youth entrepreneurship programmes",
+          "startup incubators with student tracks"
+        ],
+        "note": "Verify the programme is reputable and does not charge large fees for vague promises."
+      },
+      "approx_cost_inr": {
+        "note": "Many youth programmes are low-cost/free; beware expensive 'young-founder' courses."
+      },
       "related_scholarships": [],
-      "related_core_options": ["pu_commerce"],
+      "related_core_options": [
+        "pu_commerce"
+      ],
       "honest_notes": "Framing matters: this is a supplement, never a substitute for a qualification. Great for a self-driven student; do not let it crowd out a base path.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from a young founder who built something while still in school/college." },
-      "needs_verification": true
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a young founder who built something while still in school/college."
+      }
     },
     {
       "id": "alternative_education",
@@ -402,26 +833,81 @@
       "type": "open_schooling",
       "tier": "expansion",
       "summary": "Non-standard schooling for 10+2: NIOS (flexible open schooling) or international curricula (IB, IGCSE) for families seeking flexibility or global exposure.",
-      "leads_to": ["Flexible 10+2 (NIOS)", "International 10+2 with global university exposure (IB/IGCSE)"],
+      "leads_to": [
+        "Flexible 10+2 (NIOS)",
+        "International 10+2 with global university exposure (IB/IGCSE)"
+      ],
       "frame": "NIOS is a fully-covered core option (see the 'nios' record) for students needing a flexible pace. IB/IGCSE is a BOARD SWITCH — it sits OUTSIDE Marg AI's Phase-1 CBSE scope, so it is informational only here (not a Class X→XI stream choice within CBSE), and typically a higher-cost, family-driven decision.",
-      "eligibility": { "text": "NIOS: open eligibility after Class 10. IB/IGCSE: admission to an international school; verify recognition for Indian college admission.", "needs_verification": true },
+      "eligibility": {
+        "text": "NIOS: open eligibility after Class 10. IB/IGCSE: admission to an international school; verify recognition for Indian college admission."
+      },
       "duration": "Flexible (NIOS) / 2 years (IB/IGCSE 10+2)",
-      "where_in_bangalore": { "examples": ["NIOS accredited institutions (see 'nios' option)", "IB/IGCSE international schools in Bengaluru"], "note": "IB/IGCSE is included for awareness only; it is out of Phase-1 scope.", "needs_verification": true },
-      "approx_cost_inr": { "note": "NIOS low-to-moderate; IB/IGCSE international schools are substantially more expensive.", "needs_verification": true },
-      "related_scholarships": ["nsp", "ssp_karnataka"],
-      "related_core_options": ["nios"],
+      "where_in_bangalore": {
+        "examples": [
+          "NIOS accredited institutions (see 'nios' option)",
+          "IB/IGCSE international schools in Bengaluru"
+        ],
+        "note": "IB/IGCSE is included for awareness only; it is out of Phase-1 scope."
+      },
+      "approx_cost_inr": {
+        "note": "NIOS low-to-moderate; IB/IGCSE international schools are substantially more expensive."
+      },
+      "related_scholarships": [
+        "nsp",
+        "ssp_karnataka"
+      ],
+      "related_core_options": [
+        "nios"
+      ],
       "honest_notes": "Frame NIOS supportively (never as failure). Treat IB/IGCSE as out-of-scope context, not a recommended action — Phase 1 is CBSE, Class X→XI.",
-      "human_touchpoint": { "status": "to_source", "idea": "Story from a student who used NIOS or switched to an international curriculum." },
-      "needs_verification": true
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a student who used NIOS or switched to an international curriculum."
+      }
     }
   ],
-
   "scholarships": [
-    { "id": "nsp", "name": "National Scholarship Portal (Pre/Post-Matric)", "who": "Eligible categories/income groups (central schemes)", "amount": "Varies by scheme", "link": "https://scholarships.gov.in", "needs_verification": true, "verified_note": "Umbrella portal (scholarships.gov.in) confirmed active for 2026-27; it hosts many schemes so amounts genuinely vary — always check the specific scheme's live cycle." },
-    { "id": "pm_yasasvi", "name": "PM YASASVI (pre-matric, Class 9-10)", "who": "OBC / EBC / DNT; family income under ₹2.5 lakh/year", "amount": "₹4,000 per year (pre-matric)", "link": "https://yet.nta.ac.in", "needs_verification": false, "verified_note": "Amount (₹4,000/yr consolidated academic allowance), category (OBC/EBC/DNT) and income cap (<₹2.5 lakh) corroborated across multiple sources, Sep 2026; confirm current cycle on portal. Note: pre-matric is separate from the YASASVI 'Top Class' post-matric scheme (higher amounts)." },
-    { "id": "nmms", "name": "National Means-cum-Merit Scholarship (NMMS)", "who": "Class 9-12; means + merit. Family income ≤ ₹3.5 lakh/year; ≥55% in Class 7 to sit the Class-8 selection test (relaxation for SC/ST). ONLY government / government-aided / local-body school students — NOT private, KV, NVS or Sainik school students.", "amount": "₹12,000 per year (₹1,000/month), Classes 9-12", "link": "https://scholarships.gov.in", "needs_verification": false, "verified_note": "Amount ₹12,000/yr and income cap ₹3.5 lakh corroborated Sep 2026. IMPORTANT for Marg AI's CBSE audience: NMMS excludes private/KV/NVS school students, so most CBSE private-school students are INELIGIBLE — surface this honestly rather than listing it as broadly available." },
-    { "id": "ssp_karnataka", "name": "Karnataka State Scholarship Portal (SSP)", "who": "SC/ST/OBC/minority students in Karnataka; post-matric (after Class 10) among others", "amount": "Varies by category/scheme (pre/post-matric, merit-cum-means)", "link": "https://ssp.karnataka.gov.in", "needs_verification": false, "verified_note": "Canonical portal ssp.karnataka.gov.in confirmed (previous link ssp.postmatric.karnataka.gov.in is the post-matric sub-portal). Post-matric cycle deadlines typically Sep-Jan. Amounts vary by department/category — verify the specific scheme." },
-    { "id": "vidyadhan", "name": "Vidyadhan (Sarojini Damodaran Foundation)", "who": "Karnataka Class 10 pass with ≥90% (≥75% for students with disability); family income < ₹2 lakh/year", "amount": "Up to ₹10,000 per year; covers 2 years of PU, extendable to UG on continued performance", "link": "https://www.vidyadhan.org", "needs_verification": false, "verified_note": "Karnataka criteria (90% cutoff, 75% disability, income <₹2 lakh) and amount (max ₹10,000/yr) corroborated Sep 2026; selection via written test + interview. Confirm exact current-cycle cutoff on vidyadhan.org/apply." },
-    { "id": "aicte_scholarships", "name": "AICTE Scholarships — Pragati (girls) / Saksham (differently-abled)", "who": "Girls (Pragati) or differently-abled (Saksham) students in 1st/2nd-year (lateral) diploma at an AICTE-approved institute via centralised admission; family income ≤ ₹8 lakh/year; up to two girls per family (Pragati)", "amount": "₹50,000 per year (lump sum for fees/books/equipment), via DBT", "link": "https://www.aicte-india.org", "needs_verification": false, "verified_note": "Amount ₹50,000/yr and income cap ₹8 lakh corroborated Sep 2026 (applied via NSP). Relevant only to the polytechnic-diploma path, and only for the eligible girl / differently-abled cohorts — do not present as generally available." }
+    {
+      "id": "nsp",
+      "name": "National Scholarship Portal (Pre/Post-Matric)",
+      "who": "Eligible categories/income groups (central schemes)",
+      "amount": "Varies by scheme",
+      "link": "https://scholarships.gov.in"
+    },
+    {
+      "id": "pm_yasasvi",
+      "name": "PM YASASVI (pre-matric, Class 9-10)",
+      "who": "OBC / EBC / DNT; family income under ₹2.5 lakh/year",
+      "amount": "₹4,000 per year (pre-matric)",
+      "link": "https://yet.nta.ac.in"
+    },
+    {
+      "id": "nmms",
+      "name": "National Means-cum-Merit Scholarship (NMMS)",
+      "who": "Class 9-12; means + merit. Family income ≤ ₹3.5 lakh/year; ≥55% in Class 7 to sit the Class-8 selection test (relaxation for SC/ST). ONLY government / government-aided / local-body school students — NOT private, KV, NVS or Sainik school students.",
+      "amount": "₹12,000 per year (₹1,000/month), Classes 9-12",
+      "link": "https://scholarships.gov.in"
+    },
+    {
+      "id": "ssp_karnataka",
+      "name": "Karnataka State Scholarship Portal (SSP)",
+      "who": "SC/ST/OBC/minority students in Karnataka; post-matric (after Class 10) among others",
+      "amount": "Varies by category/scheme (pre/post-matric, merit-cum-means)",
+      "link": "https://ssp.karnataka.gov.in"
+    },
+    {
+      "id": "vidyadhan",
+      "name": "Vidyadhan (Sarojini Damodaran Foundation)",
+      "who": "Karnataka Class 10 pass with ≥90% (≥75% for students with disability); family income < ₹2 lakh/year",
+      "amount": "Up to ₹10,000 per year; covers 2 years of PU, extendable to UG on continued performance",
+      "link": "https://www.vidyadhan.org"
+    },
+    {
+      "id": "aicte_scholarships",
+      "name": "AICTE Scholarships — Pragati (girls) / Saksham (differently-abled)",
+      "who": "Girls (Pragati) or differently-abled (Saksham) students in 1st/2nd-year (lateral) diploma at an AICTE-approved institute via centralised admission; family income ≤ ₹8 lakh/year; up to two girls per family (Pragati)",
+      "amount": "₹50,000 per year (lump sum for fees/books/equipment), via DBT",
+      "link": "https://www.aicte-india.org"
+    }
   ]
 }

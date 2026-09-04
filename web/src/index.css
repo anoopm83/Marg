@@ -332,3 +332,18 @@ input::placeholder,textarea::placeholder{ color:var(--placeholder); }
 [data-theme="dark"] .foot-logo, [data-theme="contrast"] .foot-logo{
   background:#F4F1EA; border-radius:9px; padding:5px 9px;
 }
+
+/* ---- home: scale-of-the-problem (decision fatigue) ---- */
+.home-problem{padding:34px 22px 8px;}
+.prob-lead{font-size:15px;color:var(--muted);line-height:1.55;margin-top:8px;max-width:40ch;}
+.stat-lead{display:flex;gap:16px;align-items:center;margin-top:20px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow);}
+.stat-lead b{flex:none;font-family:'Spectral',Georgia,serif;font-weight:600;font-size:40px;line-height:.9;color:var(--amber);letter-spacing:.5px;font-variant-numeric:tabular-nums;}
+.stat-lead span{font-size:14.5px;color:var(--ink);line-height:1.4;}
+.stat-lead strong{font-weight:700;color:var(--amber);}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px;}
+.ministat b{display:block;font-family:'Spectral',Georgia,serif;font-weight:600;font-size:24px;color:var(--amber);line-height:1;font-variant-numeric:tabular-nums;}
+.ministat span{display:block;font-size:11.5px;color:var(--muted);line-height:1.35;margin-top:6px;}
+.prob-src{font-size:11px;color:var(--faint);margin-top:16px;}
+
+/* gov band: decision-fatigue recognition line */
+.gov-recog{position:relative;color:var(--gov-fg2);opacity:.9;font-size:12.5px;line-height:1.55;margin-top:16px;padding-top:14px;border-top:1px solid var(--gov-panel-bd);}

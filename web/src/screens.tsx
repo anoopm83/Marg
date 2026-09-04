@@ -193,6 +193,21 @@ export function Home({ ctx }: { ctx: Ctx }) {
         </div>
       </section>
 
+      <section className="home-problem">
+        <h2>Choice overload is real — and exhausting.</h2>
+        <p className="prob-lead">If big decisions leave you frozen, you're far from alone. Across India, rapid change and endless options are wearing people down.</p>
+        <div className="stat-lead">
+          <b>1 in 3</b>
+          <span>Indians hit <strong>decision paralysis</strong> — overwhelmed, and unable to act.</span>
+        </div>
+        <div className="stat-row">
+          <div className="ministat"><b>69%</b><span>struggle to plan ahead</span></div>
+          <div className="ministat"><b>62%</b><span>feel ill-equipped to decide</span></div>
+          <div className="ministat"><b>57%</b><span>regret chances they let slip</span></div>
+        </div>
+        <p className="prob-src">Survey of Indian adults · reported by The Financial Express, 2024</p>
+      </section>
+
       <section className="home-intent">
         <h2>A calmer way to decide.</h2>
         <div className="principles">
@@ -233,6 +248,7 @@ export function Home({ ctx }: { ctx: Ctx }) {
           <div className="pillar"><h3>Digital India</h3><p>Citizen-first services</p></div>
         </div>
         <div className="gov-portals"><Icon name="building" size={16} /><span>Points you to real portals — the National Scholarship Portal, state education boards (DTE / PUE), and senior support like Elderline.</span></div>
+        <p className="gov-recog">India's own institutions are tackling decision fatigue — from DARPG's process simplification to the Department of Telecom's cognitive-wellbeing training. Marg brings that clarity to citizens' life choices.</p>
       </section>
 
       <section className="home-cta">

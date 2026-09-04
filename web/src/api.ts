@@ -44,6 +44,21 @@ export const getToken = () => localStorage.getItem(TOKEN_KEY);
 export const setToken = (t: string) => localStorage.setItem(TOKEN_KEY, t);
 export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
 
+const ADMIN_KEY = "marg_admin";
+export const getAdmin = () => localStorage.getItem(ADMIN_KEY);
+export const setAdmin = (t: string) => localStorage.setItem(ADMIN_KEY, t);
+export const clearAdmin = () => localStorage.removeItem(ADMIN_KEY);
+
+export interface AdminMetrics {
+  northStar: { name: string; numerator: number; denominator: number; rate: number; definition: string };
+  funnel: { entered: number; completedIntake: number; exploredUnconsidered: number; savedShortlist: number };
+  engagement: { reflections: number; chats: number; shortlistItems: number; usersWithShortlist: number };
+  feedback: { up: number; down: number };
+  guardrail: { distressFlags: number };
+  chatsByPersona: Record<string, number>;
+  generatedAt: string;
+}
+
 interface Res<T> { status: number; data: T | null; ok: boolean }
 async function req<T = any>(path: string, opts: RequestInit = {}): Promise<Res<T>> {
   const t = getToken();
@@ -79,4 +94,6 @@ export const api = {
   removeShortlist: (optionId: string) => req<{ shortlist: ShortlistItem[] }>("/shortlist/" + optionId, { method: "DELETE" }),
   deleteMe: () => req("/me", { method: "DELETE" }),
   event: (name: string, props?: unknown) => req("/event", { method: "POST", body: JSON.stringify({ name, props }) }),
+  adminLogin: (userId: string, password: string) => req<{ token: string }>("/admin/login", { method: "POST", body: JSON.stringify({ userId, password }) }),
+  adminMetrics: () => req<AdminMetrics>("/admin/metrics", { headers: getAdmin() ? { Authorization: "Bearer " + getAdmin() } : {} }),
 };

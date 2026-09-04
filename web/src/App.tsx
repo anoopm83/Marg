@@ -3,7 +3,7 @@ import { api, getToken, setToken, clearToken, type Option, type Profile, type Sh
 import { HELPLINES } from "./lib";
 import {
   Home, Welcome, Consent, Intake, Mode, Explore, Detail, SpecializedDetail, Shortlist, DeleteConfirm,
-  Aspire, WhyGoal, Plan, GoalChat, PersonaPick, type Ctx,
+  Aspire, WhyGoal, Plan, GoalChat, PersonaPick, AdminLogin, AdminDashboard, type Ctx,
 } from "./screens";
 
 type View = { name: string; param: string | null };
@@ -149,12 +149,14 @@ export default function App() {
       case "why": return <WhyGoal ctx={ctx} />;
       case "plan": return <Plan ctx={ctx} />;
       case "delete-confirm": return <DeleteConfirm ctx={ctx} />;
+      case "adminlogin": return <AdminLogin ctx={ctx} />;
+      case "admin": return <AdminDashboard ctx={ctx} />;
       default: return <Home ctx={ctx} />;
     }
   }
 
   const showRibbon = booted && persona?.experimental && view.name !== "personas";
-  const inApp = view.name !== "home" && view.name !== "personas";
+  const inApp = !["home", "personas", "adminlogin", "admin"].includes(view.name);
   const loggedIn = !!getToken();
 
   return (

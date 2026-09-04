@@ -161,7 +161,7 @@ app.post("/api/chat", auth, async (req: AuthedRequest, res) => {
   try {
     const cfg = getConfig(persona);
     const reply = await chat(groundCtx, history, cfg.audience, cfg.experimental);
-    logEvent(req.userId!, "chat_message", { mode, turns: history.length });
+    logEvent(req.userId!, "chat_message", { mode, turns: history.length, persona });
     res.json({ source: PROVIDER, model: MODEL, reply });
   } catch (e: any) {
     res.status(e?.status || 500).json({ error: "chat_failed", message: String(e?.message || e) });
@@ -196,6 +196,72 @@ app.post("/api/event", auth, (req: AuthedRequest, res) => {
   const { name, props } = req.body || {};
   if (name) logEvent(req.userId!, String(name), props);
   res.json({ ok: true });
+});
+
+// ---- admin (metrics & KPIs) ----
+// NOTE: admin/admin is a placeholder for the prototype ONLY — insecure; replace
+// with real credentials + hashing before this is exposed anywhere public.
+const ADMIN_USER = process.env.ADMIN_USER || "admin";
+const ADMIN_PASS = process.env.ADMIN_PASS || "admin";
+const adminTokens = new Set<string>(); // in-memory sessions (cleared on restart)
+
+app.post("/api/admin/login", (req, res) => {
+  const { userId, password } = req.body || {};
+  if (userId === ADMIN_USER && password === ADMIN_PASS) {
+    const token = newToken();
+    adminTokens.add(token);
+    return res.json({ token });
+  }
+  return res.status(401).json({ error: "invalid_credentials" });
+});
+
+function adminAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const t = (req.header("authorization") || "").replace(/^Bearer\s+/i, "");
+  if (t && adminTokens.has(t)) return next();
+  return res.status(401).json({ error: "unauthorized" });
+}
+
+app.get("/api/admin/metrics", adminAuth, (_req, res) => {
+  const n = (sql: string): number => ((db.prepare(sql).get() as any)?.n ?? 0);
+  const totalUsers = n("SELECT COUNT(*) n FROM users");
+  const completedIntake = n("SELECT COUNT(*) n FROM intake");
+  const reflections = n("SELECT COUNT(*) n FROM events WHERE name='option_reflected'");
+  const chats = n("SELECT COUNT(*) n FROM events WHERE name='chat_message'");
+  const shortlistItems = n("SELECT COUNT(*) n FROM shortlist_items");
+  const usersWithShortlist = n("SELECT COUNT(DISTINCT user_id) n FROM shortlist_items");
+  const savedShortlist = n("SELECT COUNT(*) n FROM (SELECT user_id FROM shortlist_items GROUP BY user_id HAVING COUNT(*) BETWEEN 2 AND 3)");
+  const exploredUnconsidered = n("SELECT COUNT(DISTINCT user_id) n FROM events WHERE name='specialized_viewed'");
+  const distress = n("SELECT COUNT(*) n FROM events WHERE name='distress_flag_raised'");
+  // North Star — Informed-Convergence Rate: completed intake AND engaged an option
+  // they hadn't considered AND saved a 2-3 shortlist, over everyone who entered.
+  const nsmNum = n(`SELECT COUNT(*) n FROM (
+    SELECT u.id FROM users u
+    WHERE EXISTS(SELECT 1 FROM intake i WHERE i.user_id = u.id)
+      AND EXISTS(SELECT 1 FROM events e WHERE e.user_id = u.id AND e.name='specialized_viewed')
+      AND (SELECT COUNT(*) FROM shortlist_items s WHERE s.user_id = u.id) BETWEEN 2 AND 3)`);
+  const nsmDen = totalUsers;
+  // feedback + persona breakdown (props is JSON text — aggregate in JS)
+  let up = 0, down = 0;
+  for (const r of db.prepare("SELECT props FROM events WHERE name='feedback'").all() as any[]) {
+    try { const p = JSON.parse(r.props || "{}"); if (p.rating === "up") up++; else if (p.rating === "down") down++; } catch { /* skip */ }
+  }
+  const chatsByPersona: Record<string, number> = {};
+  for (const r of db.prepare("SELECT props FROM events WHERE name='chat_message'").all() as any[]) {
+    try { const p = JSON.parse(r.props || "{}"); const k = p.persona || "unknown"; chatsByPersona[k] = (chatsByPersona[k] || 0) + 1; } catch { /* skip */ }
+  }
+  res.json({
+    northStar: {
+      name: "Informed-Convergence Rate",
+      numerator: nsmNum, denominator: nsmDen, rate: nsmDen ? nsmNum / nsmDen : 0,
+      definition: "Users who completed intake, engaged an option they hadn't considered, and saved a 2–3 shortlist ÷ everyone who entered.",
+    },
+    funnel: { entered: totalUsers, completedIntake, exploredUnconsidered, savedShortlist },
+    engagement: { reflections, chats, shortlistItems, usersWithShortlist },
+    feedback: { up, down },
+    guardrail: { distressFlags: distress },
+    chatsByPersona,
+    generatedAt: new Date().toISOString(),
+  });
 });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

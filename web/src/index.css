@@ -361,3 +361,30 @@ input::placeholder,textarea::placeholder{ color:var(--placeholder); }
 .pa-ic{flex:none;width:38px;height:38px;border-radius:10px;background:var(--primary-tint);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-top:1px;}
 .prob-authority p{font-size:13px;color:var(--muted);line-height:1.55;}
 .prob-authority strong{color:var(--ink);font-weight:700;}
+
+/* ---- home: subtle Admin link at the very bottom ---- */
+.home-admin{margin-top:6px;background:none;border:none;color:var(--faint);font-size:11.5px;cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+.home-admin:hover{color:var(--muted);}
+
+/* ---- admin dashboard (metrics & KPIs) ---- */
+.adm-nsm{background:var(--surface);border:1px solid var(--primary);border-radius:16px;padding:22px 20px;text-align:center;box-shadow:var(--shadow);}
+.adm-nsm-k{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--primary-d);}
+.adm-nsm-n{font-family:'Spectral',Georgia,serif;font-weight:600;font-size:56px;line-height:1;color:var(--primary);margin-top:10px;font-variant-numeric:tabular-nums;}
+.adm-nsm-n span{font-size:26px;}
+.adm-nsm-name{font-family:'Spectral',Georgia,serif;font-weight:600;font-size:18px;margin-top:8px;}
+.adm-nsm-frac{font-size:12.5px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums;}
+.adm-nsm-def{font-size:12px;color:var(--muted);line-height:1.5;margin-top:12px;}
+.adm-funnel{display:flex;flex-direction:column;gap:12px;margin-top:12px;}
+.adm-frow{display:flex;flex-direction:column;gap:5px;}
+.adm-fmeta{display:flex;align-items:baseline;gap:8px;font-size:13px;}
+.adm-flabel{flex:1;color:var(--ink);}
+.adm-fmeta b{font-variant-numeric:tabular-nums;font-size:14px;}
+.adm-fpct{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;min-width:36px;text-align:right;}
+.adm-fbar{height:8px;border-radius:999px;background:var(--border);overflow:hidden;}
+.adm-fbar>span{display:block;height:100%;background:var(--primary);border-radius:999px;transition:width .3s ease;}
+.adm-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+.adm-tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:var(--shadow);}
+.adm-n{font-family:'Spectral',Georgia,serif;font-weight:600;font-size:26px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums;}
+.adm-l{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.3;}
+.adm-warn{border-color:var(--danger);}
+.adm-warn .adm-n{color:var(--danger);}

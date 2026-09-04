@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { api, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, type ChatMsg, type Specialized, type PersonaPublic } from "./api";
+import { api, setAdmin, getAdmin, clearAdmin, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, type ChatMsg, type Specialized, type PersonaPublic, type AdminMetrics } from "./api";
 import { Icon, Compass, Bookmark } from "./icons";
 import { INTERESTS, VALUES, localReflect, planLocal, pickNudge, costText, checkDistress, shortName, optIconName } from "./lib";
 
@@ -234,6 +234,7 @@ export function Home({ ctx }: { ctx: Ctx }) {
       <footer className="home-foot">
         <img className="foot-logo" src="/marg-logo.png" alt="Marg" />
         <span>Guiding India's Life Choices</span>
+        <button className="home-admin" onClick={() => ctx.go("adminlogin")}>Admin</button>
       </footer>
     </div>
   );
@@ -572,6 +573,8 @@ export function Detail({ ctx }: { ctx: Ctx }) {
 // lead with the honest frame and cross-link to the related core options.
 export function SpecializedDetail({ ctx }: { ctx: Ctx }) {
   const s = ctx.specialized.find((x) => x.id === ctx.param);
+  // North-star signal: the user engaged an option they hadn't considered.
+  useEffect(() => { if (s) api.event("specialized_viewed", { id: s.id, persona: ctx.persona?.id }); }, [s?.id]);
   if (!s) return <Explore ctx={ctx} />;
   const where = s.where_in_bangalore?.examples?.slice(0, 3).join(", ") || "";
   const cost = costText(s as unknown as Option);
@@ -825,6 +828,109 @@ export function DeleteConfirm({ ctx }: { ctx: Ctx }) {
         <button className="btn btn-soft" disabled={busy} onClick={del} style={{ color: "var(--danger)" }}>{busy ? "Deleting…" : "Yes, delete my data"}</button>
         <button className="btn btn-ghost" onClick={() => ctx.go("shortlist")}>Keep my data</button>
       </div>
+    </section>
+  );
+}
+
+// ===== Admin (metrics & KPIs) — reached via the Admin link at the bottom of Home =====
+export function AdminLogin({ ctx }: { ctx: Ctx }) {
+  const [userId, setUserId] = useState("admin");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  async function login() {
+    setErr(""); setBusy(true);
+    const res = await api.adminLogin(userId.trim(), password);
+    setBusy(false);
+    if (res.ok && res.data?.token) { setAdmin(res.data.token); ctx.go("admin"); }
+    else setErr("Incorrect admin credentials.");
+  }
+  return (
+    <section className="screen">
+      <div className="topbar"><button className="back" onClick={() => ctx.go("home")}><Icon name="back" size={22} /></button><span className="muted" style={{ fontSize: 14 }}>Admin</span></div>
+      <h1 style={{ fontSize: 26 }}>Admin sign-in</h1>
+      <p className="lead" style={{ marginTop: 8 }}>Metrics & KPIs for the Marg team.</p>
+      <div className="stack" style={{ marginTop: 20 }}>
+        <div><label className="field-label">User ID</label><input className="ta" autoCapitalize="none" value={userId} onChange={(e) => setUserId(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") login(); }} /></div>
+        <div><label className="field-label">Password</label><input className="ta" type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") login(); }} placeholder="password" /></div>
+      </div>
+      {err && <div className="err">{err}</div>}
+      <div className="spacer" style={{ minHeight: 16 }} />
+      <button className="btn btn-primary" disabled={busy} onClick={login}>{busy ? "Signing in…" : "Sign in"}</button>
+    </section>
+  );
+}
+
+export function AdminDashboard({ ctx }: { ctx: Ctx }) {
+  const [m, setM] = useState<AdminMetrics | null>(null);
+  const [err, setErr] = useState("");
+  async function load() {
+    setErr("");
+    if (!getAdmin()) { ctx.go("adminlogin"); return; }
+    const res = await api.adminMetrics();
+    if (res.status === 401) { clearAdmin(); ctx.go("adminlogin"); return; }
+    if (res.data) setM(res.data); else setErr("Couldn't load metrics.");
+  }
+  useEffect(() => { load(); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, []);
+  const signOut = () => { clearAdmin(); ctx.go("home"); };
+  const bar = (<div className="topbar"><button className="back" onClick={() => ctx.go("home")}><Icon name="back" size={22} /></button><div className="wordmark" style={{ fontSize: 17 }}>Marg · Admin</div><span style={{ flex: 1 }} /><button className="help-link" style={{ width: "auto" }} onClick={load}>Refresh</button><button className="help-link" style={{ width: "auto" }} onClick={signOut}>Sign out</button></div>);
+  if (!m) return <section className="screen">{bar}<div className="spacer" /><div className="center-note">{err || "Loading metrics…"}</div><div className="spacer" /></section>;
+  const pct = Math.round(m.northStar.rate * 100);
+  const f = m.funnel;
+  const stat = (label: string, val: number | string, warn = false) => (
+    <div className={"adm-tile" + (warn ? " adm-warn" : "")}><div className="adm-n">{val}</div><div className="adm-l">{label}</div></div>
+  );
+  const frow = (label: string, val: number) => {
+    const w = f.entered ? Math.round((val / f.entered) * 100) : 0;
+    return (
+      <div className="adm-frow">
+        <div className="adm-fmeta"><span className="adm-flabel">{label}</span><b>{val}</b><span className="adm-fpct">{w}%</span></div>
+        <div className="adm-fbar"><span style={{ width: w + "%" }} /></div>
+      </div>
+    );
+  };
+  return (
+    <section className="screen">
+      {bar}
+      <div className="adm-nsm">
+        <div className="adm-nsm-k">★ NORTH STAR</div>
+        <div className="adm-nsm-n">{pct}<span>%</span></div>
+        <div className="adm-nsm-name">{m.northStar.name}</div>
+        <div className="adm-nsm-frac">{m.northStar.numerator} of {m.northStar.denominator} who entered</div>
+        <p className="adm-nsm-def">{m.northStar.definition}</p>
+      </div>
+
+      <div className="section-k" style={{ marginTop: 22 }}>CONVERGENCE FUNNEL</div>
+      <div className="adm-funnel">
+        {frow("Entered", f.entered)}
+        {frow("Completed intake", f.completedIntake)}
+        {frow("Explored an unconsidered path", f.exploredUnconsidered)}
+        {frow("Saved a 2–3 shortlist", f.savedShortlist)}
+      </div>
+
+      <div className="section-k" style={{ marginTop: 22 }}>ENGAGEMENT</div>
+      <div className="adm-grid">
+        {stat("Reflections shown", m.engagement.reflections)}
+        {stat("Chat messages", m.engagement.chats)}
+        {stat("Shortlist items", m.engagement.shortlistItems)}
+        {stat("Users with a shortlist", m.engagement.usersWithShortlist)}
+      </div>
+
+      <div className="section-k" style={{ marginTop: 22 }}>FEEDBACK & SAFETY</div>
+      <div className="adm-grid">
+        {stat("Rated helpful", m.feedback.up)}
+        {stat("Rated not helpful", m.feedback.down)}
+        {stat("Distress flags (watched)", m.guardrail.distressFlags, m.guardrail.distressFlags > 0)}
+      </div>
+
+      {Object.keys(m.chatsByPersona).length > 0 && (
+        <>
+          <div className="section-k" style={{ marginTop: 22 }}>CHATS BY PERSONA</div>
+          <div className="adm-grid">{Object.entries(m.chatsByPersona).map(([k, v]) => stat(k, v))}</div>
+        </>
+      )}
+
+      <div className="disclaimer-foot" style={{ marginTop: 22 }}>Live sessions (guest accounts). Generated {new Date(m.generatedAt).toLocaleString()}. Prototype login (admin/admin) — not for public deploy.</div>
     </section>
   );
 }

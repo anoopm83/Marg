@@ -10,6 +10,7 @@ type View = { name: string; param: string | null };
 
 const THEMES = ["dark", "light", "contrast"] as const;
 type Theme = (typeof THEMES)[number];
+const THEME_LABEL: Record<Theme, string> = { dark: "Dark", light: "Light", contrast: "Contrast" };
 const SCALES = [0.9, 1, 1.15, 1.3, 1.5]; // text-size steps (zoom on the content)
 
 const MoonIcon = () => (<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6 6 0 0 0 10.5 10.5z" /></svg>);
@@ -39,11 +40,15 @@ export default function App() {
     document.documentElement.setAttribute("data-theme", t);
     try { localStorage.setItem("marg_theme", t); } catch { /* private mode */ }
   }, []);
-  const bumpFont = useCallback((d: number) => setFontStep((s) => {
-    const n = Math.max(0, Math.min(SCALES.length - 1, s + d));
+  const cycleFont = useCallback(() => setFontStep((s) => {
+    const n = (s + 1) % SCALES.length; // one button: step up, wrap to smallest
     try { localStorage.setItem("marg_fontstep", String(n)); } catch { /* private mode */ }
     return n;
   }), []);
+  const cycleTheme = useCallback(() => {
+    const next = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
+    setTheme(next);
+  }, [theme, setTheme]);
   // Restore saved preferences on first load (default: dark, 1.0×).
   useEffect(() => {
     try {
@@ -138,16 +143,13 @@ export default function App() {
   return (
     <div className="frame">
       <div className="a11y">
-        <div className="a11y-group">
-          <span className="a11y-label">Text size</span>
-          <button className="a11y-btn am" onClick={() => bumpFont(-1)} disabled={fontStep === 0} aria-label="Decrease text size">A–</button>
-          <button className="a11y-btn ap" onClick={() => bumpFont(1)} disabled={fontStep === SCALES.length - 1} aria-label="Increase text size">A+</button>
-        </div>
-        <div className="a11y-group" role="group" aria-label="Contrast">
-          <button className={"a11y-btn theme" + (theme === "dark" ? " on" : "")} onClick={() => setTheme("dark")} aria-pressed={theme === "dark"} title="Dark"><MoonIcon /></button>
-          <button className={"a11y-btn theme" + (theme === "light" ? " on" : "")} onClick={() => setTheme("light")} aria-pressed={theme === "light"} title="Light"><SunIcon /></button>
-          <button className={"a11y-btn theme" + (theme === "contrast" ? " on" : "")} onClick={() => setTheme("contrast")} aria-pressed={theme === "contrast"} title="High contrast"><ContrastIcon /></button>
-        </div>
+        <button className="a11y-btn wide" onClick={cycleFont} title="Text size — tap to change" aria-label={`Text size ${Math.round(SCALES[fontStep] * 100)} percent, tap to change`}>
+          <span className="ab-a">A</span><span className="ab-v">{Math.round(SCALES[fontStep] * 100)}%</span>
+        </button>
+        <button className="a11y-btn wide" onClick={cycleTheme} title="Contrast — tap to change" aria-label={`Contrast: ${THEME_LABEL[theme]}, tap to change`}>
+          {theme === "dark" ? <MoonIcon /> : theme === "light" ? <SunIcon /> : <ContrastIcon />}
+          <span className="ab-v">{THEME_LABEL[theme]}</span>
+        </button>
       </div>
       {showRibbon && (
         <div className="exp-ribbon">⚗ Experimental persona ({persona!.label}) — illustrative &amp; unverified. Class 10 stays the safe default.</div>

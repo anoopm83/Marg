@@ -191,7 +191,7 @@ const chatSystem = (audience: string, allowGeneral: boolean) => {
   if (allowGeneral) {
     rules.push(
       "2. Prefer the supplied catalogue. If they ask about a goal or topic NOT in it, you MAY draw on your own general knowledge to be genuinely helpful — explain what it broadly involves and how a person typically pursues it, and connect it to the nearest real pathways in the catalogue. But do NOT present specific institutions, fees, cutoffs, deadlines or links as established fact — keep those general and tell them to confirm with official sources.",
-      "3. WHENEVER you draw on general knowledge beyond the catalogue, you MUST end that reply with this exact line on its own: 'Beta note: I've drawn on general knowledge here — please double-check these details, as they're not yet from Marg's verified data.'",
+      "3. WHENEVER you draw on general knowledge beyond the catalogue, you MUST end that reply with this exact line on its own: 'Beta note: This is only general knowledge here and not validated facts — please double-check these details, as they're not yet from Marg's verified data.'",
     );
   } else {
     rules.push(

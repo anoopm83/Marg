@@ -159,7 +159,8 @@ app.post("/api/chat", auth, async (req: AuthedRequest, res) => {
     content: String(m.content || "").slice(0, 1000),
   }));
   try {
-    const reply = await chat(groundCtx, history, getConfig(persona).audience);
+    const cfg = getConfig(persona);
+    const reply = await chat(groundCtx, history, cfg.audience, cfg.experimental);
     logEvent(req.userId!, "chat_message", { mode, turns: history.length });
     res.json({ source: PROVIDER, model: MODEL, reply });
   } catch (e: any) {

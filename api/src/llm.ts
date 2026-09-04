@@ -181,18 +181,31 @@ export async function planReflect(profile: any, pathway: any, audience: string =
 // adversarially tested before real students (Architecture §8).
 export type ChatMsg = { role: "user" | "assistant"; content: string };
 
-const chatSystem = (audience: string) => [
-  `You are Marg, a warm, calm, non-judgmental guide for ${audience}. You are in a short conversation with them.`,
-  "You are given their self-described interests and values, what they are currently looking at (an option they are exploring, or a goal they typed), and the FULL curated catalogue of options, specialized pathways, ambition-pathways and scholarships. That catalogue is your ONLY source of facts.",
-  "HARD RULES — follow every time:",
-  "1. NEVER tell them what to choose, never rank options, never call one 'best' or 'better'. You help them see and weigh options; the decision is always theirs.",
-  "2. Use ONLY facts from the supplied catalogue. NEVER invent an institution, fee, cutoff, scholarship, deadline or link. If they ask something not in the catalogue, say plainly you don't have verified information on that and point them to the relevant official source. Do not guess.",
-  "3. This is an MVP: EVERY figure in the catalogue is provisional and unverified. Present all figures as approximate ('roughly', 'around', 'please double-check'), never as a guarantee, and encourage confirming against the official source.",
-  "4. Growth-framed: interests and circumstances can change. Never label the person.",
-  "5. If a typed goal has no exact match in the catalogue, say so honestly, point to the nearest real pathway(s) present, and note there may be more than one route — never fabricate a path.",
-  "6. Keep replies SHORT: 2-4 sentences, plain language, kind. End with a gentle question or a concrete next step when it helps.",
-  "7. Stay on the topic of options and next steps for their situation. If asked something off-topic, gently steer back. You are not a crisis counsellor.",
-].join("\n");
+const chatSystem = (audience: string, allowGeneral: boolean) => {
+  const rules = [
+    `You are Marg, a warm, calm, non-judgmental guide for ${audience}. You are in a short conversation with them.`,
+    "You are given their self-described interests and values, what they are currently looking at (an option they are exploring, or a goal they typed), and the curated catalogue of options, specialized pathways, ambition-pathways and scholarships.",
+    "HARD RULES — follow every time:",
+    "1. NEVER tell them what to choose, never rank options, never call one 'best' or 'better'. You help them see and weigh options; the decision is always theirs.",
+  ];
+  if (allowGeneral) {
+    rules.push(
+      "2. Prefer the supplied catalogue. If they ask about a goal or topic NOT in it, you MAY draw on your own general knowledge to be genuinely helpful — explain what it broadly involves and how a person typically pursues it, and connect it to the nearest real pathways in the catalogue. But do NOT present specific institutions, fees, cutoffs, deadlines or links as established fact — keep those general and tell them to confirm with official sources.",
+      "3. WHENEVER you draw on general knowledge beyond the catalogue, you MUST end that reply with this exact line on its own: 'Beta note: I've drawn on general knowledge here — please double-check these details, as they're not yet from Marg's verified data.'",
+    );
+  } else {
+    rules.push(
+      "2. Use ONLY facts from the supplied catalogue — it is your ONLY source of facts. NEVER invent an institution, fee, cutoff, scholarship, deadline or link. If they ask something not in the catalogue, say plainly you don't have verified information on that and point them to the relevant official source. Do not guess.",
+      "3. Every figure in the catalogue is provisional — present figures as approximate ('roughly', 'around', 'please double-check'), never as a guarantee. If a typed goal has no catalogue match, say so honestly and point to the nearest real pathway present — never fabricate a path.",
+    );
+  }
+  rules.push(
+    "4. Growth-framed: interests and circumstances can change. Never label the person.",
+    "5. Keep replies SHORT: 2-5 sentences, plain language, kind. End with a gentle question or a concrete next step when it helps.",
+    "6. Stay on the topic of options and next steps for their situation. If asked something off-topic, gently steer back. You are not a crisis counsellor.",
+  );
+  return rules.join("\n");
+};
 
 function groundingBlock(ctx: any): string {
   return "GROUNDING (facts you may use — nothing beyond this):\n" + JSON.stringify(ctx);
@@ -207,19 +220,20 @@ async function chatOpenAICompat(system: string, messages: ChatMsg[]): Promise<st
       model: MODEL,
       messages: [{ role: "system", content: system }, ...messages],
       temperature: 0.5,
-      max_tokens: 320,
+      max_tokens: 900,
     }),
   });
   if (!r.ok) throw new Error(`LLM ${r.status}: ${(await r.text()).slice(0, 300)}`);
   const d: any = await r.json();
-  return d.choices?.[0]?.message?.content ?? "";
+  const m = d.choices?.[0]?.message;
+  return (m?.content || m?.reasoning || "") ?? ""; // some reasoning models leave content empty
 }
 
 async function chatAnthropic(system: string, messages: ChatMsg[]): Promise<string> {
   const { default: Anthropic } = await import("@anthropic-ai/sdk");
   const client = new Anthropic();
   const resp = await client.messages.create({
-    model: MODEL, max_tokens: 320, system,
+    model: MODEL, max_tokens: 700, system,
     messages: messages.map((m) => ({ role: m.role, content: m.content })),
   });
   return resp.content.filter((b: any) => b.type === "text").map((b: any) => b.text).join("");
@@ -234,7 +248,7 @@ async function chatGemini(system: string, messages: ChatMsg[]): Promise<string> 
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: system }] },
       contents: messages.map((m) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] })),
-      generationConfig: { temperature: 0.5, maxOutputTokens: 320 },
+      generationConfig: { temperature: 0.5, maxOutputTokens: 700 },
     }),
   });
   if (!r.ok) throw new Error(`Gemini ${r.status}: ${(await r.text()).slice(0, 300)}`);
@@ -242,8 +256,8 @@ async function chatGemini(system: string, messages: ChatMsg[]): Promise<string> 
   return d.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 }
 
-export async function chat(groundCtx: any, messages: ChatMsg[], audience: string = DEFAULT_AUDIENCE): Promise<string> {
-  const system = chatSystem(audience) + "\n\n" + groundingBlock(groundCtx);
+export async function chat(groundCtx: any, messages: ChatMsg[], audience: string = DEFAULT_AUDIENCE, allowGeneral = false): Promise<string> {
+  const system = chatSystem(audience, allowGeneral) + "\n\n" + groundingBlock(groundCtx);
   let raw: string;
   if (PROVIDER === "gemini") raw = await chatGemini(system, messages);
   else if (PROVIDER === "anthropic") raw = await chatAnthropic(system, messages);

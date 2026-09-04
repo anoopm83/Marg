@@ -1,0 +1,511 @@
+<title>Marg Validation Sessions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Public+Sans:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --bg:#F1EEE7; --surface:#FFFFFF; --surface-2:#FBFAF6;
+    --ink:#233039; --muted:#6E7A82; --faint:#95A0A7;
+    --primary:#0E7C7B; --primary-d:#0B5E5D; --primary-tint:#E3F0EF;
+    --violet:#6D5AC0; --violet-tint:#EEE9F8;
+    --amber:#B4692B; --amber-tint:#FBF3EA;
+    --red:#B0261D; --red-tint:#FBECEA;
+    --border:#E3DFD5; --border-2:#D6D1C4;
+    --shadow:0 1px 2px rgba(20,40,50,.04), 0 8px 24px rgba(20,40,50,.06);
+    --radius:14px;
+    --sans:'Public Sans',system-ui,Segoe UI,sans-serif;
+    --serif:'Spectral',Georgia,serif;
+    --mono:'SFMono-Regular',ui-monospace,'Cascadia Code',Consolas,monospace;
+  }
+  :root:not([data-theme="light"]){ }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#151A1D; --surface:#1E262A; --surface-2:#232C31;
+      --ink:#E8EDEF; --muted:#9BA7AD; --faint:#6B767C;
+      --primary:#3FB6B0; --primary-d:#6FD0CA; --primary-tint:#173033;
+      --violet:#A796E8; --violet-tint:#241F38;
+      --amber:#E0965A; --amber-tint:#33261A;
+      --red:#E88379; --red-tint:#361E1C;
+      --border:#2E383D; --border-2:#3A464C;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#151A1D; --surface:#1E262A; --surface-2:#232C31;
+    --ink:#E8EDEF; --muted:#9BA7AD; --faint:#6B767C;
+    --primary:#3FB6B0; --primary-d:#6FD0CA; --primary-tint:#173033;
+    --violet:#A796E8; --violet-tint:#241F38;
+    --amber:#E0965A; --amber-tint:#33261A;
+    --red:#E88379; --red-tint:#361E1C;
+    --border:#2E383D; --border-2:#3A464C;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px;margin:0 auto;padding:28px 20px 64px;}
+
+  header.top{display:flex;flex-wrap:wrap;gap:16px 20px;align-items:flex-end;justify-content:space-between;
+    border-bottom:1px solid var(--border);padding-bottom:20px;}
+  .brand{display:flex;flex-direction:column;gap:5px;}
+  .kicker{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--primary-d);}
+  h1{font-family:var(--serif);font-weight:600;font-size:30px;margin:0;letter-spacing:.2px;text-wrap:balance;}
+  .sub{color:var(--muted);font-size:14px;max-width:56ch;}
+  .actions{display:flex;flex-wrap:wrap;gap:8px;}
+  button{font-family:var(--sans);cursor:pointer;font-size:13.5px;font-weight:600;border-radius:10px;
+    border:1px solid var(--border-2);background:var(--surface);color:var(--ink);padding:9px 14px;
+    transition:background .12s ease,border-color .12s ease,transform .05s ease;}
+  button:hover{border-color:var(--primary);}
+  button:active{transform:translateY(1px);}
+  button:focus-visible{outline:2px solid var(--primary);outline-offset:2px;}
+  .btn-primary{background:var(--primary);border-color:var(--primary);color:#fff;}
+  .btn-primary:hover{background:var(--primary-d);border-color:var(--primary-d);}
+  .icon-btn{padding:9px 11px;}
+
+  /* summary roll-up */
+  .summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0;}
+  .tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px;box-shadow:var(--shadow);}
+  .tile .n{font-family:var(--serif);font-weight:600;font-size:30px;line-height:1;letter-spacing:.5px;font-variant-numeric:tabular-nums;}
+  .tile .l{font-size:11.5px;color:var(--muted);margin-top:8px;letter-spacing:.03em;}
+  .tile.ns{background:var(--primary-tint);border-color:transparent;}
+  .tile.ns .n{color:var(--primary-d);}
+  .h5tally{display:flex;gap:5px;margin-top:9px;font-size:11px;font-weight:700;flex-wrap:wrap;}
+  .h5tally span{padding:2px 7px;border-radius:999px;font-variant-numeric:tabular-nums;}
+  .v-ok{background:var(--primary-tint);color:var(--primary-d);}
+  .v-mix{background:var(--amber-tint);color:var(--amber);}
+  .v-no{background:var(--red-tint);color:var(--red);}
+
+  .cols{display:grid;grid-template-columns:1fr 288px;gap:20px;align-items:start;}
+
+  .sheet{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow);overflow:hidden;}
+  .banner{background:var(--amber-tint);color:var(--amber);font-size:12.5px;font-weight:600;
+    padding:10px 20px;display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--border);}
+  .banner.hide{display:none;}
+  fieldset{border:none;margin:0;padding:20px;border-top:1px solid var(--border);}
+  fieldset:first-of-type{border-top:none;}
+  legend{font-family:var(--serif);font-weight:600;font-size:16px;padding:0;margin-bottom:2px;color:var(--ink);}
+  .legend-note{font-size:12px;color:var(--muted);margin:-2px 0 14px;}
+
+  .meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field.full{grid-column:1/-1;}
+  label.cap{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  input[type=text],input[type=date],textarea{font-family:var(--sans);font-size:14px;color:var(--ink);
+    background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:9px 11px;width:100%;}
+  input[type=date]{font-family:var(--mono);}
+  textarea{resize:vertical;min-height:58px;line-height:1.5;}
+  input:focus,textarea:focus{outline:2px solid var(--primary);outline-offset:0;border-color:transparent;}
+
+  /* segmented single-choice + scales + verdicts via radios */
+  .seg{display:flex;flex-wrap:wrap;gap:6px;}
+  .seg label{font-size:13px;font-weight:600;color:var(--muted);background:var(--surface-2);
+    border:1px solid var(--border);border-radius:999px;padding:7px 13px;cursor:pointer;user-select:none;
+    transition:all .12s ease;}
+  .seg input{position:absolute;opacity:0;width:0;height:0;}
+  .seg label:hover{border-color:var(--border-2);}
+  .seg input:checked+label{background:var(--primary-tint);border-color:var(--primary);color:var(--primary-d);}
+  .seg input:focus-visible+label{outline:2px solid var(--primary);outline-offset:2px;}
+  .seg.scale label{min-width:38px;text-align:center;font-variant-numeric:tabular-nums;padding:7px 0;}
+
+  /* behavioral checklist */
+  .checks{display:flex;flex-direction:column;gap:2px;}
+  .check{display:flex;gap:11px;align-items:flex-start;padding:9px 10px;border-radius:9px;cursor:pointer;}
+  .check:hover{background:var(--surface-2);}
+  .check input{margin:0;width:18px;height:18px;accent-color:var(--primary);flex:none;margin-top:1px;}
+  .check .t{font-size:13.5px;}
+  .check .t b{font-weight:600;}
+  .check .hint{color:var(--muted);font-size:12px;}
+  .check.star{background:var(--primary-tint);}
+  .check.star:hover{background:var(--primary-tint);filter:brightness(.98);}
+  .check.danger .t b{color:var(--red);}
+  .star-tag{font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--primary-d);
+    background:var(--surface);border-radius:999px;padding:2px 7px;margin-left:6px;}
+
+  /* H1-H6 scorecard */
+  .hyp{display:flex;flex-direction:column;gap:10px;}
+  .hrow{display:grid;grid-template-columns:1fr auto;gap:10px 14px;align-items:center;
+    padding:11px 0;border-top:1px solid var(--border);}
+  .hrow:first-child{border-top:none;padding-top:2px;}
+  .hlabel{font-size:13.5px;}
+  .hlabel .code{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--primary-d);
+    background:var(--primary-tint);border-radius:5px;padding:1px 6px;margin-right:8px;}
+  .hlabel .gate{font-size:11px;color:var(--amber);font-weight:700;margin-left:6px;}
+  .hlabel .only{font-size:11px;color:var(--faint);margin-left:6px;}
+  .verdict{display:flex;gap:5px;}
+  .verdict label{font-size:11.5px;font-weight:700;padding:6px 10px;border-radius:8px;cursor:pointer;
+    border:1px solid var(--border);background:var(--surface-2);color:var(--muted);white-space:nowrap;}
+  .verdict input{position:absolute;opacity:0;width:0;height:0;}
+  .verdict input:checked+label.ok{background:var(--primary-tint);border-color:var(--primary);color:var(--primary-d);}
+  .verdict input:checked+label.mix{background:var(--amber-tint);border-color:var(--amber);color:var(--amber);}
+  .verdict input:checked+label.no{background:var(--red-tint);border-color:var(--red);color:var(--red);}
+  .verdict input:focus-visible+label{outline:2px solid var(--primary);outline-offset:2px;}
+
+  .qual{display:flex;flex-direction:column;gap:15px;}
+
+  /* saved rail */
+  .rail{position:sticky;top:16px;display:flex;flex-direction:column;gap:12px;}
+  .rail h2{font-family:var(--serif);font-weight:600;font-size:15px;margin:0 0 2px;}
+  .saved-list{display:flex;flex-direction:column;gap:8px;}
+  .scard{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:11px 12px;
+    display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow);cursor:pointer;transition:border-color .12s;}
+  .scard:hover{border-color:var(--primary);}
+  .scard.active{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary) inset;}
+  .scard .r1{display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .scard .who{font-weight:600;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .scard .r2{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:11px;color:var(--muted);}
+  .tag{font-size:10px;font-weight:700;letter-spacing:.03em;padding:2px 7px;border-radius:999px;}
+  .tag.p10{background:var(--primary-tint);color:var(--primary-d);}
+  .tag.pmc{background:var(--violet-tint);color:var(--violet);}
+  .tag.ns{background:var(--primary);color:#fff;}
+  .tag.ex{background:var(--amber-tint);color:var(--amber);}
+  .scard .del{align-self:flex-start;font-size:11px;font-weight:600;color:var(--faint);background:none;
+    border:none;padding:2px 4px;}
+  .scard .del:hover{color:var(--red);border:none;}
+  .empty{color:var(--muted);font-size:13px;text-align:center;padding:22px 10px;border:1px dashed var(--border);border-radius:11px;}
+  .date{font-family:var(--mono);font-size:11px;color:var(--faint);}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:var(--bg);
+    font-weight:600;font-size:13.5px;padding:11px 18px;border-radius:999px;box-shadow:var(--shadow);
+    opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:50;}
+  .toast.show{opacity:1;}
+
+  @media (max-width:820px){
+    .summary{grid-template-columns:repeat(2,1fr);}
+    .cols{grid-template-columns:1fr;}
+    .rail{position:static;}
+    .meta{grid-template-columns:1fr;}
+    .hrow{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+
+  @media print{
+    .actions,.rail,.summary,.banner,.toast,.theme{display:none!important;}
+    body{background:#fff;}
+    .cols{grid-template-columns:1fr;}
+    .sheet{box-shadow:none;border-color:#bbb;}
+    .wrap{padding:0;}
+  }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="kicker">Marg AI · MVP Validation</span>
+      <h1>Session Capture Sheet</h1>
+      <span class="sub">One sheet per moderated session. Fill during the interview, save it, and let the summary roll up. Go/no-go on RAG lives in H5 — watch it.</span>
+    </div>
+    <div class="actions">
+      <button id="btn-new">+ New session</button>
+      <button id="btn-copy">Copy as Markdown</button>
+      <button id="btn-print">Print</button>
+      <button id="btn-save" class="btn-primary">Save session</button>
+      <button id="btn-theme" class="icon-btn theme" title="Toggle light/dark" aria-label="Toggle theme">◐</button>
+    </div>
+  </header>
+
+  <section class="summary" id="summary" aria-label="Roll-up across saved sessions"></section>
+
+  <div class="cols">
+    <form class="sheet" id="sheet" autocomplete="off">
+      <div class="banner" id="banner">Example session shown — hit <b style="margin:0 4px">+ New session</b> to start your own.</div>
+
+      <fieldset>
+        <legend>Session</legend>
+        <div class="meta">
+          <div class="field"><label class="cap" for="date">Date</label><input type="date" id="date"></div>
+          <div class="field"><label class="cap" for="pid">Participant (initials / id)</label><input type="text" id="pid" placeholder="e.g. R.K. — student"></div>
+          <div class="field">
+            <span class="cap">Persona</span>
+            <div class="seg" role="radiogroup" aria-label="Persona">
+              <input type="radio" name="persona" id="p-c10" value="Class 10"><label for="p-c10">Class 10</label>
+              <input type="radio" name="persona" id="p-mc" value="Mid-career"><label for="p-mc">Mid-career</label>
+            </div>
+          </div>
+          <div class="field">
+            <span class="cap">Who</span>
+            <div class="seg" role="radiogroup" aria-label="Who">
+              <input type="radio" name="role" id="r-stu" value="Student"><label for="r-stu">Student</label>
+              <input type="radio" name="role" id="r-par" value="Parent"><label for="r-par">Parent</label>
+              <input type="radio" name="role" id="r-adu" value="Adult"><label for="r-adu">Adult</label>
+            </div>
+          </div>
+          <div class="field full">
+            <span class="cap">Going in, they were</span>
+            <div class="seg" role="radiogroup" aria-label="Prior stance">
+              <input type="radio" name="stance" id="s-uns" value="Unsure"><label for="s-uns">Unsure what to do</label>
+              <input type="radio" name="stance" id="s-dec" value="Already decided"><label for="s-dec">Already decided</label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>What they did</legend>
+        <p class="legend-note">Cross-check against the event log where you can.</p>
+        <div class="checks">
+          <label class="check"><input type="checkbox" name="beh" value="Completed intake"><span class="t"><b>Completed intake</b></span></label>
+          <label class="check"><input type="checkbox" name="beh" value="Opened an expansion option"><span class="t"><b>Opened ≥1 “path you hadn’t considered”</b> <span class="hint">— the expansion tier</span></span></label>
+          <label class="check"><input type="checkbox" name="beh" value="Used the chat"><span class="t"><b>Asked the chat a real question</b></span></label>
+          <label class="check star"><input type="checkbox" name="beh" value="Reached a 2-3 shortlist"><span class="t"><b>Reached a saved 2–3 shortlist</b><span class="star-tag">NORTH STAR</span></span></label>
+          <label class="check danger"><input type="checkbox" name="beh" value="Distress flag raised"><span class="t"><b>Distress signal surfaced</b> <span class="hint">— stop the task, offer helplines</span></span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Trust &amp; return</legend>
+        <div class="meta">
+          <div class="field">
+            <span class="cap">Trust in the approach (1–5)</span>
+            <div class="seg scale" role="radiogroup" aria-label="Trust in approach">
+              <input type="radio" name="ta" id="ta1" value="1"><label for="ta1">1</label>
+              <input type="radio" name="ta" id="ta2" value="2"><label for="ta2">2</label>
+              <input type="radio" name="ta" id="ta3" value="3"><label for="ta3">3</label>
+              <input type="radio" name="ta" id="ta4" value="4"><label for="ta4">4</label>
+              <input type="radio" name="ta" id="ta5" value="5"><label for="ta5">5</label>
+            </div>
+          </div>
+          <div class="field">
+            <span class="cap">Trust in the data (1–5)</span>
+            <div class="seg scale" role="radiogroup" aria-label="Trust in data">
+              <input type="radio" name="td" id="td1" value="1"><label for="td1">1</label>
+              <input type="radio" name="td" id="td2" value="2"><label for="td2">2</label>
+              <input type="radio" name="td" id="td3" value="3"><label for="td3">3</label>
+              <input type="radio" name="td" id="td4" value="4"><label for="td4">4</label>
+              <input type="radio" name="td" id="td5" value="5"><label for="td5">5</label>
+            </div>
+          </div>
+          <div class="field full">
+            <span class="cap">Would use again / recommend?</span>
+            <div class="seg" role="radiogroup" aria-label="Would return">
+              <input type="radio" name="ret" id="ret-y" value="Yes"><label for="ret-y">Yes</label>
+              <input type="radio" name="ret" id="ret-m" value="Maybe"><label for="ret-m">Maybe</label>
+              <input type="radio" name="ret" id="ret-n" value="No"><label for="ret-n">No</label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Bets — validated, mixed, or falsified?</legend>
+        <p class="legend-note">Read each against what actually happened, not what you hoped.</p>
+        <div class="hyp" id="hyp"></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>In their words</legend>
+        <div class="qual">
+          <div class="field"><label class="cap" for="aha">“I hadn’t considered that” moment — and did it fit them?</label><textarea id="aha" placeholder="What surprised them, and whether it actually suited them (H3)."></textarea></div>
+          <div class="field"><label class="cap" for="quote">Top verbatim quote</label><textarea id="quote" placeholder="Their words, not your paraphrase."></textarea></div>
+          <div class="field"><label class="cap" for="useful">The one thing that would make it genuinely useful</label><textarea id="useful"></textarea></div>
+          <div class="field"><label class="cap" for="notes">Notes — hesitations, misreads, where they lit up</label><textarea id="notes"></textarea></div>
+        </div>
+      </fieldset>
+    </form>
+
+    <aside class="rail">
+      <h2>Saved sessions</h2>
+      <div class="saved-list" id="saved"></div>
+    </aside>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY="marg_sessions_v1", THEMEKEY="marg_sheet_theme";
+  var HYPS=[
+    {c:"H1",t:"Marg reduced their decision anxiety."},
+    {c:"H2",t:"“No verdict — here’s the whole field” felt helpful, not evasive."},
+    {c:"H3",t:"The expansion tier created a real, fitting surprise."},
+    {c:"H4",t:"The chat got used and stayed trusted."},
+    {c:"H5",t:"Unverified-but-honest data was acceptable to act on.",gate:true},
+    {c:"H6",t:"The second persona felt coherent and built-for-them.",only:"mid-career only"}
+  ];
+  var $=function(s,r){return (r||document).querySelector(s);};
+  var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+
+  // ---- theme toggle ----
+  try{ var st=localStorage.getItem(THEMEKEY); if(st) document.documentElement.setAttribute("data-theme",st); }catch(e){}
+  $("#btn-theme").addEventListener("click",function(){
+    var cur=document.documentElement.getAttribute("data-theme");
+    var mqDark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var next=cur? (cur==="dark"?"light":"dark") : (mqDark?"light":"dark");
+    document.documentElement.setAttribute("data-theme",next);
+    try{localStorage.setItem(THEMEKEY,next);}catch(e){}
+  });
+
+  // ---- build H1-H6 scorecard ----
+  var hy=$("#hyp");
+  HYPS.forEach(function(h){
+    var row=document.createElement("div"); row.className="hrow";
+    var lab=document.createElement("div"); lab.className="hlabel";
+    lab.innerHTML='<span class="code">'+h.c+'</span>'+h.t+(h.gate?'<span class="gate">→ gates RAG</span>':'')+(h.only?'<span class="only">'+h.only+'</span>':'');
+    var vd=document.createElement("div"); vd.className="verdict";
+    [["Validated","ok"],["Mixed","mix"],["Falsified","no"]].forEach(function(o){
+      var id="v-"+h.c+"-"+o[1];
+      var inp=document.createElement("input"); inp.type="radio"; inp.name="v-"+h.c; inp.value=o[0]; inp.id=id;
+      var l=document.createElement("label"); l.className=o[1]; l.setAttribute("for",id); l.textContent=o[0];
+      vd.appendChild(inp); vd.appendChild(l);
+    });
+    row.appendChild(lab); row.appendChild(vd); hy.appendChild(row);
+  });
+
+  // ---- field IO ----
+  var TEXT=["date","pid","aha","quote","useful","notes"];
+  var RADIO=["persona","role","stance","ta","td","ret"].concat(HYPS.map(function(h){return "v-"+h.c;}));
+  function gather(){
+    var o={};
+    TEXT.forEach(function(id){o[id]=$("#"+id).value.trim();});
+    RADIO.forEach(function(n){var el=$('[name="'+n+'"]:checked');o[n]=el?el.value:"";});
+    o.beh=$$('[name="beh"]:checked').map(function(e){return e.value;});
+    return o;
+  }
+  function fill(o){
+    o=o||{};
+    TEXT.forEach(function(id){$("#"+id).value=o[id]||"";});
+    RADIO.forEach(function(n){
+      $$('[name="'+n+'"]').forEach(function(e){e.checked=false;});
+      if(o[n]){var el=$('[name="'+n+'"][value="'+o[n]+'"]'); if(el) el.checked=true;}
+    });
+    var beh=o.beh||[];
+    $$('[name="beh"]').forEach(function(e){e.checked=beh.indexOf(e.value)>-1;});
+  }
+  function blank(){
+    var d=new Date(); var iso=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    return {date:iso,pid:"",persona:"Class 10",role:"Student",beh:[]};
+  }
+
+  // ---- storage ----
+  function load(){ try{return JSON.parse(localStorage.getItem(KEY))||[];}catch(e){return [];} }
+  function save(list){ try{localStorage.setItem(KEY,JSON.stringify(list));}catch(e){} }
+
+  var current=null; // id of loaded session, or null for a new one
+  var isExample=false;
+
+  function toast(m){ var t=$("#toast"); t.textContent=m; t.classList.add("show"); setTimeout(function(){t.classList.remove("show");},1600); }
+
+  function fmtDate(s){ if(!s) return "—"; var p=s.split("-"); return p.length===3? p[2]+"/"+p[1] : s; }
+
+  function renderSaved(){
+    var list=load(); var box=$("#saved");
+    box.innerHTML="";
+    if(!list.length){ box.innerHTML='<div class="empty">No sessions saved yet. Fill the sheet and hit Save.</div>'; return; }
+    list.slice().reverse().forEach(function(s){
+      var card=document.createElement("div"); card.className="scard"+(s.id===current?" active":"");
+      var pcls=s.persona==="Mid-career"?"pmc":"p10";
+      var ns=(s.beh||[]).indexOf("Reached a 2-3 shortlist")>-1;
+      card.innerHTML=
+        '<div class="r1"><span class="who">'+(escapeHtml(s.pid)||"Untitled")+'</span><span class="date">'+fmtDate(s.date)+'</span></div>'+
+        '<div class="r2">'+
+          '<span class="tag '+pcls+'">'+(s.persona||"—")+'</span>'+
+          (s.role?'<span>'+escapeHtml(s.role)+'</span>':'')+
+          (ns?'<span class="tag ns">★ shortlist</span>':'')+
+          (s.example?'<span class="tag ex">EXAMPLE</span>':'')+
+        '</div>';
+      var del=document.createElement("button"); del.className="del"; del.textContent="Delete";
+      del.addEventListener("click",function(ev){ ev.stopPropagation();
+        var l=load().filter(function(x){return x.id!==s.id;}); save(l);
+        if(current===s.id){current=null;isExample=false;}
+        renderSaved(); renderSummary();
+      });
+      card.addEventListener("click",function(){
+        current=s.id; isExample=!!s.example;
+        fill(s); $("#banner").classList.toggle("hide",!s.example);
+        renderSaved(); window.scrollTo({top:0,behavior:"smooth"});
+      });
+      card.appendChild(del); box.appendChild(card);
+    });
+  }
+
+  function renderSummary(){
+    var list=load(), n=list.length;
+    var ns=list.filter(function(s){return (s.beh||[]).indexOf("Reached a 2-3 shortlist")>-1;}).length;
+    var taV=avg(list,"ta"), tdV=avg(list,"td");
+    var h5={Validated:0,Mixed:0,Falsified:0};
+    list.forEach(function(s){ var v=s["v-H5"]; if(v&&h5[v]!==undefined) h5[v]++; });
+    var el=$("#summary");
+    el.innerHTML=
+      tile(n, "sessions captured")+
+      tileNS(ns, n, "reached a 2–3 shortlist")+
+      tile(taV||"—", "avg trust · approach")+
+      tileH5(h5);
+  }
+  function avg(list,k){ var v=list.map(function(s){return parseFloat(s[k]);}).filter(function(x){return !isNaN(x);}); if(!v.length) return ""; return (v.reduce(function(a,b){return a+b;},0)/v.length).toFixed(1); }
+  function tile(n,l){ return '<div class="tile"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>'; }
+  function tileNS(a,b,l){ return '<div class="tile ns"><div class="n">'+a+(b?'<span style="font-size:15px;color:var(--muted)"> / '+b+'</span>':'')+'</div><div class="l">'+l+'</div></div>'; }
+  function tileH5(h5){
+    return '<div class="tile"><div class="l" style="margin:0 0 2px">H5 — data acceptable? <b style="color:var(--amber)">(gates RAG)</b></div>'+
+      '<div class="h5tally"><span class="v-ok">'+h5.Validated+' ✓</span><span class="v-mix">'+h5.Mixed+' ~</span><span class="v-no">'+h5.Falsified+' ✕</span></div></div>';
+  }
+
+  function escapeHtml(s){ return (s||"").replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+
+  // ---- actions ----
+  $("#btn-save").addEventListener("click",function(){
+    var o=gather(); var list=load();
+    if(current){ // update existing
+      var i=list.findIndex(function(x){return x.id===current;});
+      if(i>-1){ o.id=current; o.example=false; list[i]=o; }
+      else { o.id=current=Date.now()+""; list.push(o); }
+    } else { o.id=current=Date.now()+""; o.example=false; list.push(o); }
+    isExample=false; $("#banner").classList.add("hide");
+    save(list); renderSaved(); renderSummary(); toast("Session saved");
+  });
+  $("#btn-new").addEventListener("click",function(){
+    current=null; isExample=false; fill(blank()); $("#banner").classList.add("hide");
+    renderSaved(); $("#pid").focus(); window.scrollTo({top:0,behavior:"smooth"});
+  });
+  $("#btn-print").addEventListener("click",function(){ window.print(); });
+  $("#btn-copy").addEventListener("click",function(){
+    var md=toMarkdown(gather());
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(md).then(function(){toast("Copied as Markdown");},function(){toast("Copy failed — select & copy manually");});
+    } else { toast("Clipboard unavailable"); }
+  });
+  function toMarkdown(o){
+    var L=[];
+    L.push("### Session — "+(o.pid||"?")+" ("+(o.persona||"?")+", "+(o.role||"?")+")  ·  "+(o.date||""));
+    L.push("Going in: "+(o.stance||"—"));
+    L.push("");
+    L.push("**Did:** "+((o.beh&&o.beh.length)?o.beh.join(" · "):"—"));
+    L.push("**Trust:** approach "+(o.ta||"—")+"/5 · data "+(o.td||"—")+"/5 · would return: "+(o.ret||"—"));
+    L.push("");
+    L.push("**Bets:**");
+    HYPS.forEach(function(h){ L.push("- "+h.c+": "+(o["v-"+h.c]||"—")+(h.gate?"  _(gates RAG)_":"")); });
+    L.push("");
+    if(o.aha) L.push("**Aha / fit:** "+o.aha);
+    if(o.quote) L.push("**Quote:** “"+o.quote+"”");
+    if(o.useful) L.push("**Would make it useful:** "+o.useful);
+    if(o.notes) L.push("**Notes:** "+o.notes);
+    return L.join("\n");
+  }
+
+  // ---- seed an example on first run ----
+  function seedIfEmpty(){
+    var list=load();
+    if(list.length) return list;
+    var ex={ id:"example", example:true, date:new Date().toISOString().slice(0,10),
+      pid:"R.K. — Class 10 student", persona:"Class 10", role:"Student", stance:"Unsure",
+      beh:["Completed intake","Opened an expansion option","Used the chat","Reached a 2-3 shortlist"],
+      ta:"4", td:"2", ret:"Yes",
+      "v-H1":"Validated","v-H2":"Validated","v-H3":"Validated","v-H4":"Mixed","v-H5":"Falsified","v-H6":"",
+      aha:"Didn’t know a polytechnic diploma could bridge to BTech — said “so I don’t have to do PU?”. Fit them: they like building things.",
+      quote:"“It’s the first time someone didn’t just tell me to take Science.”",
+      useful:"Real, current fees for the actual colleges near me.",
+      notes:"Loved being shown everything. Hesitated at the ‘provisional’ note — wanted to know which numbers to trust. H5 is the wall, not the format." };
+    list=[ex]; save(list); return list;
+  }
+
+  // ---- boot ----
+  var initial=seedIfEmpty();
+  var first=initial[0];
+  current=first.id; isExample=!!first.example;
+  fill(first);
+  $("#banner").classList.toggle("hide",!first.example);
+  renderSaved(); renderSummary();
+})();
+</script>

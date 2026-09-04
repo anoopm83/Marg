@@ -153,3 +153,16 @@ input::placeholder,textarea::placeholder{ color:#9aa2a6; }
 .exp-ribbon{background:#FBEFD6;color:#7A5A12;border-bottom:1px solid #EBD9A8;font-size:12px;line-height:1.4;padding:8px 14px;text-align:center;font-weight:600;}
 .badge-exp{flex:none;font-size:10px;font-weight:800;letter-spacing:.4px;color:#8a5a00;background:#FBEFD6;border:1px solid #EBD9A8;padding:3px 8px;border-radius:999px;}
 .badge-ok{flex:none;font-size:10px;font-weight:800;letter-spacing:.4px;color:var(--primary-d);background:var(--primary-tint);border:1px solid #cfe6e4;padding:3px 8px;border-radius:999px;}
+
+/* ---- in-app feedback (validation instrument) ---- */
+.fb{margin-top:16px;border:1px dashed var(--border);border-radius:12px;padding:12px 14px;background:#FBFAF6;}
+.fb-row{display:flex;align-items:center;gap:10px;}
+.fb-q{flex:1;font-size:13.5px;font-weight:600;color:var(--ink);}
+.fb-btn{border:1px solid var(--border);background:#fff;border-radius:10px;padding:5px 10px;font-size:16px;line-height:1;cursor:pointer;transition:all .12s ease;}
+.fb-btn:hover{border-color:#cfc9bc;}
+.fb-btn.on{border-color:var(--primary);background:var(--primary-tint);}
+.fb-note{display:flex;gap:8px;margin-top:10px;}
+.fb-note .ta{margin-top:0;min-height:0;height:42px;flex:1;}
+.fb-send{flex:none;border:none;background:var(--primary);color:#fff;border-radius:10px;padding:0 16px;font-weight:600;font-size:14px;cursor:pointer;}
+.fb-send:hover{background:var(--primary-d);}
+.fb-done{margin-top:16px;display:flex;gap:7px;align-items:center;font-size:13px;color:var(--primary-d);font-weight:600;}

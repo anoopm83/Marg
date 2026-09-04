@@ -84,6 +84,32 @@ export function Chat({ ctx, mode, contextId, goal, placeholder, seedAssistant }:
   );
 }
 
+// Lightweight validation instrument: a 👍/👎 + optional note at key moments,
+// logged to the events table (api.event) so moderated sessions produce real signal.
+export function Feedback({ ctx, where, prompt }: { ctx: Ctx; where: string; prompt: string }) {
+  const [rating, setRating] = useState<null | "up" | "down">(null);
+  const [note, setNote] = useState("");
+  const [sent, setSent] = useState(false);
+  const rate = (r: "up" | "down") => { setRating(r); api.event("feedback", { where, rating: r, persona: ctx.persona?.id }); };
+  const submit = () => { if (note.trim()) api.event("feedback_note", { where, rating, note: note.trim(), persona: ctx.persona?.id }); setSent(true); };
+  if (sent) return <div className="fb-done"><Icon name="check" size={14} /> Thanks — that helps us learn.</div>;
+  return (
+    <div className="fb">
+      <div className="fb-row">
+        <span className="fb-q">{prompt}</span>
+        <button className={"fb-btn" + (rating === "up" ? " on" : "")} onClick={() => rate("up")} aria-label="Helpful">👍</button>
+        <button className={"fb-btn" + (rating === "down" ? " on" : "")} onClick={() => rate("down")} aria-label="Not helpful">👎</button>
+      </div>
+      {rating && (
+        <div className="fb-note">
+          <input className="ta" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Anything you'd add? (optional)" onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
+          <button className="fb-send" onClick={submit}>Send</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function PersonaPick({ ctx }: { ctx: Ctx }) {
   return (
     <section className="screen">
@@ -450,6 +476,7 @@ export function Detail({ ctx }: { ctx: Ctx }) {
           <div className="disc"><Icon name="info" size={13} style={{ color: "var(--muted)" }} /> {loading ? "personalizing…" : "An AI suggestion, not a guarantee — you decide."}</div>
         </div>
       )}
+      {refl && !loading && <Feedback ctx={ctx} where="reflection" prompt="Was this helpful?" />}
       {!showChat ? (
         <button className="ask-open" onClick={() => setShowChat(true)}>
           <span style={{ color: "var(--primary)" }}><Icon name="bulb" size={17} stroke={2} /></span>
@@ -567,6 +594,7 @@ export function Shortlist({ ctx }: { ctx: Ctx }) {
         <button className="btn btn-ghost" onClick={() => ctx.toast("In the real product, sharing is yours to control — a family view, no rankings.")}>Save &amp; share with my family</button>
         <button className="btn btn-soft" onClick={() => ctx.toast("Saved. Come back whenever you're ready — that's a fine choice.")}>I'm not ready to choose yet — save &amp; come back</button>
       </div>
+      <Feedback ctx={ctx} where="session" prompt="How did exploring feel?" />
       <FooterLinks ctx={ctx} />
     </section>
   );

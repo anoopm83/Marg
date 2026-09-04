@@ -8,6 +8,14 @@ import {
 
 type View = { name: string; param: string | null };
 
+const THEMES = ["dark", "light", "contrast"] as const;
+type Theme = (typeof THEMES)[number];
+const SCALES = [0.9, 1, 1.15, 1.3, 1.5]; // text-size steps (zoom on the content)
+
+const MoonIcon = () => (<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6 6 0 0 0 10.5 10.5z" /></svg>);
+const SunIcon = () => (<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.3" /><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.5 1.5M17.3 17.3l1.5 1.5M18.8 5.2l-1.5 1.5M6.7 17.3l-1.5 1.5" /></svg>);
+const ContrastIcon = () => (<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none" /></svg>);
+
 export default function App() {
   const [view, setView] = useState<View>({ name: "home", param: null });
   const [options, setOptions] = useState<Option[]>([]);
@@ -23,6 +31,28 @@ export default function App() {
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [safety, setSafety] = useState<{ open: boolean; distress: boolean }>({ open: false, distress: false });
   const [booted, setBooted] = useState(false);
+  const [theme, setThemeState] = useState<Theme>("dark"); // dark is the default
+  const [fontStep, setFontStep] = useState(1);            // index into SCALES (1 = 1.0×)
+
+  const setTheme = useCallback((t: Theme) => {
+    setThemeState(t);
+    document.documentElement.setAttribute("data-theme", t);
+    try { localStorage.setItem("marg_theme", t); } catch { /* private mode */ }
+  }, []);
+  const bumpFont = useCallback((d: number) => setFontStep((s) => {
+    const n = Math.max(0, Math.min(SCALES.length - 1, s + d));
+    try { localStorage.setItem("marg_fontstep", String(n)); } catch { /* private mode */ }
+    return n;
+  }), []);
+  // Restore saved preferences on first load (default: dark, 1.0×).
+  useEffect(() => {
+    try {
+      const t = localStorage.getItem("marg_theme");
+      if (t && (THEMES as readonly string[]).includes(t)) { setThemeState(t as Theme); document.documentElement.setAttribute("data-theme", t); }
+      const f = parseInt(localStorage.getItem("marg_fontstep") || "", 10);
+      if (!Number.isNaN(f) && f >= 0 && f < SCALES.length) setFontStep(f);
+    } catch { /* private mode — keep defaults */ }
+  }, []);
 
   const go = useCallback((name: string, param: string | null = null) => { setView({ name, param }); window.scrollTo(0, 0); }, []);
   const toast = useCallback((m: string) => setToastMsg(m), []);
@@ -107,10 +137,22 @@ export default function App() {
 
   return (
     <div className="frame">
+      <div className="a11y">
+        <div className="a11y-group">
+          <span className="a11y-label">Text size</span>
+          <button className="a11y-btn am" onClick={() => bumpFont(-1)} disabled={fontStep === 0} aria-label="Decrease text size">A–</button>
+          <button className="a11y-btn ap" onClick={() => bumpFont(1)} disabled={fontStep === SCALES.length - 1} aria-label="Increase text size">A+</button>
+        </div>
+        <div className="a11y-group" role="group" aria-label="Contrast">
+          <button className={"a11y-btn theme" + (theme === "dark" ? " on" : "")} onClick={() => setTheme("dark")} aria-pressed={theme === "dark"} title="Dark"><MoonIcon /></button>
+          <button className={"a11y-btn theme" + (theme === "light" ? " on" : "")} onClick={() => setTheme("light")} aria-pressed={theme === "light"} title="Light"><SunIcon /></button>
+          <button className={"a11y-btn theme" + (theme === "contrast" ? " on" : "")} onClick={() => setTheme("contrast")} aria-pressed={theme === "contrast"} title="High contrast"><ContrastIcon /></button>
+        </div>
+      </div>
       {showRibbon && (
         <div className="exp-ribbon">⚗ Experimental persona ({persona!.label}) — illustrative &amp; unverified. Class 10 stays the safe default.</div>
       )}
-      <main>
+      <main style={{ zoom: SCALES[fontStep] }}>
         {booted ? screen() : (
           <section className="screen"><div className="spacer" /><div className="center-note">Loading…</div><div className="spacer" /></section>
         )}

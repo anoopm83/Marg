@@ -516,7 +516,7 @@ export function Explore({ ctx }: { ctx: Ctx }) {
       )}
       {ex && (
         <button className="nudge" style={{ marginTop: 16, width: "100%" }} onClick={() => ctx.go("detail", ex.id)}>
-          <div style={{ width: 34, height: 34, borderRadius: 9, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--violet)" }}><Icon name="star" size={18} stroke={2} /></div>
+          <div style={{ width: 34, height: 34, borderRadius: 9, background: "var(--surface)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--violet)" }}><Icon name="star" size={18} stroke={2} /></div>
           <div style={{ flex: 1, textAlign: "left" }}><div className="k">HAVE YOU CONSIDERED</div><div style={{ fontWeight: 600, fontSize: 15 }}>{ex.name}</div></div>
           <span style={{ color: "var(--violet)" }}><Icon name="chev" size={18} stroke={2} /></span>
         </button>
@@ -526,7 +526,7 @@ export function Explore({ ctx }: { ctx: Ctx }) {
           const alt = !academic.has(o.id);
           return (
             <button key={o.id} className={"opt" + (alt ? " alt" : "")} onClick={() => ctx.go("detail", o.id)}>
-              <div className="dot" style={{ color: alt ? "#8a6d3b" : "var(--primary)" }}><Icon name={optIconName(o.id)} size={17} /></div>
+              <div className="dot" style={{ color: alt ? "var(--alt-fg)" : "var(--primary)" }}><Icon name={optIconName(o.id)} size={17} /></div>
               <h3>{shortName(o.name)}</h3>
               <div className="sub">{(o.leads_to || []).slice(0, 3).join(", ")}</div>
             </button>
@@ -537,7 +537,7 @@ export function Explore({ ctx }: { ctx: Ctx }) {
       {ctx.specialized.length > 0 && (
         <div style={{ marginTop: 22 }}>
           <button className="expand-head" onClick={() => setShowMore((v) => !v)} aria-expanded={showMore}>
-            <div style={{ width: 34, height: 34, borderRadius: 9, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--violet)", flex: "none" }}><Icon name="star" size={17} stroke={2} /></div>
+            <div style={{ width: 34, height: 34, borderRadius: 9, background: "var(--surface)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--violet)", flex: "none" }}><Icon name="star" size={17} stroke={2} /></div>
             <div style={{ flex: 1, textAlign: "left" }}>
               <div className="k" style={{ color: "var(--violet)" }}>PATHS YOU MIGHT NOT HAVE CONSIDERED</div>
               <div className="muted" style={{ fontSize: 12.5, marginTop: 2 }}>{showMore ? "Not ranked — confirm details before you rely on them." : `${ctx.specialized.length} more paths, when you're ready — no rush`}</div>
@@ -898,7 +898,7 @@ export function DeleteConfirm({ ctx }: { ctx: Ctx }) {
       <p className="lead" style={{ marginTop: 10 }}>This removes your account, answers, and shortlist for good. It can't be undone — and that's your right.</p>
       <div className="spacer" />
       <div className="stack">
-        <button className="btn btn-soft" disabled={busy} onClick={del} style={{ color: "#B0261D" }}>{busy ? "Deleting…" : "Yes, delete my data"}</button>
+        <button className="btn btn-soft" disabled={busy} onClick={del} style={{ color: "var(--danger)" }}>{busy ? "Deleting…" : "Yes, delete my data"}</button>
         <button className="btn btn-ghost" onClick={() => ctx.go("shortlist")}>Keep my data</button>
       </div>
     </section>

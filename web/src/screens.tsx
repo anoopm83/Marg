@@ -885,7 +885,7 @@ export function AdminDashboard({ ctx }: { ctx: Ctx }) {
     return (
       <div className="adm-frow">
         <div className="adm-fmeta"><span className="adm-flabel">{label}</span><b>{val}</b><span className="adm-fpct">{w}%</span></div>
-        <div className="adm-fbar"><span style={{ width: w + "%" }} /></div>
+        <div className="adm-fbar"><span style={{ transform: `scaleX(${w / 100})` }} /></div>
       </div>
     );
   };

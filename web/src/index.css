@@ -381,7 +381,7 @@ input::placeholder,textarea::placeholder{ color:var(--placeholder); }
 .adm-fmeta b{font-variant-numeric:tabular-nums;font-size:14px;}
 .adm-fpct{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;min-width:36px;text-align:right;}
 .adm-fbar{height:8px;border-radius:999px;background:var(--border);overflow:hidden;}
-.adm-fbar>span{display:block;height:100%;background:var(--primary);border-radius:999px;transition:width .3s ease;}
+.adm-fbar>span{display:block;height:100%;width:100%;background:var(--primary);border-radius:999px;transform-origin:left;transition:transform .3s ease;}
 .adm-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
 .adm-tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:var(--shadow);}
 .adm-n{font-family:'Spectral',Georgia,serif;font-weight:600;font-size:26px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums;}

@@ -78,7 +78,7 @@ const CONFIGS: Record<string, PersonaConfig> = {
   },
   midcareer: {
     id: "midcareer",
-    label: "Mid-career (prototype)",
+    label: "Mid-career (beta)",
     age_band: "25-45",
     category: "career-change",
     experimental: true,
@@ -102,11 +102,11 @@ const CONFIGS: Record<string, PersonaConfig> = {
     helplines: HELP_GENERAL,
     consent_rule: "adult_self",
     success_metric: "Informed next-step rate (explore realistic routes → reach a considered, self-owned direction) — prototype, not computed",
-    disclosure: "Experimental prototype — this persona's information is illustrative and unverified. Don't rely on any figure or route here.",
+    disclosure: "Beta — this persona's information is still being checked for accuracy. Please double-check anything important before relying on it.",
   },
   retiree: {
     id: "retiree",
-    label: "Retiree (prototype)",
+    label: "Retiree (beta)",
     age_band: "55+",
     category: "later-life",
     experimental: true,
@@ -130,7 +130,7 @@ const CONFIGS: Record<string, PersonaConfig> = {
     helplines: HELP_SENIOR,
     consent_rule: "adult_self",
     success_metric: "Reached a considered, self-owned next step for this chapter (prototype, not computed)",
-    disclosure: "Experimental prototype — illustrative and unverified. This chapter touches health, money and wellbeing: treat everything as information, not advice, and check anything important with a qualified professional.",
+    disclosure: "Beta — accuracy still being checked. This chapter touches health, money and wellbeing: treat everything as information, not advice, and check anything important with a qualified professional.",
   },
 };
 

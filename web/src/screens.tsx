@@ -280,7 +280,7 @@ export function PersonaPick({ ctx }: { ctx: Ctx }) {
             onClick={async () => { await ctx.setPersona(p); ctx.go("welcome"); }}>
             <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center", gap: 10 }}>
               <div style={{ fontFamily: "Spectral, Georgia, serif", fontWeight: 600, fontSize: 19 }}>{p.label}</div>
-              <span className={p.experimental ? "badge-exp" : "badge-ok"}>{p.experimental ? "EXPERIMENTAL" : "READY"}</span>
+              <span className={p.experimental ? "badge-exp" : "badge-ok"}>{p.experimental ? "BETA" : "READY"}</span>
             </div>
             <div className="muted" style={{ fontSize: 13.5, marginTop: 4 }}>{p.tagline} · ages {p.age_band}</div>
             {p.disclosure && <div className="note" style={{ marginTop: 10, fontSize: 12 }}>{p.disclosure}</div>}

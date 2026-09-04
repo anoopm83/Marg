@@ -170,7 +170,7 @@ export default function App() {
         </div>
       </div>
       {showRibbon && (
-        <div className="exp-ribbon">⚗ Experimental persona ({persona!.label}) — illustrative &amp; unverified. Class 10 stays the safe default.</div>
+        <div className="exp-ribbon"><b>Beta version</b> — accuracy still being checked. Please double-check anything important.</div>
       )}
       <main style={{ zoom: SCALES[fontStep] }}>
         {booted ? screen() : (

@@ -287,7 +287,7 @@ export function PersonaPick({ ctx }: { ctx: Ctx }) {
           </button>
         ))}
       </div>
-      <div className="disclaimer-foot" style={{ marginTop: 18 }}>Class 10 is the built, verified experience. Others are early prototypes of Marg's one-engine vision.</div>
+      <div className="disclaimer-foot" style={{ marginTop: 18 }}>Class 10 is the built, verified experience. Others are early beta versions of Marg's one-engine vision.</div>
     </section>
   );
 }

@@ -8,7 +8,7 @@
       "transition": "After Class 10 (Class X to XI)"
     },
     "created": "2026-09-02",
-    "disclaimer": "MVP disclaimer: Everything shown in Marg AI is provisional and for guidance only. It has not been fully verified — always double-check every detail (fees, eligibility, dates, links) against the official source before you rely on it or make a decision.",
+    "disclaimer": "MVP disclaimer: Everything shown in Marg is provisional and for guidance only. It has not been fully verified — always double-check every detail (fees, eligibility, dates, links) against the official source before you rely on it or make a decision.",
     "verification": {
       "status": "partially_verified",
       "last_verified": "2026-09-03",
@@ -837,7 +837,7 @@
         "Flexible 10+2 (NIOS)",
         "International 10+2 with global university exposure (IB/IGCSE)"
       ],
-      "frame": "NIOS is a fully-covered core option (see the 'nios' record) for students needing a flexible pace. IB/IGCSE is a BOARD SWITCH — it sits OUTSIDE Marg AI's Phase-1 CBSE scope, so it is informational only here (not a Class X→XI stream choice within CBSE), and typically a higher-cost, family-driven decision.",
+      "frame": "NIOS is a fully-covered core option (see the 'nios' record) for students needing a flexible pace. IB/IGCSE is a BOARD SWITCH — it sits OUTSIDE Marg's Phase-1 CBSE scope, so it is informational only here (not a Class X→XI stream choice within CBSE), and typically a higher-cost, family-driven decision.",
       "eligibility": {
         "text": "NIOS: open eligibility after Class 10. IB/IGCSE: admission to an international school; verify recognition for Indian college admission."
       },

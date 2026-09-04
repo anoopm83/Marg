@@ -232,7 +232,7 @@ export function Home({ ctx }: { ctx: Ctx }) {
               <div className="stage-body">
                 <div className="stage-head">
                   <h3>{s.when}</h3>
-                  <span className={s.ready ? "chip-ready" : "chip-proto"}>{s.ready ? "Ready" : "Preview"}</span>
+                  <span className={s.ready ? "chip-ready" : "chip-proto"}>{s.ready ? "Ready" : "Beta"}</span>
                 </div>
                 <p>{s.line}</p>
               </div>

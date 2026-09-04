@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { api, getToken, clearToken, type Option, type Profile, type ShortlistItem, type Pathway, type Specialized, type PersonaPublic } from "./api";
+import { api, getToken, setToken, clearToken, type Option, type Profile, type ShortlistItem, type Pathway, type Specialized, type PersonaPublic } from "./api";
 import { HELPLINES } from "./lib";
 import {
-  Home, Welcome, Consent, Register, Login, Intake, Mode, Explore, Detail, SpecializedDetail, Shortlist, DeleteConfirm,
+  Home, Welcome, Consent, Intake, Mode, Explore, Detail, SpecializedDetail, Shortlist, DeleteConfirm,
   Aspire, WhyGoal, Plan, GoalChat, PersonaPick, type Ctx,
 } from "./screens";
 
@@ -83,6 +83,15 @@ export default function App() {
     await loadPacks(p.id);
   }, [loadPacks]);
 
+  // No login barrier: silently create an anonymous guest session (random creds the
+  // user never sees) so intake/shortlist/chat work and survive reload, then go to intake.
+  const startSession = useCallback(async (consent: { path: string; school_code?: string }) => {
+    const uid = "guest_" + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+    const pwd = "g" + Math.random().toString(36).slice(2, 12) + "A1";
+    const res = await api.register({ userId: uid, password: pwd, consent });
+    if (res.ok && res.data?.token) { setToken(res.data.token); go("intake"); }
+    else { toast("Couldn't start just now — please try again."); }
+  }, [go, toast]);
   const logout = useCallback(async () => {
     try { await api.logout(); } catch { /* best-effort; clear locally regardless */ }
     clearToken();
@@ -121,7 +130,7 @@ export default function App() {
     })();
   }, [loadPacks]);
 
-  const ctx: Ctx = { go, param: view.param, toast, openSafety, logout, options, profile, setProfile, consent, setConsent, shortlist, setShortlist, scholarshipNames, pathways, specialized, disclaimer, personas, persona, setPersona };
+  const ctx: Ctx = { go, param: view.param, toast, openSafety, logout, startSession, options, profile, setProfile, consent, setConsent, shortlist, setShortlist, scholarshipNames, pathways, specialized, disclaimer, personas, persona, setPersona };
 
   function screen() {
     switch (view.name) {
@@ -129,8 +138,6 @@ export default function App() {
       case "personas": return <PersonaPick ctx={ctx} />;
       case "welcome": return <Welcome ctx={ctx} />;
       case "consent": return <Consent ctx={ctx} />;
-      case "register": return <Register ctx={ctx} />;
-      case "login": return <Login ctx={ctx} />;
       case "intake": return <Intake ctx={ctx} />;
       case "mode": return <Mode ctx={ctx} />;
       case "explore": return <Explore ctx={ctx} />;
@@ -160,7 +167,7 @@ export default function App() {
           )}
         </div>
         <div className="appbar-r">
-          {inApp && loggedIn && <button className="ab-btn" onClick={logout} title="Log out" aria-label="Log out"><LogoutIcon /></button>}
+          {inApp && loggedIn && <button className="ab-btn" onClick={logout} title="Start over" aria-label="Start over (clears this session)"><LogoutIcon /></button>}
           <button className="a11y-btn" onClick={cycleFont} title="Text size — tap to change" aria-label={`Text size ${Math.round(SCALES[fontStep] * 100)} percent, tap to change`}>
             <span className="ab-a">A</span><span className="ab-v">{Math.round(SCALES[fontStep] * 100)}%</span>
           </button>

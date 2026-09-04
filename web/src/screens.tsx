@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { api, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, type ChatMsg, type Specialized, type PersonaPublic, setToken } from "./api";
+import { api, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, type ChatMsg, type Specialized, type PersonaPublic } from "./api";
 import { Icon, Compass, Bookmark } from "./icons";
 import { INTERESTS, VALUES, localReflect, planLocal, expansionId, costText, checkDistress, shortName, optIconName } from "./lib";
 
@@ -9,6 +9,7 @@ export interface Ctx {
   toast: (m: string) => void;
   openSafety: (fromDistress?: boolean) => void;
   logout: () => void;
+  startSession: (consent: { path: string; school_code?: string }) => void | Promise<void>;
   options: Option[];
   profile: Profile;
   setProfile: (p: Profile) => void;
@@ -32,7 +33,7 @@ function FooterLinks({ ctx }: { ctx: Ctx }) {
       <span>·</span>
       <button className="help-link" onClick={() => ctx.go("delete-confirm")}>Delete my data</button>
       <span>·</span>
-      <button className="help-link" onClick={() => ctx.logout()}>Log out</button>
+      <button className="help-link" onClick={() => ctx.logout()}>Start over</button>
     </div>
   );
 }
@@ -111,7 +112,7 @@ export function Feedback({ ctx, where, prompt }: { ctx: Ctx; where: string; prom
 }
 
 // Landing / front door — the page anyone with the app link reaches. Persuade mode:
-// warm citizen-first pitch, an inline login, and a government-alignment trust band.
+// warm citizen-first pitch, a "Get started" CTA, and a government-alignment trust band.
 // Design: "dawn over the road" — the logo's sunrise mapped onto the stages of life.
 function SunMark({ size = 96 }: { size?: number }) {
   return (
@@ -134,21 +135,6 @@ function SunMark({ size = 96 }: { size?: number }) {
 }
 
 export function Home({ ctx }: { ctx: Ctx }) {
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState("");
-  async function login() {
-    if (!userId.trim() || !password) { setErr("Enter your username and password."); return; }
-    setErr(""); setBusy(true);
-    const res = await api.login({ userId: userId.trim(), password });
-    if (!res.ok || !res.data?.token) { setBusy(false); setErr(res.status === 401 ? "Incorrect username or password." : "Something went wrong. Please try again."); return; }
-    setToken(res.data.token);
-    const [ik, sl] = await Promise.all([api.getIntake(), api.getShortlist()]);
-    if (ik.data?.intake) { const it = ik.data.intake; ctx.setProfile({ interests: it.interests ?? [], values: it.values ?? [], marks: it.marks ?? null, mind_flagged: it.mind_flagged }); }
-    if (sl.data?.shortlist) ctx.setShortlist(sl.data.shortlist);
-    setBusy(false); ctx.go("mode");
-  }
   const start = () => ctx.go("personas");
   const openStage = (id: string) => { const p = ctx.personas.find((x) => x.id === id); if (p) { ctx.setPersona(p); ctx.go("welcome"); } else start(); };
   const stages = [
@@ -177,21 +163,6 @@ export function Home({ ctx }: { ctx: Ctx }) {
           <div className="hero-trust"><Icon name="lock" size={14} /> Private by design · nothing is ranked · you decide, always</div>
         </div>
       </header>
-
-      <section className="home-login">
-        <div className="login-card">
-          <h2>Welcome back</h2>
-          <p className="muted" style={{ fontSize: 13.5, marginTop: 4 }}>Log in to pick up where you left off.</p>
-          <div className="stack" style={{ marginTop: 16 }}>
-            <input className="ta" autoCapitalize="none" value={userId} onChange={(e) => setUserId(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") login(); }} placeholder="Username" aria-label="Username" />
-            <input className="ta" type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") login(); }} placeholder="Password" aria-label="Password" />
-          </div>
-          {err && <div className="err">{err}</div>}
-          <button className="btn btn-primary" style={{ marginTop: 14 }} disabled={busy} onClick={login}>{busy ? "Logging in…" : "Log in"}</button>
-          <div className="login-sep"><span>new to Marg?</span></div>
-          <button className="btn btn-ghost" onClick={start}>Create an account &amp; start</button>
-        </div>
-      </section>
 
       <section className="home-problem">
         <h2>Decision fatigue is real — and exhausting.</h2>
@@ -296,7 +267,7 @@ export function Welcome({ ctx }: { ctx: Ctx }) {
   const p = ctx.persona;
   const adult = p?.consent_rule === "adult_self";
   const isClass10 = (p?.id ?? "class10") === "class10";
-  const start = () => { if (adult) { ctx.setConsent({ path: "self_serve" }); ctx.go("register"); } else ctx.go("consent"); };
+  const start = () => { if (adult) ctx.startSession({ path: "self_serve" }); else ctx.go("consent"); };
   return (
     <section className="screen">
       {ctx.personas.length > 1 && (
@@ -320,7 +291,6 @@ export function Welcome({ ctx }: { ctx: Ctx }) {
             </div>
           </div>
         </div>
-        <button className="help-link" onClick={() => ctx.go("login")}>Already have an account? Log in</button>
       </div>
     </section>
   );
@@ -335,7 +305,7 @@ export function Consent({ ctx }: { ctx: Ctx }) {
       <div style={{ fontSize: 13.5, lineHeight: 1.5 }}>{txt}</div>
     </div>
   );
-  const choose = (path: string) => { ctx.setConsent({ path, school_code: codeRef.current?.value }); ctx.go("register"); };
+  const choose = (path: string) => { ctx.startSession({ path, school_code: codeRef.current?.value }); };
   return (
     <section className="screen">
       <div className="topbar"><button className="back" onClick={() => ctx.go("welcome")}><Icon name="back" size={22} /></button><span className="muted" style={{ fontSize: 14 }}>Setting up safely</span></div>
@@ -362,84 +332,6 @@ export function Consent({ ctx }: { ctx: Ctx }) {
         </div>
       )}
       <button className="help-link" style={{ marginTop: 16 }} onClick={() => ctx.openSafety(false)}>Feeling low or unsafe? Talk to someone now</button>
-    </section>
-  );
-}
-
-export function Register({ ctx }: { ctx: Ctx }) {
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [err, setErr] = useState("");
-  const [busy, setBusy] = useState(false);
-  async function submit() {
-    setErr("");
-    if (userId.trim().length < 3) return setErr("Pick a username of at least 3 characters.");
-    if (password.length < 6) return setErr("Pick a password of at least 6 characters.");
-    setBusy(true);
-    const res = await api.register({ userId: userId.trim(), password, email: email.trim() || undefined, consent: ctx.consent });
-    setBusy(false);
-    if (res.ok && res.data?.token) { setToken(res.data.token); ctx.go("intake"); return; }
-    const code = (res.data as any)?.error;
-    setErr(code === "handle_taken" ? "That username is taken — log in instead, or try another." : code === "weak_password" ? "That password is too short." : "Something went wrong. Please try again.");
-  }
-  return (
-    <section className="screen">
-      <div className="topbar"><button className="back" onClick={() => ctx.go("consent")}><Icon name="back" size={22} /></button><span className="muted" style={{ fontSize: 14 }}>Create your login</span></div>
-      <h1 style={{ fontSize: 25 }}>A login so you can come back</h1>
-      <p className="lead" style={{ marginTop: 10 }}>Indecision is normal — pick a username and password so your saved options are waiting when you return.</p>
-      <div className="stack" style={{ marginTop: 20 }}>
-        <div><label className="field-label">Username</label><input className="ta" autoCapitalize="none" value={userId} onChange={(e) => setUserId(e.target.value)} placeholder="anything you'll remember" /></div>
-        <div><label className="field-label">Password</label><input className="ta" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="at least 6 characters" /></div>
-        <div><label className="field-label">Email <span className="muted" style={{ fontWeight: 400 }}>(optional — for recovery)</span></label><input className="ta" type="email" autoCapitalize="none" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="skip if you don't have one" /></div>
-      </div>
-      {err && <div className="err">{err}</div>}
-      <div className="spacer" style={{ minHeight: 16 }} />
-      <button className="btn btn-primary" disabled={busy} onClick={submit}>{busy ? "Creating…" : "Create account"}</button>
-      <button className="help-link" style={{ marginTop: 12 }} onClick={() => ctx.go("login")}>Already registered? Log in</button>
-      <div className="center-note" style={{ marginTop: 8 }}>No email needed. Nothing is shared.</div>
-    </section>
-  );
-}
-
-export function Login({ ctx }: { ctx: Ctx }) {
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState("");
-  async function submit() {
-    if (!userId.trim() || !password) { setErr("Enter your username and password."); return; }
-    setErr(""); setBusy(true);
-    const res = await api.login({ userId: userId.trim(), password });
-    if (!res.ok || !res.data?.token) {
-      setBusy(false);
-      setErr(res.status === 401 ? "Incorrect username or password." : "Something went wrong. Please try again.");
-      return;
-    }
-    setToken(res.data.token);
-    // Hydrate the returning session — same as the initial boot in App.tsx.
-    const [ik, sl] = await Promise.all([api.getIntake(), api.getShortlist()]);
-    if (ik.data?.intake) {
-      const it = ik.data.intake;
-      ctx.setProfile({ interests: it.interests ?? [], values: it.values ?? [], marks: it.marks ?? null, mind_flagged: it.mind_flagged });
-    }
-    if (sl.data?.shortlist) ctx.setShortlist(sl.data.shortlist);
-    setBusy(false);
-    ctx.go("mode");
-  }
-  return (
-    <section className="screen">
-      <div className="topbar"><button className="back" onClick={() => ctx.go("welcome")}><Icon name="back" size={22} /></button><span className="muted" style={{ fontSize: 14 }}>Log in</span></div>
-      <h1 style={{ fontSize: 26 }}>Welcome back</h1>
-      <p className="lead" style={{ marginTop: 10 }}>Log in to pick up where you left off — your options and shortlist are saved.</p>
-      <div className="stack" style={{ marginTop: 20 }}>
-        <div><label className="field-label">Username</label><input className="ta" autoCapitalize="none" value={userId} onChange={(e) => setUserId(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} placeholder="your username" /></div>
-        <div><label className="field-label">Password</label><input className="ta" type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} placeholder="your password" /></div>
-      </div>
-      {err && <div className="err">{err}</div>}
-      <div className="spacer" style={{ minHeight: 16 }} />
-      <button className="btn btn-primary" disabled={busy} onClick={submit}>{busy ? "Logging in…" : "Log in"}</button>
-      <button className="help-link" style={{ marginTop: 14 }} onClick={() => ctx.go("consent")}>New here? Create an account</button>
     </section>
   );
 }

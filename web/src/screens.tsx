@@ -194,8 +194,8 @@ export function Home({ ctx }: { ctx: Ctx }) {
       </section>
 
       <section className="home-problem">
-        <h2>Choice overload is real — and exhausting.</h2>
-        <p className="prob-lead">If big decisions leave you frozen, you're far from alone. Across India, rapid change and endless options are wearing people down.</p>
+        <h2>Decision fatigue is real — and exhausting.</h2>
+        <p className="prob-lead">When choices pile up amid constant change, people hit <strong>decision paralysis</strong> — the thought-paralysis of being frozen, unable to act. At a big crossroads, you're far from alone.</p>
         <div className="stat-lead">
           <b>1 in 3</b>
           <span>Indians hit <strong>decision paralysis</strong> — overwhelmed, and unable to act.</span>
@@ -206,6 +206,10 @@ export function Home({ ctx }: { ctx: Ctx }) {
           <div className="ministat"><b>57%</b><span>regret chances they let slip</span></div>
         </div>
         <p className="prob-src">Survey of Indian adults · reported by The Financial Express, 2024</p>
+        <div className="prob-authority">
+          <span className="pa-ic"><Icon name="building" size={19} stroke={2} /></span>
+          <p><strong>India's own institutions now treat decision fatigue as a real problem.</strong> DARPG is delayering decision-heavy government processes, and the Ministry of Communications (Dept. of Telecom) runs cognitive-wellbeing training for clearer decision-making — the very overload Marg helps citizens navigate at life's crossroads.</p>
+        </div>
       </section>
 
       <section className="home-intent">
@@ -248,7 +252,6 @@ export function Home({ ctx }: { ctx: Ctx }) {
           <div className="pillar"><h3>Digital India</h3><p>Citizen-first services</p></div>
         </div>
         <div className="gov-portals"><Icon name="building" size={16} /><span>Points you to real portals — the National Scholarship Portal, state education boards (DTE / PUE), and senior support like Elderline.</span></div>
-        <p className="gov-recog">India's own institutions are tackling decision fatigue — from DARPG's process simplification to the Department of Telecom's cognitive-wellbeing training. Marg brings that clarity to citizens' life choices.</p>
       </section>
 
       <section className="home-cta">

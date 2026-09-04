@@ -345,5 +345,8 @@ input::placeholder,textarea::placeholder{ color:var(--placeholder); }
 .ministat span{display:block;font-size:11.5px;color:var(--muted);line-height:1.35;margin-top:6px;}
 .prob-src{font-size:11px;color:var(--faint);margin-top:16px;}
 
-/* gov band: decision-fatigue recognition line */
-.gov-recog{position:relative;color:var(--gov-fg2);opacity:.9;font-size:12.5px;line-height:1.55;margin-top:16px;padding-top:14px;border-top:1px solid var(--gov-panel-bd);}
+/* problem section: government-recognition callout (authority + gravity) */
+.prob-authority{display:flex;gap:13px;align-items:flex-start;margin-top:20px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:15px 16px;box-shadow:var(--shadow);}
+.pa-ic{flex:none;width:38px;height:38px;border-radius:10px;background:var(--primary-tint);color:var(--primary);display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.prob-authority p{font-size:13px;color:var(--muted);line-height:1.55;}
+.prob-authority strong{color:var(--ink);font-weight:700;}

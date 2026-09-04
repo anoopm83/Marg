@@ -166,3 +166,8 @@ input::placeholder,textarea::placeholder{ color:#9aa2a6; }
 .fb-send{flex:none;border:none;background:var(--primary);color:#fff;border-radius:10px;padding:0 16px;font-weight:600;font-size:14px;cursor:pointer;}
 .fb-send:hover{background:var(--primary-d);}
 .fb-done{margin-top:16px;display:flex;gap:7px;align-items:center;font-size:13px;color:var(--primary-d);font-weight:600;}
+
+/* ---- collapsible expansion tier header ---- */
+.expand-head{width:100%;display:flex;gap:12px;align-items:center;background:var(--violet-tint);border:1px solid var(--violet-bd);border-radius:14px;padding:13px 15px;cursor:pointer;text-align:left;transition:border-color .12s ease;}
+.expand-head:hover{border-color:var(--violet);}
+.expand-head .k{font-size:11.5px;font-weight:700;letter-spacing:.3px;}

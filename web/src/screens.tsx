@@ -363,6 +363,7 @@ export function Explore({ ctx }: { ctx: Ctx }) {
   const academic = new Set(["pu_science", "pu_commerce", "pu_humanities"]);
   const exId = expansionId(ctx.options, ctx.profile);
   const ex = ctx.options.find((o) => o.id === exId);
+  const [showMore, setShowMore] = useState(false); // expansion tier collapsed by default — don't overwhelm
   return (
     <section className="screen">
       <div className="topbar"><button className="back" onClick={() => ctx.go("mode")}><Icon name="back" size={22} /></button><div className="wordmark" style={{ fontSize: 17 }}>Your options</div></div>
@@ -395,19 +396,27 @@ export function Explore({ ctx }: { ctx: Ctx }) {
       </div>
 
       {ctx.specialized.length > 0 && (
-        <>
-          <div className="section-k" style={{ marginTop: 24, color: "var(--violet)" }}>PATHS YOU MIGHT NOT HAVE CONSIDERED</div>
-          <p className="muted" style={{ fontSize: 13, marginTop: 6, lineHeight: 1.5 }}>Less common routes, shown for breadth — not ranked. Still being verified, so explore them, but confirm details before you rely on them.</p>
-          <div className="grid" style={{ marginTop: 12 }}>
-            {ctx.specialized.map((s) => (
-              <button key={s.id} className="opt spec" onClick={() => ctx.go("specialized", s.id)}>
-                <div className="dot" style={{ background: "var(--violet-tint)", color: "var(--violet)" }}><Icon name="star" size={16} /></div>
-                <h3>{s.name}</h3>
-                <div className="sub">{(s.leads_to || []).slice(0, 2).join(", ")}</div>
-              </button>
-            ))}
-          </div>
-        </>
+        <div style={{ marginTop: 22 }}>
+          <button className="expand-head" onClick={() => setShowMore((v) => !v)} aria-expanded={showMore}>
+            <div style={{ width: 34, height: 34, borderRadius: 9, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--violet)", flex: "none" }}><Icon name="star" size={17} stroke={2} /></div>
+            <div style={{ flex: 1, textAlign: "left" }}>
+              <div className="k" style={{ color: "var(--violet)" }}>PATHS YOU MIGHT NOT HAVE CONSIDERED</div>
+              <div className="muted" style={{ fontSize: 12.5, marginTop: 2 }}>{showMore ? "Not ranked — confirm details before you rely on them." : `${ctx.specialized.length} more paths, when you're ready — no rush`}</div>
+            </div>
+            <span style={{ color: "var(--violet)", flex: "none", display: "inline-flex", transform: showMore ? "rotate(90deg)" : "none", transition: "transform .18s ease" }}><Icon name="chev" size={20} stroke={2} /></span>
+          </button>
+          {showMore && (
+            <div className="grid" style={{ marginTop: 12 }}>
+              {ctx.specialized.map((s) => (
+                <button key={s.id} className="opt spec" onClick={() => ctx.go("specialized", s.id)}>
+                  <div className="dot" style={{ background: "var(--violet-tint)", color: "var(--violet)" }}><Icon name="star" size={16} /></div>
+                  <h3>{s.name}</h3>
+                  <div className="sub">{(s.leads_to || []).slice(0, 2).join(", ")}</div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       )}
 
       <button className="btn btn-ghost" style={{ marginTop: 20 }} onClick={() => ctx.go("shortlist")}>View my shortlist ({ctx.shortlist.length})</button>

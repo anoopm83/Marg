@@ -145,11 +145,22 @@ function extractJson(s: string): string {
 
 async function complete<T>(system: string, userObj: unknown, geminiSchema: unknown, schema: z.ZodType<T>): Promise<T> {
   const user = JSON.stringify(userObj);
-  let raw: string;
-  if (PROVIDER === "gemini") raw = await callGemini(system, user, geminiSchema);
-  else if (PROVIDER === "anthropic") raw = await callAnthropic(system, user);
-  else raw = await callOpenAICompat(system, user); // groq | openai | ollama
-  return schema.parse(JSON.parse(extractJson(raw)));
+  // Reasoning models (e.g. Groq gpt-oss) intermittently emit reasoning tokens that
+  // break the json_object constraint → a stochastic HTTP 400 (~1 in 3). It succeeds
+  // on retry, so try a few times before surfacing the error. (Prose chat is unaffected.)
+  let lastErr: unknown;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      let raw: string;
+      if (PROVIDER === "gemini") raw = await callGemini(system, user, geminiSchema);
+      else if (PROVIDER === "anthropic") raw = await callAnthropic(system, user);
+      else raw = await callOpenAICompat(system, user); // groq | openai | ollama
+      return schema.parse(JSON.parse(extractJson(raw)));
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr;
 }
 
 // ---- public API (same signatures the routes already use) ----

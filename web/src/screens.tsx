@@ -421,7 +421,7 @@ export function Intake({ ctx }: { ctx: Ctx }) {
   }
   return (
     <section className="screen">
-      <div className="topbar"><button className="back" onClick={() => ctx.go("mode")}><Icon name="back" size={22} /></button><div className="bar"><span style={{ transform: `scaleX(${pct / 100})` }} /></div></div>
+      <div className="topbar"><button className="back" onClick={() => ctx.go("welcome")}><Icon name="back" size={22} /></button><div className="bar"><span style={{ transform: `scaleX(${pct / 100})` }} /></div></div>
       <h1 style={{ fontSize: 25 }}>{pi.title}</h1>
       <p className="lead" style={{ marginTop: 8 }}>{pi.lead}</p>
       <div className="stack" style={{ marginTop: 20 }}>
@@ -956,8 +956,8 @@ export function AdminDashboard({ ctx }: { ctx: Ctx }) {
   if (!m) return <section className="screen">{bar}<div className="spacer" /><div className="center-note">{err || "Loading metrics…"}</div><div className="spacer" /></section>;
   const pct = Math.round(m.northStar.rate * 100);
   const f = m.funnel;
-  const stat = (label: string, val: number | string, warn = false) => (
-    <div className={"adm-tile" + (warn ? " adm-warn" : "")}><div className="adm-n">{val}</div><div className="adm-l">{label}</div></div>
+  const stat = (label: string, val: number | string, warn = false, key?: string) => (
+    <div key={key} className={"adm-tile" + (warn ? " adm-warn" : "")}><div className="adm-n">{val}</div><div className="adm-l">{label}</div></div>
   );
   const frow = (label: string, val: number) => {
     const w = f.entered ? Math.round((val / f.entered) * 100) : 0;
@@ -1019,7 +1019,7 @@ export function AdminDashboard({ ctx }: { ctx: Ctx }) {
       {Object.keys(m.chatsByPersona).length > 0 && (
         <>
           <div className="section-k" style={{ marginTop: 22 }}>CHATS BY PERSONA</div>
-          <div className="adm-grid">{Object.entries(m.chatsByPersona).map(([k, v]) => stat(k, v))}</div>
+          <div className="adm-grid">{Object.entries(m.chatsByPersona).map(([k, v]) => stat(k, v, false, k))}</div>
         </>
       )}
 

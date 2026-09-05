@@ -510,7 +510,7 @@ export function Explore({ ctx }: { ctx: Ctx }) {
   const nudgeOpt = nudge ? (nudge.spec ? ctx.specialized.find((s) => s.id === nudge.id) : ctx.options.find((o) => o.id === nudge.id)) : null;
   const [showMore, setShowMore] = useState(false); // expansion tier collapsed by default, don't overwhelm
   return (
-    <section className="screen">
+    <section className="screen wide">
       <div className="topbar"><button className="back" onClick={() => ctx.go("mode")}><Icon name="back" size={22} /></button><div className="wordmark" style={{ fontSize: 17 }}>Your options</div></div>
       <h1 style={{ fontSize: 24 }}>{ctx.persona?.framing.exploreTitle ?? "Everything open to you after Class 10"}</h1>
       <p className="lead" style={{ marginTop: 6 }}>{ctx.persona?.framing.exploreLead ?? "Nothing here is ranked. Look around freely."}</p>
@@ -1005,7 +1005,7 @@ export function AdminDashboard({ ctx }: { ctx: Ctx }) {
     );
   };
   return (
-    <section className="screen">
+    <section className="screen wide">
       {bar}
       <div className="adm-nsm">
         <div className="adm-nsm-k">★ NORTH STAR</div>

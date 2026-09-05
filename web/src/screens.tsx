@@ -250,9 +250,13 @@ export function Home({ ctx }: { ctx: Ctx }) {
       </header>
 
       <section className="home-problem">
-        <h2>Decision fatigue is real and exhausting.</h2>
-        <p className="prob-lead">When choices pile up amid constant change, people hit <strong>decision paralysis</strong>: the stuck, frozen feeling of being unable to act. At a big crossroads, you're far from alone.</p>
-        <img className="prob-illus" src="/decision-fatigue.png" alt="A person overwhelmed by competing choices: career, health, move, invest, which job, buy a home" loading="lazy" />
+        <div className="prob-head">
+          <div className="prob-text">
+            <h2>Decision fatigue is real and exhausting.</h2>
+            <p className="prob-lead">When choices pile up amid constant change, people hit <strong>decision paralysis</strong>: the stuck, frozen feeling of being unable to act. At a big crossroads, you're far from alone.</p>
+          </div>
+          <img className="prob-illus" src="/decision-fatigue.png" alt="A person overwhelmed by competing choices: career, health, move, invest, which job, buy a home" loading="lazy" />
+        </div>
         <div className="stat-lead">
           <b>1 in 3</b>
           <span>Indians hit <strong>decision paralysis</strong>, overwhelmed, and unable to act.</span>

@@ -7,10 +7,25 @@ import { options } from "./dataset.js";
 import { getPack, getConfig, personaList } from "./personas.js";
 import { reflect, planReflect, chat, interpretFeedback, type ChatMsg, MODEL, hasKey, PROVIDER } from "./llm.js";
 import { checkDistress, HELPLINES } from "./safety.js";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import { existsSync } from "node:fs";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const IS_PROD = process.env.NODE_ENV === "production";
 
 const app = express();
+app.disable("x-powered-by");
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "64kb" }));
+// Baseline security headers (kept minimal — the SPA needs inline styles/scripts).
+app.use((_req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
+  next();
+});
 
 // ---- prepared statements ----
 const insUser = db.prepare("INSERT INTO users (id, user_handle, password_hash, email, is_minor, created_at) VALUES (?,?,?,?,?,?)");
@@ -231,6 +246,9 @@ app.post("/api/event", auth, (req: AuthedRequest, res) => {
 // with real credentials + hashing before this is exposed anywhere public.
 const ADMIN_USER = process.env.ADMIN_USER || "admin";
 const ADMIN_PASS = process.env.ADMIN_PASS || "admin";
+if (IS_PROD && ADMIN_PASS === "admin") {
+  console.warn("⚠️  SECURITY: ADMIN_PASS is still the default 'admin'. Set ADMIN_USER/ADMIN_PASS env vars before exposing this publicly.");
+}
 const adminTokens = new Set<string>(); // in-memory sessions (cleared on restart)
 
 app.post("/api/admin/login", (req, res) => {
@@ -337,6 +355,19 @@ app.post("/api/admin/feedback/:id", adminAuth, (req, res) => {
   setFeedbackStatus.run(status, req.params.id);
   res.json({ ok: true });
 });
+
+// ---- serve the built front-end (single service, same origin as /api) ----
+// In production the Express server also serves web/dist, so the whole app is one
+// deployable unit and the SPA's fetch("/api/...") calls are same-origin.
+const WEB_DIST = process.env.WEB_DIST || join(HERE, "..", "..", "web", "dist");
+if (existsSync(WEB_DIST)) {
+  app.use(express.static(WEB_DIST));
+  // SPA fallback: any non-/api route returns index.html (client renders the view).
+  app.get(/^\/(?!api\/).*/, (_req, res) => res.sendFile(join(WEB_DIST, "index.html")));
+  console.log(`Serving front-end from ${WEB_DIST}`);
+} else if (IS_PROD) {
+  console.warn(`⚠️  WEB_DIST not found at ${WEB_DIST} — front-end will not be served. Run the web build first.`);
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

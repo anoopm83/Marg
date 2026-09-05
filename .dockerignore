@@ -1,0 +1,15 @@
+# Keep the build context small and never ship secrets, local DB, or dev cruft.
+**/node_modules
+**/dist
+**/.vite
+**/.env
+**/.env.*
+!**/.env.example
+api/marg.db
+api/marg.db-*
+server
+screenshots-app
+.git
+.gitignore
+*.md
+!DEPLOY.md

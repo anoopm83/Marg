@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import { db } from "./db.js";
+import { run, get, all, initDb, IS_TURSO } from "./db.js";
 import { auth, id, now, hash, verify, newToken, type AuthedRequest } from "./auth.js";
 import { options } from "./dataset.js";
 import { getPack, getConfig, personaList } from "./personas.js";
@@ -27,31 +27,36 @@ app.use((_req, res, next) => {
   next();
 });
 
-// ---- prepared statements ----
-const insUser = db.prepare("INSERT INTO users (id, user_handle, password_hash, email, is_minor, created_at) VALUES (?,?,?,?,?,?)");
-const getUserByHandle = db.prepare("SELECT * FROM users WHERE user_handle = ?");
-const insConsent = db.prepare("INSERT INTO consent (id, user_id, path, parental_status, school_code, consented_at) VALUES (?,?,?,?,?,?)");
-const insSession = db.prepare("INSERT INTO sessions (token, user_id, created_at) VALUES (?,?,?)");
-const delSession = db.prepare("DELETE FROM sessions WHERE token = ?");
-const upsertIntake = db.prepare("INSERT INTO intake (user_id, data, updated_at) VALUES (?,?,?) ON CONFLICT(user_id) DO UPDATE SET data=excluded.data, updated_at=excluded.updated_at");
-const getIntake = db.prepare("SELECT data FROM intake WHERE user_id = ?");
-const getShortlist = db.prepare("SELECT option_id, note, added_at FROM shortlist_items WHERE user_id = ? ORDER BY added_at");
-const hasShortlistItem = db.prepare("SELECT id FROM shortlist_items WHERE user_id = ? AND option_id = ?");
-const insShortlist = db.prepare("INSERT INTO shortlist_items (id, user_id, option_id, note, added_at) VALUES (?,?,?,?,?)");
-const delShortlist = db.prepare("DELETE FROM shortlist_items WHERE user_id = ? AND option_id = ?");
-const insEvent = db.prepare("INSERT INTO events (id, user_id, name, props, ts) VALUES (?,?,?,?,?)");
-const delUserCascade = db.prepare("DELETE FROM users WHERE id = ?");
-const insFeedback = db.prepare("INSERT INTO feedback (id, user_id, persona, context, rating, category, text, status, created_at) VALUES (?,?,?,?,?,?,?, 'new', ?)");
-const setFeedbackAI = db.prepare("UPDATE feedback SET ai_theme=?, ai_sentiment=?, ai_severity=?, ai_summary=?, ai_suggestion=? WHERE id=?");
-const setFeedbackStatus = db.prepare("UPDATE feedback SET status=? WHERE id=?");
-const anonFeedback = db.prepare("UPDATE feedback SET user_id=NULL WHERE user_id=?");
+// ---- SQL (libSQL is async; ? placeholders, args as arrays) ----
+const SQL = {
+  insUser: "INSERT INTO users (id, user_handle, password_hash, email, is_minor, created_at) VALUES (?,?,?,?,?,?)",
+  getUserByHandle: "SELECT * FROM users WHERE user_handle = ?",
+  insConsent: "INSERT INTO consent (id, user_id, path, parental_status, school_code, consented_at) VALUES (?,?,?,?,?,?)",
+  insSession: "INSERT INTO sessions (token, user_id, created_at) VALUES (?,?,?)",
+  delSession: "DELETE FROM sessions WHERE token = ?",
+  upsertIntake: "INSERT INTO intake (user_id, data, updated_at) VALUES (?,?,?) ON CONFLICT(user_id) DO UPDATE SET data=excluded.data, updated_at=excluded.updated_at",
+  getIntake: "SELECT data FROM intake WHERE user_id = ?",
+  getShortlist: "SELECT option_id, note, added_at FROM shortlist_items WHERE user_id = ? ORDER BY added_at",
+  hasShortlistItem: "SELECT id FROM shortlist_items WHERE user_id = ? AND option_id = ?",
+  insShortlist: "INSERT INTO shortlist_items (id, user_id, option_id, note, added_at) VALUES (?,?,?,?,?)",
+  delShortlist: "DELETE FROM shortlist_items WHERE user_id = ? AND option_id = ?",
+  insEvent: "INSERT INTO events (id, user_id, name, props, ts) VALUES (?,?,?,?,?)",
+  insFeedback: "INSERT INTO feedback (id, user_id, persona, context, rating, category, text, status, created_at) VALUES (?,?,?,?,?,?,?, 'new', ?)",
+  setFeedbackAI: "UPDATE feedback SET ai_theme=?, ai_sentiment=?, ai_severity=?, ai_summary=?, ai_suggestion=? WHERE id=?",
+  setFeedbackStatus: "UPDATE feedback SET status=? WHERE id=?",
+  anonFeedback: "UPDATE feedback SET user_id=NULL WHERE user_id=?",
+};
 
-function logEvent(userId: string | null, name: string, props: any) {
-  try { insEvent.run(id(), userId, name, props ? JSON.stringify(props) : null, now()); } catch { /* non-fatal */ }
+async function logEvent(userId: string | null, name: string, props: any) {
+  try { await run(SQL.insEvent, [id(), userId, name, props ? JSON.stringify(props) : null, now()]); } catch { /* non-fatal */ }
 }
 
+// Wrap an async route so thrown errors reach the error handler instead of hanging.
+type A = (req: any, res: express.Response) => Promise<unknown>;
+const h = (fn: A) => (req: express.Request, res: express.Response, next: express.NextFunction) => Promise.resolve(fn(req, res)).catch(next);
+
 // ---- health & content ----
-app.get("/api/health", (_req, res) => res.json({ ok: true, provider: PROVIDER, model: MODEL, ai_key_detected: hasKey, options: options.length }));
+app.get("/api/health", (_req, res) => res.json({ ok: true, provider: PROVIDER, model: MODEL, ai_key_detected: hasKey, options: options.length, store: IS_TURSO ? "turso" : "sqlite-file" }));
 // Public runtime config for the front-end (PostHog project keys are public/client-side).
 // Set POSTHOG_KEY in the host env to enable analytics — no rebuild needed.
 app.get("/api/config", (_req, res) => res.json({
@@ -74,74 +79,74 @@ app.get("/api/pathway/:id", (req, res) => {
 });
 
 // ---- auth ----
-app.post("/api/register", (req, res) => {
+app.post("/api/register", h(async (req, res) => {
   const { userId, password, email, consent } = req.body || {};
   if (!userId || typeof userId !== "string" || userId.length < 3) return res.status(400).json({ error: "bad_user_id" });
   if (!password || typeof password !== "string" || password.length < 6) return res.status(400).json({ error: "weak_password" });
   if (!consent || !["self_serve", "school_mediated"].includes(consent.path)) return res.status(400).json({ error: "consent_required" });
-  if (getUserByHandle.get(userId)) return res.status(409).json({ error: "handle_taken" });
+  if (await get(SQL.getUserByHandle, [userId])) return res.status(409).json({ error: "handle_taken" });
 
   const uid = id();
-  insUser.run(uid, userId, hash(password), email || null, 1, now());
+  await run(SQL.insUser, [uid, userId, hash(password), email || null, 1, now()]);
   // Prototype consent: recorded as verified for the chosen path. Production needs
   // real verifiable parental consent (DPDP) before this can be "verified".
-  insConsent.run(id(), uid, consent.path, "verified", consent.school_code || null, now());
+  await run(SQL.insConsent, [id(), uid, consent.path, "verified", consent.school_code || null, now()]);
   const token = newToken();
-  insSession.run(token, uid, now());
-  logEvent(uid, "account_created", { path: consent.path });
+  await run(SQL.insSession, [token, uid, now()]);
+  await logEvent(uid, "account_created", { path: consent.path });
   return res.json({ token, userId });
-});
+}));
 
-app.post("/api/login", (req, res) => {
+app.post("/api/login", h(async (req, res) => {
   const { userId, password } = req.body || {};
-  const u = getUserByHandle.get(userId) as any;
+  const u = await get<any>(SQL.getUserByHandle, [userId]);
   if (!u || !verify(password || "", u.password_hash)) return res.status(401).json({ error: "invalid_credentials" });
   const token = newToken();
-  insSession.run(token, u.id, now());
+  await run(SQL.insSession, [token, u.id, now()]);
   return res.json({ token, userId: u.user_handle });
-});
+}));
 
-app.post("/api/logout", auth, (req: AuthedRequest, res) => {
+app.post("/api/logout", auth, h(async (req: AuthedRequest, res) => {
   const header = req.header("authorization") || "";
-  delSession.run(header.replace(/^Bearer\s+/i, ""));
+  await run(SQL.delSession, [header.replace(/^Bearer\s+/i, "")]);
   res.json({ ok: true });
-});
+}));
 
 // ---- intake ----
-app.get("/api/intake", auth, (req: AuthedRequest, res) => {
-  const row = getIntake.get(req.userId!) as { data: string } | undefined;
+app.get("/api/intake", auth, h(async (req: AuthedRequest, res) => {
+  const row = await get<{ data: string }>(SQL.getIntake, [req.userId!]);
   res.json({ intake: row ? JSON.parse(row.data) : null });
-});
-app.post("/api/intake", auth, (req: AuthedRequest, res) => {
+}));
+app.post("/api/intake", auth, h(async (req: AuthedRequest, res) => {
   const data = req.body || {};
-  upsertIntake.run(req.userId!, JSON.stringify(data), now());
-  logEvent(req.userId!, "intake_completed", { fields: Object.keys(data).length });
+  await run(SQL.upsertIntake, [req.userId!, JSON.stringify(data), now()]);
+  await logEvent(req.userId!, "intake_completed", { fields: Object.keys(data).length });
   res.json({ ok: true });
-});
+}));
 
 // ---- reflections (grounded Claude) ----
-app.post("/api/reflect", auth, async (req: AuthedRequest, res) => {
+app.post("/api/reflect", auth, h(async (req: AuthedRequest, res) => {
   const { optionId, persona } = req.body || {};
   const option = getPack(persona).optById.get(optionId);
   if (!option) return res.status(400).json({ error: "unknown_option" });
   if (!hasKey) return res.status(503).json({ error: "no_ai_key", message: `No key for LLM_PROVIDER='${PROVIDER}'. Set it in api/.env (see api/.env.example) to enable live reflections.` });
-  const row = getIntake.get(req.userId!) as { data: string } | undefined;
+  const row = await get<{ data: string }>(SQL.getIntake, [req.userId!]);
   const profile = row ? JSON.parse(row.data) : {};
   try {
     const reflection = await reflect(profile, option, getConfig(persona).audience);
-    logEvent(req.userId!, "option_reflected", { option_id: optionId });
+    await logEvent(req.userId!, "option_reflected", { option_id: optionId });
     res.json({ source: PROVIDER, model: MODEL, reflection });
   } catch (e: any) {
     res.status(e?.status || 500).json({ error: "reflect_failed", message: String(e?.message || e) });
   }
-});
+}));
 
-app.post("/api/plan", auth, async (req: AuthedRequest, res) => {
+app.post("/api/plan", auth, h(async (req: AuthedRequest, res) => {
   const { pathwayId, persona } = req.body || {};
   const pathway = getPack(persona).pathById.get(pathwayId);
   if (!pathway) return res.status(400).json({ error: "unknown_pathway" });
   if (!hasKey) return res.status(503).json({ error: "no_ai_key", message: `No key for LLM_PROVIDER='${PROVIDER}'. Set it in api/.env (see api/.env.example) to enable live reflections.` });
-  const row = getIntake.get(req.userId!) as { data: string } | undefined;
+  const row = await get<{ data: string }>(SQL.getIntake, [req.userId!]);
   const profile = row ? JSON.parse(row.data) : {};
   try {
     const plan = await planReflect(profile, pathway, getConfig(persona).audience);
@@ -149,10 +154,10 @@ app.post("/api/plan", auth, async (req: AuthedRequest, res) => {
   } catch (e: any) {
     res.status(e?.status || 500).json({ error: "plan_failed", message: String(e?.message || e) });
   }
-});
+}));
 
 // ---- conversational chat (grounded, no-verdict; safety-gated) ----
-app.post("/api/chat", auth, async (req: AuthedRequest, res) => {
+app.post("/api/chat", auth, h(async (req: AuthedRequest, res) => {
   const { mode, contextId, goal, messages, persona } = req.body || {};
   if (!Array.isArray(messages) || messages.length === 0) return res.status(400).json({ error: "no_messages" });
 
@@ -160,14 +165,14 @@ app.post("/api/chat", auth, async (req: AuthedRequest, res) => {
   // Helplines are persona-appropriate (config-driven), falling back to the default set.
   const lastUser = [...messages].reverse().find((m: any) => m?.role === "user");
   if (lastUser && checkDistress(String(lastUser.content || ""))) {
-    logEvent(req.userId!, "distress_flag_raised", { source: "chat", mode, persona });
+    await logEvent(req.userId!, "distress_flag_raised", { source: "chat", mode, persona });
     return res.json({ safety: true, helplines: getConfig(persona).helplines || HELPLINES });
   }
 
   if (!hasKey) return res.status(503).json({ error: "no_ai_key", message: `No key for LLM_PROVIDER='${PROVIDER}'. Set it in api/.env to enable chat.` });
 
   const pack = getPack(persona);
-  const row = getIntake.get(req.userId!) as { data: string } | undefined;
+  const row = await get<{ data: string }>(SQL.getIntake, [req.userId!]);
   const profile = row ? JSON.parse(row.data) : {};
   const chatMode: "explore" | "aspire" = mode === "aspire" ? "aspire" : "explore";
   const currentOption = chatMode === "explore" && contextId ? pack.optById.get(contextId) : null;
@@ -186,7 +191,7 @@ app.post("/api/chat", auth, async (req: AuthedRequest, res) => {
   try {
     const cfg = getConfig(persona);
     const reply = await chat(groundCtx, history, cfg.audience, cfg.experimental);
-    logEvent(req.userId!, "chat_message", { mode, turns: history.length, persona });
+    await logEvent(req.userId!, "chat_message", { mode, turns: history.length, persona });
     res.json({ source: PROVIDER, model: MODEL, reply });
   } catch (e: any) {
     const msg = String(e?.message || e);
@@ -196,56 +201,62 @@ app.post("/api/chat", auth, async (req: AuthedRequest, res) => {
     }
     res.status(e?.status || 500).json({ error: "chat_failed", message: msg });
   }
-});
+}));
 
 // ---- shortlist ----
-app.get("/api/shortlist", auth, (req: AuthedRequest, res) => {
-  res.json({ shortlist: getShortlist.all(req.userId!) });
-});
-app.post("/api/shortlist", auth, (req: AuthedRequest, res) => {
+app.get("/api/shortlist", auth, h(async (req: AuthedRequest, res) => {
+  res.json({ shortlist: await all(SQL.getShortlist, [req.userId!]) });
+}));
+app.post("/api/shortlist", auth, h(async (req: AuthedRequest, res) => {
   const { optionId, note, persona } = req.body || {};
   if (!getPack(persona).optById.get(optionId)) return res.status(400).json({ error: "unknown_option" });
-  if (!hasShortlistItem.get(req.userId!, optionId)) {
-    insShortlist.run(id(), req.userId!, optionId, note || null, now());
-    logEvent(req.userId!, "shortlist_saved", { option_id: optionId });
+  if (!(await get(SQL.hasShortlistItem, [req.userId!, optionId]))) {
+    await run(SQL.insShortlist, [id(), req.userId!, optionId, note || null, now()]);
+    await logEvent(req.userId!, "shortlist_saved", { option_id: optionId });
   }
-  res.json({ shortlist: getShortlist.all(req.userId!) });
-});
-app.delete("/api/shortlist/:optionId", auth, (req: AuthedRequest, res) => {
-  delShortlist.run(req.userId!, req.params.optionId);
-  res.json({ shortlist: getShortlist.all(req.userId!) });
-});
+  res.json({ shortlist: await all(SQL.getShortlist, [req.userId!]) });
+}));
+app.delete("/api/shortlist/:optionId", auth, h(async (req: AuthedRequest, res) => {
+  await run(SQL.delShortlist, [req.userId!, req.params.optionId]);
+  res.json({ shortlist: await all(SQL.getShortlist, [req.userId!]) });
+}));
 
 // ---- DPDP: delete everything ----
-app.delete("/api/me", auth, (req: AuthedRequest, res) => {
-  anonFeedback.run(req.userId!);     // keep the anonymous improvement signal, drop the linkage
-  delUserCascade.run(req.userId!);   // cascades to consent/intake/shortlist/sessions
+app.delete("/api/me", auth, h(async (req: AuthedRequest, res) => {
+  const uid = req.userId!;
+  await run(SQL.anonFeedback, [uid]); // keep the anonymous improvement signal, drop the linkage
+  // Explicit cascade (no FK reliance across backends).
+  await run("DELETE FROM shortlist_items WHERE user_id = ?", [uid]);
+  await run("DELETE FROM intake WHERE user_id = ?", [uid]);
+  await run("DELETE FROM consent WHERE user_id = ?", [uid]);
+  await run("DELETE FROM sessions WHERE user_id = ?", [uid]);
+  await run("DELETE FROM users WHERE id = ?", [uid]);
   res.json({ ok: true });
-});
+}));
 
 // ---- feedback loop: user tells Marg what to improve ----
 // The note is stored immediately; Marg interprets it in the background (theme,
 // sentiment, severity, a summary, and a DRAFT suggestion) for the admin triage
 // inbox. Interpretation never changes any product data — a human admin actions it.
-app.post("/api/feedback", auth, (req: AuthedRequest, res) => {
+app.post("/api/feedback", auth, h(async (req: AuthedRequest, res) => {
   const { text, rating, category, context, persona } = req.body || {};
   const body = String(text || "").trim().slice(0, 2000);
   if (!body) return res.status(400).json({ error: "empty_feedback" });
   const fid = id();
-  insFeedback.run(fid, req.userId!, persona || null, context || null, rating || "", category || null, body, now());
-  logEvent(req.userId!, "feedback_submitted", { persona, category, hasRating: !!rating });
+  await run(SQL.insFeedback, [fid, req.userId!, persona || null, context || null, rating || "", category || null, body, now()]);
+  await logEvent(req.userId!, "feedback_submitted", { persona, category, hasRating: !!rating });
   res.json({ ok: true });
   // Fire-and-forget interpretation (response already sent; failures are swallowed).
   interpretFeedback(body, { persona, context, category, rating })
-    .then((ai) => { if (ai) setFeedbackAI.run(ai.theme, ai.sentiment, ai.severity, ai.summary, ai.suggestion, fid); })
+    .then((ai) => { if (ai) return run(SQL.setFeedbackAI, [ai.theme, ai.sentiment, ai.severity, ai.summary, ai.suggestion, fid]); })
     .catch(() => { /* best-effort; raw note remains visible to admin */ });
-});
+}));
 
-app.post("/api/event", auth, (req: AuthedRequest, res) => {
+app.post("/api/event", auth, h(async (req: AuthedRequest, res) => {
   const { name, props } = req.body || {};
-  if (name) logEvent(req.userId!, String(name), props);
+  if (name) await logEvent(req.userId!, String(name), props);
   res.json({ ok: true });
-});
+}));
 
 // ---- admin (metrics & KPIs) ----
 // NOTE: admin/admin is a placeholder for the prototype ONLY — insecure; replace
@@ -273,38 +284,33 @@ function adminAuth(req: express.Request, res: express.Response, next: express.Ne
   return res.status(401).json({ error: "unauthorized" });
 }
 
-app.get("/api/admin/metrics", adminAuth, (_req, res) => {
-  const n = (sql: string): number => ((db.prepare(sql).get() as any)?.n ?? 0);
-  const totalUsers = n("SELECT COUNT(*) n FROM users");
-  const completedIntake = n("SELECT COUNT(*) n FROM intake");
-  const reflections = n("SELECT COUNT(*) n FROM events WHERE name='option_reflected'");
-  const chats = n("SELECT COUNT(*) n FROM events WHERE name='chat_message'");
-  const shortlistItems = n("SELECT COUNT(*) n FROM shortlist_items");
-  const usersWithShortlist = n("SELECT COUNT(DISTINCT user_id) n FROM shortlist_items");
-  const distress = n("SELECT COUNT(*) n FROM events WHERE name='distress_flag_raised'");
+app.get("/api/admin/metrics", adminAuth, h(async (_req, res) => {
+  const n = async (sql: string): Promise<number> => Number((await get<any>(sql))?.n ?? 0);
+  const totalUsers = await n("SELECT COUNT(*) n FROM users");
+  const completedIntake = await n("SELECT COUNT(*) n FROM intake");
+  const reflections = await n("SELECT COUNT(*) n FROM events WHERE name='option_reflected'");
+  const chats = await n("SELECT COUNT(*) n FROM events WHERE name='chat_message'");
+  const shortlistItems = await n("SELECT COUNT(*) n FROM shortlist_items");
+  const usersWithShortlist = await n("SELECT COUNT(DISTINCT user_id) n FROM shortlist_items");
+  const distress = await n("SELECT COUNT(*) n FROM events WHERE name='distress_flag_raised'");
 
   // ---- North Star (fair instrumentation) ----
-  // Three sets, computed from real events:
-  //  intake    — completed the intake
-  //  explored  — genuinely looked beyond the obvious: opened an expansion path,
-  //              engaged the "have you considered" nudge, OR compared >=2 distinct
-  //              options (viewed/reflected). The old version only counted the
-  //              collapsed expansion tier + the one nudge, so real comparing users
-  //              were missed — that made the metric near-impossible to satisfy.
-  //  converged — saved a shortlist of 2 or more (narrowed the field; was "exactly 2-3").
+  // intake ∩ explored ∩ converged, over everyone who entered. "Explored" = opened
+  // an expansion path, took the nudge, OR compared >=2 distinct options.
+  // "Converged" = saved a shortlist of 2 or more.
   const intakeSet = new Set<string>();
-  for (const r of db.prepare("SELECT user_id AS uid FROM intake").all() as any[]) intakeSet.add(r.uid);
+  for (const r of await all<any>("SELECT user_id AS uid FROM intake")) intakeSet.add(r.uid);
 
   const explored = new Set<string>();
-  for (const r of db.prepare("SELECT DISTINCT user_id AS uid FROM events WHERE name IN ('specialized_viewed','nudge_engaged') AND user_id IS NOT NULL").all() as any[]) explored.add(r.uid);
+  for (const r of await all<any>("SELECT DISTINCT user_id AS uid FROM events WHERE name IN ('specialized_viewed','nudge_engaged') AND user_id IS NOT NULL")) explored.add(r.uid);
   const optsByUser = new Map<string, Set<string>>(); // distinct options each user opened
-  for (const r of db.prepare("SELECT user_id AS uid, props FROM events WHERE name IN ('option_reflected','option_viewed') AND user_id IS NOT NULL").all() as any[]) {
+  for (const r of await all<any>("SELECT user_id AS uid, props FROM events WHERE name IN ('option_reflected','option_viewed') AND user_id IS NOT NULL")) {
     try { const oid = JSON.parse(r.props || "{}").option_id; if (oid) { (optsByUser.get(r.uid) ?? optsByUser.set(r.uid, new Set()).get(r.uid)!).add(oid); } } catch { /* skip */ }
   }
   for (const [uid, s] of optsByUser) if (s.size >= 2) explored.add(uid);
 
   const converged = new Set<string>();
-  for (const r of db.prepare("SELECT user_id AS uid FROM shortlist_items GROUP BY user_id HAVING COUNT(*) >= 2").all() as any[]) converged.add(r.uid);
+  for (const r of await all<any>("SELECT user_id AS uid FROM shortlist_items GROUP BY user_id HAVING COUNT(*) >= 2")) converged.add(r.uid);
 
   const exploredUnconsidered = explored.size;
   const savedShortlist = converged.size;
@@ -313,20 +319,20 @@ app.get("/api/admin/metrics", adminAuth, (_req, res) => {
   const nsmDen = totalUsers;
   // helpfulness: 👍/👎 ratings live in events; count them for a direct benefit read.
   let up = 0, down = 0;
-  for (const r of db.prepare("SELECT props FROM events WHERE name='feedback'").all() as any[]) {
+  for (const r of await all<any>("SELECT props FROM events WHERE name='feedback'")) {
     try { const p = JSON.parse(r.props || "{}"); if (p.rating === "up") up++; else if (p.rating === "down") down++; } catch { /* skip */ }
   }
   const rated = up + down;
   const chatsByPersona: Record<string, number> = {};
-  for (const r of db.prepare("SELECT props FROM events WHERE name='chat_message'").all() as any[]) {
+  for (const r of await all<any>("SELECT props FROM events WHERE name='chat_message'")) {
     try { const p = JSON.parse(r.props || "{}"); const k = p.persona || "unknown"; chatsByPersona[k] = (chatsByPersona[k] || 0) + 1; } catch { /* skip */ }
   }
   // free-text feedback aggregates (from the feedback table)
-  const feedbackTotal = n("SELECT COUNT(*) n FROM feedback");
-  const feedbackOpen = n("SELECT COUNT(*) n FROM feedback WHERE status IN ('new','triaged')");
+  const feedbackTotal = await n("SELECT COUNT(*) n FROM feedback");
+  const feedbackOpen = await n("SELECT COUNT(*) n FROM feedback WHERE status IN ('new','triaged')");
   const themes: Record<string, number> = {};
   const sentiment: Record<string, number> = { positive: 0, neutral: 0, negative: 0 };
-  for (const r of db.prepare("SELECT ai_theme, ai_sentiment FROM feedback").all() as any[]) {
+  for (const r of await all<any>("SELECT ai_theme, ai_sentiment FROM feedback")) {
     const t = r.ai_theme || "Unclassified"; themes[t] = (themes[t] || 0) + 1;
     if (r.ai_sentiment && sentiment[r.ai_sentiment] != null) sentiment[r.ai_sentiment]++;
   }
@@ -345,30 +351,27 @@ app.get("/api/admin/metrics", adminAuth, (_req, res) => {
     chatsByPersona,
     generatedAt: new Date().toISOString(),
   });
-});
+}));
 
 // ---- admin: feedback triage inbox ----
-app.get("/api/admin/feedback", adminAuth, (req, res) => {
+app.get("/api/admin/feedback", adminAuth, h(async (req, res) => {
   const status = String(req.query.status || "");
   const rows = status
-    ? db.prepare("SELECT * FROM feedback WHERE status=? ORDER BY created_at DESC LIMIT 200").all(status)
-    : db.prepare("SELECT * FROM feedback ORDER BY created_at DESC LIMIT 200").all();
+    ? await all("SELECT * FROM feedback WHERE status=? ORDER BY created_at DESC LIMIT 200", [status])
+    : await all("SELECT * FROM feedback ORDER BY created_at DESC LIMIT 200");
   res.json({ feedback: rows });
-});
-app.post("/api/admin/feedback/:id", adminAuth, (req, res) => {
+}));
+app.post("/api/admin/feedback/:id", adminAuth, h(async (req, res) => {
   const { status } = req.body || {};
   if (!["new", "triaged", "actioned", "dismissed"].includes(status)) return res.status(400).json({ error: "bad_status" });
-  setFeedbackStatus.run(status, req.params.id);
+  await run(SQL.setFeedbackStatus, [status, req.params.id]);
   res.json({ ok: true });
-});
+}));
 
 // ---- serve the built front-end (single service, same origin as /api) ----
-// In production the Express server also serves web/dist, so the whole app is one
-// deployable unit and the SPA's fetch("/api/...") calls are same-origin.
 const WEB_DIST = process.env.WEB_DIST || join(HERE, "..", "..", "web", "dist");
 if (existsSync(WEB_DIST)) {
   app.use(express.static(WEB_DIST));
-  // SPA fallback: any non-/api route returns index.html (client renders the view).
   app.get(/^\/(?!api\/).*/, (_req, res) => res.sendFile(join(WEB_DIST, "index.html")));
   console.log(`Serving front-end from ${WEB_DIST}`);
 } else if (IS_PROD) {
@@ -382,4 +385,5 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
 });
 
 const PORT = Number(process.env.PORT) || 5175;
-app.listen(PORT, () => console.log(`Marg API on http://localhost:${PORT}  (AI key detected: ${hasKey})`));
+await initDb(); // create the schema before accepting requests
+app.listen(PORT, () => console.log(`Marg API on http://localhost:${PORT}  (store: ${IS_TURSO ? "Turso" : "sqlite file"}, AI key: ${hasKey})`));

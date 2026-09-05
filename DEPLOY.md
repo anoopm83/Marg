@@ -20,7 +20,16 @@ and the built React front-end, so there's a single URL and no CORS setup.
 | `ADMIN_USER` / `ADMIN_PASS` | yes | **Change from `admin`/`admin`.** Gates the metrics dashboard. |
 | `NODE_ENV` | recommended | `production` |
 | `PORT` | auto | Most hosts set this; the app reads it. |
+| `TURSO_DATABASE_URL` + `TURSO_AUTH_TOKEN` | strongly recommended | Durable database (Turso/libSQL). Without it the app uses a local SQLite file that **resets on every redeploy and free-tier sleep**. See setup below. |
 | `POSTHOG_KEY` | optional | PostHog project key → enables product analytics (sessions, funnels, time-to-value). No rebuild needed; served at runtime via `/api/config`. |
+
+### Durable metrics with Turso (free)
+Render's free tier has an ephemeral disk, so a file database is wiped on redeploy
+**and whenever the service sleeps**. To keep users/events/metrics forever:
+1. Create a free DB at https://turso.tech (`turso db create marg`).
+2. Get its URL (`turso db show marg --url`) and a token (`turso db tokens create marg`).
+3. In Render add env vars `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`, then redeploy.
+4. Seed once (`cd api && SEED_BASE=https://your-app npm run seed`) — it now persists.
 
 The Docker image sets `WEB_DIST` and serves the SPA automatically.
 

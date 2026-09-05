@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { api, setAdmin, getAdmin, clearAdmin, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, type ChatMsg, type Specialized, type PersonaPublic, type AdminMetrics, type FeedbackItem } from "./api";
-import { Icon, Compass, Bookmark } from "./icons";
+import { Icon, Bookmark } from "./icons";
 import { INTERESTS, VALUES, localReflect, planLocal, pickNudge, costText, checkDistress, shortName, optIconName } from "./lib";
 import { trackFeature, trackFlowStep, trackValueMoment } from "./analytics";
 
@@ -363,18 +363,13 @@ export function Welcome({ ctx }: { ctx: Ctx }) {
   const start = () => { if (adult) ctx.startSession({ path: "self_serve" }); else ctx.go("consent"); };
   return (
     <section className="screen">
-      {ctx.personas.length > 1 && (
-        <div className="topbar"><button className="back" onClick={() => ctx.go("personas")}><Icon name="back" size={22} /></button><span className="muted" style={{ fontSize: 14 }}>Change stage</span></div>
-      )}
-      <div className="wordmark"><Compass /><span>Marg</span></div>
-      <div className="spacer" />
-      <div className="stack" style={{ gap: 16 }}>
+      <div className="topbar"><button className="back" onClick={() => ctx.go("home")}><Icon name="back" size={22} /></button><span className="muted" style={{ fontSize: 14 }}>Home page</span></div>
+      <div className="stack" style={{ gap: 16, marginTop: 6 }}>
         <div className="eyebrow">{p?.tagline ?? "CBSE · Bengaluru"}</div>
         <h1 style={{ fontSize: 33 }}>{isClass10 ? "See all your paths from here, then choose, without being boxed in." : "See your real options, then choose your next step, without being boxed in."}</h1>
         <p className="lead">A calm way to explore your real options and plan your next steps. No pressure, no verdicts.</p>
       </div>
-      <div className="spacer" />
-      <div className="stack">
+      <div className="stack" style={{ marginTop: 26 }}>
         <button className="btn btn-primary" onClick={start}>Start</button>
         <div className="card" style={{ padding: 15 }}>
           <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "dataset": "Marg AI — Mid-career (PROTOTYPE)",
+    "dataset": "Marg AI, Mid-career (PROTOTYPE)",
     "version": "proto-0",
     "context": {
       "stage": "Mid-career (~25-45)",
@@ -8,15 +8,15 @@
       "focus": "Rethinking work, a switch, or growth"
     },
     "created": "2026-09-04",
-    "disclaimer": "Beta — accuracy still being checked. Everything shown in Marg is provisional and for guidance only; always double-check every detail (fees, eligibility, dates, links) against the official source before you rely on it or make a decision."
+    "disclaimer": "Beta, accuracy still being checked. Everything shown in Marg is provisional and for guidance only; always double-check every detail (fees, eligibility, dates, links) against the official source before you rely on it or make a decision."
   },
   "options": [
     {
       "id": "upskill_current",
-      "official_links": [{"label":"Skill India Digital","url":"https://www.skillindiadigital.gov.in"},{"label":"SWAYAM — free govt online courses","url":"https://swayam.gov.in"}],
+      "official_links": [{"label":"Skill India Digital","url":"https://www.skillindiadigital.gov.in"},{"label":"SWAYAM, free govt online courses","url":"https://swayam.gov.in"}],
       "name": "Upskill in your current field",
       "type": "growth_in_place",
-      "summary": "Deepen expertise where you already are — advanced certifications, a specialisation, or a senior-track skill — to grow without changing domain.",
+      "summary": "Deepen expertise where you already are, advanced certifications, a specialisation, or a senior-track skill, to grow without changing domain.",
       "leads_to": [
         "Senior / specialist roles",
         "Higher pay in the same field",
@@ -53,7 +53,7 @@
       "official_links": [{"label":"SWAYAM / NPTEL (tech & data courses)","url":"https://swayam.gov.in"},{"label":"Skill India Digital","url":"https://www.skillindiadigital.gov.in"},{"label":"National Career Service","url":"https://www.ncs.gov.in"}],
       "name": "Pivot into tech / data",
       "type": "career_change",
-      "summary": "Move toward software, data, analytics or product via structured reskilling — bootcamps, certifications, or a guided self-study path.",
+      "summary": "Move toward software, data, analytics or product via structured reskilling, bootcamps, certifications, or a guided self-study path.",
       "leads_to": [
         "Developer / analyst / data roles",
         "Product / project roles",
@@ -70,7 +70,7 @@
           "university certificate programmes",
           "employer apprenticeships"
         ],
-        "note": "Verify placement claims — this space has many over-promising providers."
+        "note": "Verify placement claims, this space has many over-promising providers."
       },
       "approx_cost_inr": {
         "note": "Free/low-cost self-study up to expensive bootcamps; verify outcomes before paying."
@@ -88,10 +88,10 @@
     },
     {
       "id": "management_route",
-      "official_links": [{"label":"SWAYAM — management courses","url":"https://swayam.gov.in"},{"label":"AICTE (approved institutions)","url":"https://www.aicte-india.org"}],
+      "official_links": [{"label":"SWAYAM, management courses","url":"https://swayam.gov.in"},{"label":"AICTE (approved institutions)","url":"https://www.aicte-india.org"}],
       "name": "Management / leadership route",
       "type": "growth_in_place",
-      "summary": "Grow toward people-leadership or general management — via an MBA, executive education, or moving into a lead role on the job.",
+      "summary": "Grow toward people-leadership or general management, via an MBA, executive education, or moving into a lead role on the job.",
       "leads_to": [
         "Team lead / manager",
         "General management",
@@ -111,13 +111,13 @@
         "note": "Illustrative, unverified."
       },
       "approx_cost_inr": {
-        "note": "On-the-job: low. Executive MBA: can be very expensive — weigh ROI honestly."
+        "note": "On-the-job: low. Executive MBA: can be very expensive, weigh ROI honestly."
       },
       "related_scholarships": [
         "employer_sponsorship",
         "edu_loan"
       ],
-      "honest_notes": "A degree is one route, not the only one. Many strong managers grow in-role — try leading before you spend on a programme.",
+      "honest_notes": "A degree is one route, not the only one. Many strong managers grow in-role, try leading before you spend on a programme.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Story from someone who moved into management without an MBA."
@@ -125,10 +125,10 @@
     },
     {
       "id": "entrepreneurship",
-      "official_links": [{"label":"Startup India","url":"https://www.startupindia.gov.in"},{"label":"MSME — Udyam registration","url":"https://udyamregistration.gov.in"},{"label":"PM MUDRA loans","url":"https://www.mudra.org.in"}],
+      "official_links": [{"label":"Startup India","url":"https://www.startupindia.gov.in"},{"label":"MSME, Udyam registration","url":"https://udyamregistration.gov.in"},{"label":"PM MUDRA loans","url":"https://www.mudra.org.in"}],
       "name": "Start your own venture",
       "type": "independent",
-      "summary": "Build a business or product of your own — full-time, or as a side venture you grow before leaving a job.",
+      "summary": "Build a business or product of your own, full-time, or as a side venture you grow before leaving a job.",
       "leads_to": [
         "Founder / owner",
         "Self-employment",
@@ -153,7 +153,7 @@
       "related_scholarships": [
         "startup_schemes"
       ],
-      "honest_notes": "Be honest about runway and dependants. Many start as a side venture and only leave the job once it's proven — a valid, lower-risk route.",
+      "honest_notes": "Be honest about runway and dependants. Many start as a side venture and only leave the job once it's proven, a valid, lower-risk route.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Story from someone who bootstrapped a venture while employed."
@@ -164,7 +164,7 @@
       "official_links": [{"label":"National Career Service","url":"https://www.ncs.gov.in"},{"label":"Staff Selection Commission (SSC)","url":"https://ssc.nic.in"},{"label":"UPSC","url":"https://www.upsc.gov.in"}],
       "name": "Stable / public sector move",
       "type": "career_change",
-      "summary": "Shift toward stability — government roles, PSUs, or established sectors — often via competitive exams or lateral moves.",
+      "summary": "Shift toward stability, government roles, PSUs, or established sectors, often via competitive exams or lateral moves.",
       "leads_to": [
         "Government / PSU roles",
         "Stable long-tenure employment",
@@ -172,7 +172,7 @@
       ],
       "keeps_open": "Security and predictability; some routes have age limits worth checking.",
       "eligibility": {
-        "text": "Varies widely by exam/role — several have age and qualification limits. Verify per specific exam."
+        "text": "Varies widely by exam/role, several have age and qualification limits. Verify per specific exam."
       },
       "duration": "Exam prep varies (months to years)",
       "where_in_bangalore": {
@@ -187,7 +187,7 @@
         "note": "Low course cost; the real cost is prep time and opportunity cost."
       },
       "related_scholarships": [],
-      "honest_notes": "Stability is a real value, not a lesser choice. But check age limits early — some doors close by the late 30s.",
+      "honest_notes": "Stability is a real value, not a lesser choice. But check age limits early, some doors close by the late 30s.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Story from someone who moved from private to public sector mid-career."
@@ -195,10 +195,10 @@
     },
     {
       "id": "freelance_consulting",
-      "official_links": [{"label":"MSME — Udyam registration","url":"https://udyamregistration.gov.in"},{"label":"GST portal","url":"https://www.gst.gov.in"},{"label":"National Career Service","url":"https://www.ncs.gov.in"}],
+      "official_links": [{"label":"MSME, Udyam registration","url":"https://udyamregistration.gov.in"},{"label":"GST portal","url":"https://www.gst.gov.in"},{"label":"National Career Service","url":"https://www.ncs.gov.in"}],
       "name": "Freelance / independent consulting",
       "type": "independent",
-      "summary": "Take your existing expertise independent — consulting, contracting or freelancing — for flexibility and control over your work.",
+      "summary": "Take your existing expertise independent, consulting, contracting or freelancing, for flexibility and control over your work.",
       "leads_to": [
         "Independent consultant",
         "Portfolio of clients",
@@ -232,32 +232,32 @@
       "official_links": [{"label":"Territorial Army (official)","url":"https://territorialarmy.in"},{"label":"Join Indian Army","url":"https://joinindianarmy.nic.in"}],
       "name": "Territorial Army (part-time service)",
       "type": "service",
-      "summary": "Serve the nation part-time as a Territorial Army officer while keeping your civilian job or business — annual training and short embodiment periods, without leaving your career.",
+      "summary": "Serve the nation part-time as a Territorial Army officer while keeping your civilian job or business, annual training and short embodiment periods, without leaving your career.",
       "leads_to": ["Commissioned Territorial Army officer (part-time)", "Purpose and service alongside your career", "Leadership and discipline that carry back into your work"],
-      "keeps_open": "You keep your day job — the TA is a parallel commitment, not a career change.",
+      "keeps_open": "You keep your day job, the TA is a parallel commitment, not a career change.",
       "eligibility": { "text": "Gainfully employed or self-employed Indian citizens, typically 18-42, graduate, medically fit. Selection is via a written test and an SSB-style interview." },
       "duration": "Ongoing, part-time (annual training plus short embodiment)",
       "where_in_bangalore": { "examples": ["Territorial Army recruitment (Indian Army)", "TA units"], "note": "Illustrative; confirm current eligibility and units." },
-      "approx_cost_inr": { "note": "No course cost — you're paid for training and embodiment periods." },
+      "approx_cost_inr": { "note": "No course cost, you're paid for training and embodiment periods." },
       "related_scholarships": [],
-      "honest_notes": "A meaningful way to serve without giving up your career — but selection is competitive and there are fitness and age limits. It is not a full-time income.",
+      "honest_notes": "A meaningful way to serve without giving up your career but selection is competitive and there are fitness and age limits. It is not a full-time income.",
       "human_touchpoint": { "status": "to_source", "idea": "Story from a working professional who serves in the Territorial Army." }
     }
   ],
   "specialized_pathways": [
     {
       "id": "teaching_coaching",
-      "official_links": [{"label":"CTET — teacher eligibility (schools)","url":"https://ctet.nic.in"},{"label":"UGC NET — college teaching","url":"https://ugcnet.nta.ac.in"}],
+      "official_links": [{"label":"CTET, teacher eligibility (schools)","url":"https://ctet.nic.in"},{"label":"UGC NET, college teaching","url":"https://ugcnet.nta.ac.in"}],
       "name": "Teaching, training or coaching",
       "type": "encore",
       "tier": "expansion",
-      "summary": "Turn hard-won experience into teaching, corporate training, mentoring or coaching — as a second act or a portfolio addition.",
+      "summary": "Turn hard-won experience into teaching, corporate training, mentoring or coaching, as a second act or a portfolio addition.",
       "leads_to": [
         "Trainer / educator",
         "Executive or life coach",
         "Mentor / advisor roles"
       ],
-      "frame": "A meaningful pivot for those drawn to helping others grow. Coaching credentials vary a lot in quality — verify recognition before paying for one.",
+      "frame": "A meaningful pivot for those drawn to helping others grow. Coaching credentials vary a lot in quality, verify recognition before paying for one.",
       "eligibility": {
         "text": "Depends on the route; domain experience is the main asset."
       },
@@ -267,7 +267,7 @@
         "freelance_consulting",
         "upskill_current"
       ],
-      "honest_notes": "Verify any coaching 'certification' carefully — it's a space with many low-value paid programmes."
+      "honest_notes": "Verify any coaching 'certification' carefully, it's a space with many low-value paid programmes."
     },
     {
       "id": "social_sector",
@@ -275,7 +275,7 @@
       "name": "Social sector / purpose-driven work",
       "type": "encore",
       "tier": "expansion",
-      "summary": "Move toward nonprofit, development, or impact-focused work — often a pay trade-off for greater meaning.",
+      "summary": "Move toward nonprofit, development, or impact-focused work, often a pay trade-off for greater meaning.",
       "leads_to": [
         "Nonprofit / development roles",
         "CSR / impact roles",
@@ -300,10 +300,10 @@
       "ambition": "Move into a leadership role",
       "next_horizon_steps": [
         "Name the leadership you want (people-manager, tech-lead, general management).",
-        "Start leading where you are — a project, a small team, a cross-functional effort.",
+        "Start leading where you are, a project, a small team, a cross-functional effort.",
         "Add a targeted credential ONLY if a specific door needs it."
       ],
-      "honest_cost_effort": "Mostly time and visible ownership, not money — unless you choose an executive programme, which is a real expense to justify.",
+      "honest_cost_effort": "Mostly time and visible ownership, not money, unless you choose an executive programme, which is a real expense to justify.",
       "real_routes_through_cost": [
         "On-the-job leadership (low cost)",
         "Employer-sponsored programmes",
@@ -314,7 +314,7 @@
         "Consulting",
         "Founding a venture"
       ],
-      "what_if_it_changes": "Leadership skills transfer everywhere — the effort is not wasted if the destination shifts."
+      "what_if_it_changes": "Leadership skills transfer everywhere, the effort is not wasted if the destination shifts."
     },
     {
       "id": "into_tech",
@@ -324,7 +324,7 @@
         "Pick a structured path (certificate/bootcamp/guided self-study) that fits your runway.",
         "Transition while keeping income where possible; target adjacent roles first."
       ],
-      "honest_cost_effort": "6-18 months of consistent effort; cost ranges from near-zero self-study to expensive bootcamps — verify outcomes before paying.",
+      "honest_cost_effort": "6-18 months of consistent effort; cost ranges from near-zero self-study to expensive bootcamps, verify outcomes before paying.",
       "real_routes_through_cost": [
         "Free/low-cost self-study",
         "Income-share or employer-sponsored programmes",
@@ -356,17 +356,17 @@
         "Intrapreneurship inside a company",
         "Return to a role with venture experience"
       ],
-      "what_if_it_changes": "Even a venture that doesn't last builds rare, transferable skills — not a dead end."
+      "what_if_it_changes": "Even a venture that doesn't last builds rare, transferable skills, not a dead end."
     },
     {
       "id": "balance_meaning",
       "ambition": "Find better balance or more meaning",
       "next_horizon_steps": [
         "Get specific: is it hours, autonomy, purpose, or the work itself?",
-        "Consider adjacent moves — same field, better setup — before a full switch.",
+        "Consider adjacent moves, same field, better setup, before a full switch.",
         "Explore purpose-led or flexible routes that fit your finances."
       ],
-      "honest_cost_effort": "Often less about money than about trade-offs in income, status or security — name the trade-off you're willing to make.",
+      "honest_cost_effort": "Often less about money than about trade-offs in income, status or security, name the trade-off you're willing to make.",
       "real_routes_through_cost": [
         "Flexible/remote arrangements",
         "Freelance/portfolio work",
@@ -377,7 +377,7 @@
         "Teaching/coaching",
         "A calmer role in the same field"
       ],
-      "what_if_it_changes": "Clarity about what you actually want is the real outcome — it holds even if the path changes."
+      "what_if_it_changes": "Clarity about what you actually want is the real outcome, it holds even if the path changes."
     }
   ],
   "scholarships": [
@@ -399,7 +399,7 @@
       "id": "income_share",
       "name": "Income-share agreements (bootcamps)",
       "who": "Career changers in some programmes",
-      "amount": "Pay-after-placement models — verify terms carefully",
+      "amount": "Pay-after-placement models, verify terms carefully",
       "link": ""
     },
     {

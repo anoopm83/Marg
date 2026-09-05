@@ -60,7 +60,7 @@ export default function App() {
       if (t && (THEMES as readonly string[]).includes(t)) { setThemeState(t as Theme); document.documentElement.setAttribute("data-theme", t); }
       const f = parseInt(localStorage.getItem("marg_fontstep") || "", 10);
       if (!Number.isNaN(f) && f >= 0 && f < SCALES.length) setFontStep(f);
-    } catch { /* private mode — keep defaults */ }
+    } catch { /* private mode, keep defaults */ }
   }, []);
 
   const go = useCallback((name: string, param: string | null = null) => { setView({ name, param }); window.scrollTo(0, 0); }, []);
@@ -90,7 +90,7 @@ export default function App() {
     const pwd = "g" + Math.random().toString(36).slice(2, 12) + "A1";
     const res = await api.register({ userId: uid, password: pwd, consent });
     if (res.ok && res.data?.token) { setToken(res.data.token); go("intake"); }
-    else { toast("Couldn't start just now — please try again."); }
+    else { toast("Couldn't start just now, please try again."); }
   }, [go, toast]);
   const logout = useCallback(async () => {
     try { await api.logout(); } catch { /* best-effort; clear locally regardless */ }
@@ -163,23 +163,23 @@ export default function App() {
     <div className="frame">
       <div className="appbar">
         <div className="appbar-l">
-          <button className="ab-logo" onClick={() => go("home")} title="Marg — home" aria-label="Marg, go to homepage"><img src="/marg-logo.png" alt="Marg" /></button>
+          <button className="ab-logo" onClick={() => go("home")} title="Marg, home" aria-label="Marg, go to homepage"><img src="/marg-logo.png" alt="Marg" /></button>
           {inApp && loggedIn && persona && (
             <span className="ab-persona" title="You're exploring as this persona"><UserIcon /> {PERSONA_SHORT[persona.id] ?? persona.label}</span>
           )}
         </div>
         <div className="appbar-r">
           {inApp && loggedIn && <button className="ab-btn" onClick={logout} title="Start over" aria-label="Start over (clears this session)"><RestartIcon /></button>}
-          <button className="a11y-btn" onClick={cycleFont} title="Text size — tap to change" aria-label={`Text size ${Math.round(SCALES[fontStep] * 100)} percent, tap to change`}>
+          <button className="a11y-btn" onClick={cycleFont} title="Text size, tap to change" aria-label={`Text size ${Math.round(SCALES[fontStep] * 100)} percent, tap to change`}>
             <span className="ab-a">A</span><span className="ab-v">{Math.round(SCALES[fontStep] * 100)}%</span>
           </button>
-          <button className="a11y-btn" onClick={cycleTheme} title={`Contrast: ${THEME_LABEL[theme]} — tap to change`} aria-label={`Contrast: ${THEME_LABEL[theme]}, tap to change`}>
+          <button className="a11y-btn" onClick={cycleTheme} title={`Contrast: ${THEME_LABEL[theme]}, tap to change`} aria-label={`Contrast: ${THEME_LABEL[theme]}, tap to change`}>
             {theme === "dark" ? <MoonIcon /> : theme === "light" ? <SunIcon /> : <ContrastIcon />}
           </button>
         </div>
       </div>
       {showRibbon && (
-        <div className="exp-ribbon"><b>Beta version</b> — accuracy still being checked. Please double-check anything important.</div>
+        <div className="exp-ribbon"><b>Beta version</b>, accuracy still being checked. Please double-check anything important.</div>
       )}
       <main style={{ zoom: SCALES[fontStep] }}>
         {booted ? screen() : (
@@ -205,7 +205,7 @@ function Safety({ distress, onClose, onContinue }: { distress: boolean; onClose:
         <div className="sheet-h">You matter. Talk to someone.</div>
         <p className="muted" style={{ fontSize: 14, lineHeight: 1.55, marginTop: 8 }}>
           {distress
-            ? "It sounds like things feel heavy right now. You don't have to carry this alone — these people are here to listen, free and confidential."
+            ? "It sounds like things feel heavy right now. You don't have to carry this alone, these people are here to listen, free and confidential."
             : "If you're feeling low, anxious or unsafe, please reach out. Free and confidential."}
         </p>
         {HELPLINES.map((h) => (
@@ -213,7 +213,7 @@ function Safety({ distress, onClose, onContinue }: { distress: boolean; onClose:
         ))}
         <p className="muted" style={{ fontSize: 12, marginTop: 12 }}>In immediate danger, call 112.</p>
         <div className="stack" style={{ marginTop: 14 }}>
-          {distress && <button className="btn btn-primary" onClick={onContinue}>I'm okay — continue</button>}
+          {distress && <button className="btn btn-primary" onClick={onContinue}>I'm okay, continue</button>}
           <button className="btn btn-soft" onClick={onClose}>Close</button>
         </div>
       </div>

@@ -44,7 +44,7 @@ function FooterLinks({ ctx }: { ctx: Ctx }) {
   );
 }
 
-// A prominent, inviting entry point to the same feedback channel — for high-traffic
+// A prominent, inviting entry point to the same feedback channel, for high-traffic
 // screens (e.g. Explore) where a footer link is too easy to miss.
 export function ImprovePrompt({ ctx, where }: { ctx: Ctx; where: string }) {
   const [open, setOpen] = useState(false);
@@ -52,7 +52,7 @@ export function ImprovePrompt({ ctx, where }: { ctx: Ctx; where: string }) {
     <>
       <button className="improve-cta" onClick={() => setOpen(true)}>
         <span className="ic-ic"><Icon name="bulb" size={18} stroke={2} /></span>
-        <span className="ic-body"><b>Spotted something wrong or missing?</b><span>Tell Marg — every note is read and helps us improve.</span></span>
+        <span className="ic-body"><b>Spotted something wrong or missing?</b><span>Tell Marg, every note is read and helps us improve.</span></span>
         <span className="ic-chev"><Icon name="chev" size={18} stroke={2} /></span>
       </button>
       {open && <ImproveMarg ctx={ctx} where={where} onClose={() => setOpen(false)} />}
@@ -61,7 +61,7 @@ export function ImprovePrompt({ ctx, where }: { ctx: Ctx; where: string }) {
 }
 
 // The deliberate "tell Marg what to improve" channel. Free text + an optional
-// category. It goes to the same interpreted feedback loop as the 👍/👎 note —
+// category. It goes to the same interpreted feedback loop as the 👍/👎 note, 
 // Marg tags it for the admin; it never auto-changes the product.
 const FB_CATS: { id: string; label: string }[] = [
   { id: "wrong_info", label: "Wrong or outdated info" },
@@ -85,7 +85,7 @@ export function ImproveMarg({ ctx, where, onClose }: { ctx: Ctx; where: string; 
         {sent ? (
           <div className="im-done">
             <div className="im-check"><Icon name="check" size={22} /></div>
-            <h3>Thank you — Marg is listening</h3>
+            <h3>Thank you, Marg is listening</h3>
             <p>Your note goes straight to the people improving Marg. If it points to a fact we should fix, a human checks it before anything changes.</p>
             <button className="btn" onClick={onClose}>Close</button>
           </div>
@@ -133,10 +133,10 @@ export function Chat({ ctx, mode, contextId, goal, placeholder, seedAssistant }:
     setBusy(false);
     if (res.data?.safety) {
       ctx.openSafety(true);
-      setMsgs([...next, { role: "assistant", content: "I want to make sure you're okay before we carry on — please see the help options that just came up. I'm here when you're ready." }]);
+      setMsgs([...next, { role: "assistant", content: "I want to make sure you're okay before we carry on, please see the help options that just came up. I'm here when you're ready." }]);
       return;
     }
-    setMsgs([...next, { role: "assistant", content: res.data?.reply || "Sorry — I couldn't answer just now. Please try again in a moment." }]);
+    setMsgs([...next, { role: "assistant", content: res.data?.reply || "Sorry, I couldn't answer just now. Please try again in a moment." }]);
   }
 
   return (
@@ -152,7 +152,7 @@ export function Chat({ ctx, mode, contextId, goal, placeholder, seedAssistant }:
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }} />
         <button className="chat-send" onClick={send} disabled={busy || !input.trim()} aria-label="Send"><Icon name="chev" size={19} stroke={2.4} /></button>
       </div>
-      <div className="chat-disc"><Icon name="info" size={12} style={{ color: "var(--muted)" }} /> Answers come from verified info only, never a verdict — figures may still be being checked.</div>
+      <div className="chat-disc"><Icon name="info" size={12} style={{ color: "var(--muted)" }} /> Answers come from verified info only, never a verdict, figures may still be being checked.</div>
     </div>
   );
 }
@@ -163,7 +163,7 @@ export function Feedback({ ctx, where, prompt }: { ctx: Ctx; where: string; prom
   const [rating, setRating] = useState<null | "up" | "down">(null);
   const [note, setNote] = useState("");
   const [noteSent, setNoteSent] = useState(false);
-  // The 👍/👎 is recorded the instant it's clicked — no Send needed. Send only
+  // The 👍/👎 is recorded the instant it's clicked, no Send needed. Send only
   // submits the optional free-text note. (Re-clicking the same thumb is a no-op.)
   const rate = (r: "up" | "down") => {
     if (r === rating) return;
@@ -175,7 +175,7 @@ export function Feedback({ ctx, where, prompt }: { ctx: Ctx; where: string; prom
     api.feedback({ text: note.trim(), rating, context: where, persona: ctx.persona?.id });
     setNoteSent(true);
   };
-  if (noteSent) return <div className="fb-done"><Icon name="check" size={14} /> Thanks — that helps us learn.</div>;
+  if (noteSent) return <div className="fb-done"><Icon name="check" size={14} /> Thanks, that helps us learn.</div>;
   return (
     <div className="fb">
       <div className="fb-row">
@@ -185,7 +185,7 @@ export function Feedback({ ctx, where, prompt }: { ctx: Ctx; where: string; prom
       </div>
       {rating && (
         <div className="fb-note">
-          <span className="fb-ok"><Icon name="check" size={13} /> Thanks — noted.</span>
+          <span className="fb-ok"><Icon name="check" size={13} /> Thanks, noted.</span>
           <input className="ta" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Want to add why? (optional)" onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
           <button className="fb-send" onClick={submit} disabled={!note.trim()}>Send</button>
         </div>
@@ -194,9 +194,9 @@ export function Feedback({ ctx, where, prompt }: { ctx: Ctx; where: string; prom
   );
 }
 
-// Landing / front door — the page anyone with the app link reaches. Persuade mode:
+// Landing / front door, the page anyone with the app link reaches. Persuade mode:
 // warm citizen-first pitch, a "Get started" CTA, and a government-alignment trust band.
-// Design: "dawn over the road" — the logo's sunrise mapped onto the stages of life.
+// Design: "dawn over the road", the logo's sunrise mapped onto the stages of life.
 function SunMark({ size = 96 }: { size?: number }) {
   return (
     <svg className="sunmark" width={size} height={size * 0.62} viewBox="0 0 120 74" fill="none" aria-hidden="true">
@@ -238,8 +238,8 @@ export function Home({ ctx }: { ctx: Ctx }) {
         <div className="dawn" aria-hidden="true" />
         <div className="hero-inner">
           <SunMark size={104} />
-          <h1>See every path ahead — then choose your own.</h1>
-          <p className="hero-sub">Marg lays out your real options at life's crossroads — clearly, honestly, and never tells you what to pick. From Class 10 to retirement, the choice stays yours.</p>
+          <h1>See every path ahead, then choose your own.</h1>
+          <p className="hero-sub">Marg lays out your real options at life's crossroads, clearly and honestly. It never tells you what to pick. From Class 10 to retirement, the choice stays yours.</p>
           <button className="btn btn-primary hero-cta" onClick={start}>Explore your paths <Icon name="chev" size={18} stroke={2.4} style={{ color: "#fff" }} /></button>
           <div className="hero-trust">
             <span className="trust-chip"><Icon name="lock" size={12} /> Private &amp; secure</span>
@@ -250,11 +250,11 @@ export function Home({ ctx }: { ctx: Ctx }) {
       </header>
 
       <section className="home-problem">
-        <h2>Decision fatigue is real — and exhausting.</h2>
-        <p className="prob-lead">When choices pile up amid constant change, people hit <strong>decision paralysis</strong> — the thought-paralysis of being frozen, unable to act. At a big crossroads, you're far from alone.</p>
+        <h2>Decision fatigue is real and exhausting.</h2>
+        <p className="prob-lead">When choices pile up amid constant change, people hit <strong>decision paralysis</strong>: the stuck, frozen feeling of being unable to act. At a big crossroads, you're far from alone.</p>
         <div className="stat-lead">
           <b>1 in 3</b>
-          <span>Indians hit <strong>decision paralysis</strong> — overwhelmed, and unable to act.</span>
+          <span>Indians hit <strong>decision paralysis</strong>, overwhelmed, and unable to act.</span>
         </div>
         <div className="stat-row">
           <div className="ministat"><b>69%</b><span>struggle to plan ahead</span></div>
@@ -264,7 +264,7 @@ export function Home({ ctx }: { ctx: Ctx }) {
         <p className="prob-src">Survey of Indian adults · reported by The Financial Express, 2024</p>
         <div className="prob-authority">
           <span className="pa-ic"><Icon name="building" size={19} stroke={2} /></span>
-          <p><strong>India's own institutions now treat decision fatigue as a real problem.</strong> DARPG is delayering decision-heavy government processes, and the Ministry of Communications (Dept. of Telecom) runs cognitive-wellbeing training for clearer decision-making — the very overload Marg helps citizens navigate at life's crossroads.</p>
+          <p><strong>India's own institutions now treat decision fatigue as a real problem.</strong> DARPG is delayering decision-heavy government processes, and the Ministry of Communications (Dept. of Telecom) runs cognitive-wellbeing training for clearer decision-making, the very overload Marg helps citizens navigate at life's crossroads.</p>
         </div>
       </section>
 
@@ -272,8 +272,8 @@ export function Home({ ctx }: { ctx: Ctx }) {
         <h2>A calmer way to decide.</h2>
         <div className="principles">
           {principle("search", "The whole field, in view", "Every real option, side by side. Nothing hidden, nothing ranked for you.")}
-          {principle("star", "Paths you hadn't considered", "We gently surface at least one route you might have missed — no pressure.")}
-          {principle("check", "Honest about the cost", "The real effort and money each path takes — and the routes through it.")}
+          {principle("star", "Paths you hadn't considered", "We gently surface at least one route you might have missed, no pressure.")}
+          {principle("check", "Honest about the cost", "The real effort and money each path takes and the routes through it.")}
         </div>
       </section>
 
@@ -307,13 +307,13 @@ export function Home({ ctx }: { ctx: Ctx }) {
           <div className="pillar"><h3>Skill India</h3><p>Careers &amp; employability</p></div>
           <div className="pillar"><h3>Digital India</h3><p>Citizen-first services</p></div>
         </div>
-        <div className="gov-portals"><Icon name="building" size={16} /><span>Points you to real portals — the National Scholarship Portal, state education boards (DTE / PUE), and senior support like Elderline.</span></div>
+        <div className="gov-portals"><Icon name="building" size={16} /><span>Points you to real portals, the National Scholarship Portal, state education boards (DTE / PUE), and senior support like Elderline.</span></div>
       </section>
 
       <section className="home-cta">
         <h2>Your road, your pace.</h2>
         <button className="btn btn-primary" style={{ marginTop: 16 }} onClick={start}>Explore your paths <Icon name="chev" size={18} stroke={2.4} style={{ color: "#fff" }} /></button>
-        <p className="home-fine">An early preview — information is provisional, so double-check the important details. Private by design (DPDP-ready), and you can delete everything anytime.</p>
+        <p className="home-fine">An early preview, information is provisional, so double-check the important details. Private by design (DPDP-ready), and you can delete everything anytime.</p>
       </section>
 
       <footer className="home-foot">
@@ -363,7 +363,7 @@ export function Welcome({ ctx }: { ctx: Ctx }) {
       <div className="spacer" />
       <div className="stack" style={{ gap: 16 }}>
         <div className="eyebrow">{p?.tagline ?? "For Class 10 · CBSE · Bengaluru"}</div>
-        <h1 style={{ fontSize: 33 }}>{isClass10 ? "See all your paths after Class 10 — then choose, without being boxed in." : "See your real options — then choose your next step, without being boxed in."}</h1>
+        <h1 style={{ fontSize: 33 }}>{isClass10 ? "See all your paths after Class 10, then choose, without being boxed in." : "See your real options, then choose your next step, without being boxed in."}</h1>
         <p className="lead">A calm way to explore your real options and plan your next steps. No pressure, no verdicts.</p>
       </div>
       <div className="spacer" />
@@ -397,11 +397,11 @@ export function Consent({ ctx }: { ctx: Ctx }) {
       <div className="topbar"><button className="back" onClick={() => ctx.go("welcome")}><Icon name="back" size={22} /></button><span className="muted" style={{ fontSize: 14 }}>Setting up safely</span></div>
       <div className="eyebrow">A quick consent step</div>
       <h1 style={{ fontSize: 26, marginTop: 12 }}>Let's set this up safely</h1>
-      <p className="lead" style={{ marginTop: 10 }}>You're a student, so we need a parent or guardian's okay before we keep any of your answers. India's data-protection rules (DPDP) require this — and it protects you.</p>
+      <p className="lead" style={{ marginTop: 10 }}>You're a student, so we need a parent or guardian's okay before we keep any of your answers. India's data-protection rules (DPDP) require this and it protects you.</p>
       <div className="card" style={{ marginTop: 18 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {bullet("check", "We keep only what helps show your options.")}
-          {bullet("lock", "Your answers are private — never sold or shared.")}
+          {bullet("lock", "Your answers are private, never sold or shared.")}
           {bullet("refresh", "You can delete everything, anytime.")}
         </div>
       </div>
@@ -413,7 +413,7 @@ export function Consent({ ctx }: { ctx: Ctx }) {
         </div>
       ) : (
         <div className="stack" style={{ marginTop: 18 }}>
-          <button className="btn btn-primary" onClick={() => choose("self_serve")}>My parent/guardian is here — they consent</button>
+          <button className="btn btn-primary" onClick={() => choose("self_serve")}>My parent/guardian is here, they consent</button>
           <button className="btn btn-ghost" onClick={() => ctx.go("consent", "school")}>Use my school's code instead</button>
         </div>
       )}
@@ -456,12 +456,12 @@ export function Intake({ ctx }: { ctx: Ctx }) {
       <h1 style={{ fontSize: 25 }}>{pi.title}</h1>
       <p className="lead" style={{ marginTop: 8 }}>{pi.lead}</p>
       <div className="stack" style={{ marginTop: 20 }}>
-        <div className="card"><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 12 }}>{pi.interests.title}</div><div className="chips">{chips(pi.interests.options, "interests")}</div><div className="muted" style={{ fontSize: 12.5, marginTop: 12 }}>These can change over time — that's normal.</div></div>
+        <div className="card"><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 12 }}>{pi.interests.title}</div><div className="chips">{chips(pi.interests.options, "interests")}</div><div className="muted" style={{ fontSize: 12.5, marginTop: 12 }}>These can change over time, that's normal.</div></div>
         <div className="card"><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>{pi.values.title}</div><div className="muted" style={{ fontSize: 13, marginBottom: 12 }}>Pick what feels true today.</div><div className="chips">{chips(pi.values.options, "values")}</div></div>
         {ctx.persona?.id === "class10" && (
           <div className="card">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-              <div><div style={{ fontWeight: 700, fontSize: 15 }}>Add your marks?</div><div className="muted" style={{ fontSize: 12.5, marginTop: 2 }}>Optional — we don't lead with these.</div></div>
+              <div><div style={{ fontWeight: 700, fontSize: 15 }}>Add your marks?</div><div className="muted" style={{ fontSize: 12.5, marginTop: 2 }}>Optional, we don't lead with these.</div></div>
               <button className={"chip" + (p.marks === "skipped" ? " on" : "")} onClick={() => ctx.setProfile({ ...p, marks: p.marks === "skipped" ? null : "skipped" })}>{p.marks === "skipped" ? "Skipped" : "Skip"}</button>
             </div>
             {p.marks !== "skipped" && (
@@ -504,11 +504,11 @@ export function Mode({ ctx }: { ctx: Ctx }) {
 
 export function Explore({ ctx }: { ctx: Ctx }) {
   const academic = new Set(["pu_science", "pu_commerce", "pu_humanities"]);
-  // Personalised "have you considered" — only shows when a picked interest maps to a
+  // Personalised "have you considered", only shows when a picked interest maps to a
   // genuinely-overlooked option; otherwise nothing (no arbitrary suggestion).
   const nudge = pickNudge(ctx.profile, ctx.options, ctx.specialized);
   const nudgeOpt = nudge ? (nudge.spec ? ctx.specialized.find((s) => s.id === nudge.id) : ctx.options.find((o) => o.id === nudge.id)) : null;
-  const [showMore, setShowMore] = useState(false); // expansion tier collapsed by default — don't overwhelm
+  const [showMore, setShowMore] = useState(false); // expansion tier collapsed by default, don't overwhelm
   return (
     <section className="screen">
       <div className="topbar"><button className="back" onClick={() => ctx.go("mode")}><Icon name="back" size={22} /></button><div className="wordmark" style={{ fontSize: 17 }}>Your options</div></div>
@@ -550,7 +550,7 @@ export function Explore({ ctx }: { ctx: Ctx }) {
             <div style={{ width: 34, height: 34, borderRadius: 9, background: "var(--surface)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--violet)", flex: "none" }}><Icon name="star" size={17} stroke={2} /></div>
             <div style={{ flex: 1, textAlign: "left" }}>
               <div className="k" style={{ color: "var(--violet)" }}>PATHS YOU MIGHT NOT HAVE CONSIDERED</div>
-              <div className="muted" style={{ fontSize: 12.5, marginTop: 2 }}>{showMore ? "Not ranked — confirm details before you rely on them." : `${ctx.specialized.length} more paths, when you're ready — no rush`}</div>
+              <div className="muted" style={{ fontSize: 12.5, marginTop: 2 }}>{showMore ? "Not ranked, confirm details before you rely on them." : `${ctx.specialized.length} more paths, when you're ready, no rush`}</div>
             </div>
             <span style={{ color: "var(--violet)", flex: "none", display: "inline-flex", transform: showMore ? "rotate(90deg)" : "none", transition: "transform .18s ease" }}><Icon name="chev" size={20} stroke={2} /></span>
           </button>
@@ -621,7 +621,7 @@ export function Detail({ ctx }: { ctx: Ctx }) {
         {exams && row("list", "Exams / entry", exams)}
         {schs && row("sch", "Scholarships", schs)}
       </div>
-      <div className="verify"><Icon name="refresh" size={14} style={{ color: "var(--muted)" }} />{ctx.disclaimer || "Figures shown are provisional — confirm before you rely on them."}</div>
+      <div className="verify"><Icon name="refresh" size={14} style={{ color: "var(--muted)" }} />{ctx.disclaimer || "Figures shown are provisional, confirm before you rely on them."}</div>
       <OfficialLinks links={o.official_links} />
       {!!o.human_touchpoint && (
         <button className="touch" style={{ width: "100%" }} onClick={() => ctx.toast("Coming soon: a short, real story from someone on this path.")}>
@@ -635,7 +635,7 @@ export function Detail({ ctx }: { ctx: Ctx }) {
             <span style={{ fontSize: 12, fontWeight: 700, color: "var(--primary)" }}>{refl.band}</span>
           </div>
           <p style={{ fontSize: 14, lineHeight: 1.55, marginTop: 11 }}>{refl.why_this_connects} <span className="muted">Worth watching: {refl.what_to_watch}</span></p>
-          <div className="disc"><Icon name="info" size={13} style={{ color: "var(--muted)" }} /> {loading ? "personalizing…" : "An AI suggestion, not a guarantee — you decide."}</div>
+          <div className="disc"><Icon name="info" size={13} style={{ color: "var(--muted)" }} /> {loading ? "personalizing…" : "An AI suggestion, not a guarantee, you decide."}</div>
         </div>
       )}
       {refl && !loading && <Feedback ctx={ctx} where="reflection" prompt="Was this helpful?" />}
@@ -658,7 +658,7 @@ export function Detail({ ctx }: { ctx: Ctx }) {
   );
 }
 
-// Official "where to look" links — curated government / recognised-body portals
+// Official "where to look" links, curated government / recognised-body portals
 // only (the source of truth where the current, verified centre list lives). Marg
 // never lists private coaching centres; these open the authority's own directory.
 function OfficialLinks({ links, accent = "var(--primary)" }: { links?: { label: string; url: string }[]; accent?: string }) {
@@ -666,7 +666,7 @@ function OfficialLinks({ links, accent = "var(--primary)" }: { links?: { label: 
   return (
     <>
       <div className="section-k" style={{ marginTop: 20 }}>WHERE TO LOOK · OFFICIAL PORTALS</div>
-      <div className="offlink-note">Government &amp; recognised-body sites — the current, verified list lives here. Marg doesn't list private coaching centres or agents.</div>
+      <div className="offlink-note">Government &amp; recognised-body sites, the current, verified list lives here. Marg doesn't list private coaching centres or agents.</div>
       <div className="stack" style={{ marginTop: 10 }}>
         {links.map((l) => (
           <a key={l.url} className="offlink" href={l.url} target="_blank" rel="noopener noreferrer">
@@ -681,7 +681,7 @@ function OfficialLinks({ links, accent = "var(--primary)" }: { links?: { label: 
 }
 
 // Detail view for an expansion-tier pathway. These are unverified and framing-led,
-// so (unlike core options) there is no AI "fit" band and no shortlist — instead we
+// so (unlike core options) there is no AI "fit" band and no shortlist, instead we
 // lead with the honest frame and cross-link to the related core options.
 export function SpecializedDetail({ ctx }: { ctx: Ctx }) {
   const s = ctx.specialized.find((x) => x.id === ctx.param);
@@ -718,7 +718,7 @@ export function SpecializedDetail({ ctx }: { ctx: Ctx }) {
         {cost && cost !== "Varies" && row("rupee", "Approx. cost", cost)}
         {schs && row("sch", "Scholarships", schs)}
       </div>
-      <div className="verify"><Icon name="refresh" size={14} style={{ color: "var(--muted)" }} />{ctx.disclaimer || "An unverified path — confirm details with the official source before you rely on them."}</div>
+      <div className="verify"><Icon name="refresh" size={14} style={{ color: "var(--muted)" }} />{ctx.disclaimer || "An unverified path, confirm details with the official source before you rely on them."}</div>
 
       {s.honest_notes && (
         <div className="note" style={{ marginTop: 14 }}>{s.honest_notes}</div>
@@ -781,8 +781,8 @@ export function Shortlist({ ctx }: { ctx: Ctx }) {
       </div>
       <div className="spacer" style={{ minHeight: 16 }} />
       <div className="stack">
-        <button className="btn btn-ghost" onClick={() => ctx.toast("In the real product, sharing is yours to control — a family view, no rankings.")}>Save &amp; share with my family</button>
-        <button className="btn btn-soft" onClick={() => ctx.toast("Saved. Come back whenever you're ready — that's a fine choice.")}>I'm not ready to choose yet — save &amp; come back</button>
+        <button className="btn btn-ghost" onClick={() => ctx.toast("In the real product, sharing is yours to control, a family view, no rankings.")}>Save &amp; share with my family</button>
+        <button className="btn btn-soft" onClick={() => ctx.toast("Saved. Come back whenever you're ready, that's a fine choice.")}>I'm not ready to choose yet, save &amp; come back</button>
       </div>
       <Feedback ctx={ctx} where="session" prompt="How did exploring feel?" />
       <FooterLinks ctx={ctx} />
@@ -797,7 +797,7 @@ export function Aspire({ ctx }: { ctx: Ctx }) {
     <section className="screen">
       <div className="topbar"><button className="back" onClick={() => ctx.go("mode")}><Icon name="back" size={22} /></button><div className="wordmark" style={{ fontSize: 17 }}>A goal in mind</div></div>
       <h1 style={{ fontSize: 24 }}>Where would you like to head?</h1>
-      <p className="lead" style={{ marginTop: 6 }}>Tell me your goal in your own words — or pick a common one below. We'll keep it open, not fixed.</p>
+      <p className="lead" style={{ marginTop: 6 }}>Tell me your goal in your own words or pick a common one below. We'll keep it open, not fixed.</p>
 
       <div className="card" style={{ marginTop: 16 }}>
         <label className="field-label">Your goal, in your words</label>
@@ -830,7 +830,7 @@ export function GoalChat({ ctx }: { ctx: Ctx }) {
     <section className="screen">
       <div className="topbar"><button className="back" onClick={() => ctx.go("aspire")}><Icon name="back" size={22} /></button><span style={{ fontSize: 12, fontWeight: 700, color: "var(--violet)", background: "var(--violet-tint)", padding: "4px 9px", borderRadius: 999 }}>PREVIEW</span></div>
       <h1 style={{ fontSize: 23, marginTop: 8 }}>“{goal}”</h1>
-      <p className="lead" style={{ marginTop: 8 }}>Let's talk it through. I'll point you to real paths that fit — and be honest where a goal has no single fixed route. Goals often shift as you learn, and that's fine.</p>
+      <p className="lead" style={{ marginTop: 8 }}>Let's talk it through. I'll point you to real paths that fit and be honest where a goal has no single fixed route. Goals often shift as you learn, and that's fine.</p>
       <div style={{ marginTop: 14 }}>
         <Chat ctx={ctx} mode="aspire" goal={goal}
           placeholder="Ask me how to get there, what it takes, or what else is close…"
@@ -850,10 +850,10 @@ export function WhyGoal({ ctx }: { ctx: Ctx }) {
       <div className="spacer" />
       <div className="ic" style={{ background: "var(--violet-tint)", color: "var(--violet)", width: 52, height: 52 }}><Icon name="target" size={26} stroke={1.8} /></div>
       <h1 style={{ fontSize: 26, marginTop: 16 }}>Why {label}?</h1>
-      <p className="lead" style={{ marginTop: 10 }}>Before we plan, it helps to know what draws you. Goals often shift as you learn more — and that's completely fine.</p>
+      <p className="lead" style={{ marginTop: 10 }}>Before we plan, it helps to know what draws you. Goals often shift as you learn more and that's completely fine.</p>
       <div className="spacer" />
       <div className="stack">
-        <button className="btn btn-primary" onClick={() => ctx.go("plan", p.id)}>I've thought about it — show me the path</button>
+        <button className="btn btn-primary" onClick={() => ctx.go("plan", p.id)}>I've thought about it, show me the path</button>
         <button className="btn btn-ghost" onClick={() => ctx.go("explore")}>Actually, let me explore my options first</button>
       </div>
     </section>
@@ -876,7 +876,7 @@ export function Plan({ ctx }: { ctx: Ctx }) {
   return (
     <section className="screen">
       <div className="topbar"><button className="back" onClick={() => ctx.go("why", p.id)}><Icon name="back" size={22} /></button><span style={{ fontSize: 12, fontWeight: 700, color: "var(--violet)", background: "var(--violet-tint)", padding: "4px 9px", borderRadius: 999 }}>PREVIEW</span></div>
-      <h1 style={{ fontSize: 25 }}>{p.ambition} — a possible path</h1>
+      <h1 style={{ fontSize: 25 }}>{p.ambition}, a possible path</h1>
       <p className="lead" style={{ marginTop: 8 }}>This is one way there, and it can change as you do.</p>
 
       <div className="section-k" style={{ marginTop: 20 }}>YOUR NEXT 1–2 YEARS</div>
@@ -920,11 +920,11 @@ export function Plan({ ctx }: { ctx: Ctx }) {
           <p style={{ fontSize: 14, lineHeight: 1.55, marginTop: 10 }}>{ai.opening}</p>
           {ai.reconciliation && <p style={{ fontSize: 13.5, lineHeight: 1.55, marginTop: 8 }}>{ai.reconciliation}</p>}
           {ai.watch && <div className="muted" style={{ fontSize: 12.5, marginTop: 8 }}>Worth watching: {ai.watch}</div>}
-          <div className="disc" style={{ marginTop: 10, fontSize: 12, color: "var(--muted)", display: "flex", gap: 7, alignItems: "center" }}><Icon name="info" size={13} style={{ color: "var(--muted)" }} /> An AI suggestion, not a guarantee — you decide.</div>
+          <div className="disc" style={{ marginTop: 10, fontSize: 12, color: "var(--muted)", display: "flex", gap: 7, alignItems: "center" }}><Icon name="info" size={13} style={{ color: "var(--muted)" }} /> An AI suggestion, not a guarantee, you decide.</div>
         </div>
       )}
 
-      <div className="disclaimer-foot">{p.what_if_it_changes}<br />A preview — full step-by-step planning comes later.</div>
+      <div className="disclaimer-foot">{p.what_if_it_changes}<br />A preview, full step-by-step planning comes later.</div>
     </section>
   );
 }
@@ -937,7 +937,7 @@ export function DeleteConfirm({ ctx }: { ctx: Ctx }) {
       <div className="topbar"><button className="back" onClick={() => ctx.go("shortlist")}><Icon name="back" size={22} /></button><span className="muted" style={{ fontSize: 14 }}>Delete my data</span></div>
       <div className="spacer" />
       <h1 style={{ fontSize: 26 }}>Delete everything?</h1>
-      <p className="lead" style={{ marginTop: 10 }}>This removes your account, answers, and shortlist for good. It can't be undone — and that's your right.</p>
+      <p className="lead" style={{ marginTop: 10 }}>This removes your account, answers, and shortlist for good. It can't be undone and that's your right.</p>
       <div className="spacer" />
       <div className="stack">
         <button className="btn btn-soft" disabled={busy} onClick={del} style={{ color: "var(--danger)" }}>{busy ? "Deleting…" : "Yes, delete my data"}</button>
@@ -947,7 +947,7 @@ export function DeleteConfirm({ ctx }: { ctx: Ctx }) {
   );
 }
 
-// ===== Admin (metrics & KPIs) — reached via the Admin link at the bottom of Home =====
+// ===== Admin (metrics & KPIs), reached via the Admin link at the bottom of Home =====
 export function AdminLogin({ ctx }: { ctx: Ctx }) {
   const [userId, setUserId] = useState("admin");
   const [password, setPassword] = useState("");
@@ -1033,7 +1033,7 @@ export function AdminDashboard({ ctx }: { ctx: Ctx }) {
 
       <div className="section-k" style={{ marginTop: 22 }}>HELPFULNESS & SAFETY</div>
       <div className="adm-grid">
-        {stat("Helpfulness rate", m.feedback.rated ? Math.round(m.feedback.helpfulnessRate * 100) + "%" : "—")}
+        {stat("Helpfulness rate", m.feedback.rated ? Math.round(m.feedback.helpfulnessRate * 100) + "%" : ", ")}
         {stat("Ratings (👍 / 👎)", `${m.feedback.up} / ${m.feedback.down}`)}
         {stat("Distress flags (watched)", m.guardrail.distressFlags, m.guardrail.distressFlags > 0)}
       </div>
@@ -1059,7 +1059,7 @@ export function AdminDashboard({ ctx }: { ctx: Ctx }) {
         </>
       )}
 
-      <div className="disclaimer-foot" style={{ marginTop: 22 }}>Live sessions (guest accounts). Generated {new Date(m.generatedAt).toLocaleString()}. Marg tags each note; a human actions anything that changes facts. Prototype login (admin/admin) — not for public deploy.</div>
+      <div className="disclaimer-foot" style={{ marginTop: 22 }}>Live sessions (guest accounts). Generated {new Date(m.generatedAt).toLocaleString()}. Marg tags each note; a human actions anything that changes facts. Prototype login (admin/admin), not for public deploy.</div>
     </section>
   );
 }
@@ -1093,7 +1093,7 @@ function FeedbackInbox({ onChange }: { onChange: () => void }) {
             </div>
             <div className="adm-fb-text">“{it.text}”</div>
             {it.ai_suggestion && <div className="adm-fb-sug"><b>Marg suggests (draft):</b> {it.ai_suggestion}</div>}
-            <div className="adm-fb-meta">{it.persona || "—"} · {it.context || "—"} · {new Date(it.created_at).toLocaleDateString()}</div>
+            <div className="adm-fb-meta">{it.persona || ", "} · {it.context || ", "} · {new Date(it.created_at).toLocaleDateString()}</div>
             <div className="adm-fb-acts">
               {it.status !== "triaged" && <button className="adm-fb-act" onClick={() => setStatus(it.id, "triaged")}>Triaged</button>}
               {it.status !== "actioned" && <button className="adm-fb-act ok" onClick={() => setStatus(it.id, "actioned")}>Actioned</button>}

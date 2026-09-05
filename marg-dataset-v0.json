@@ -1,6 +1,6 @@
 {
   "meta": {
-    "dataset": "Marg AI — Options & Pathways",
+    "dataset": "Marg AI, Options & Pathways",
     "version": "v0-draft",
     "context": {
       "board": "CBSE",
@@ -8,33 +8,33 @@
       "transition": "After Class 10 (Class X to XI)"
     },
     "created": "2026-09-02",
-    "disclaimer": "MVP disclaimer: Everything shown in Marg is provisional and for guidance only. It has not been fully verified — always double-check every detail (fees, eligibility, dates, links) against the official source before you rely on it or make a decision.",
+    "disclaimer": "MVP disclaimer: Everything shown in Marg is provisional and for guidance only. It has not been fully verified, always double-check every detail (fees, eligibility, dates, links) against the official source before you rely on it or make a decision.",
     "verification": {
       "status": "partially_verified",
       "last_verified": "2026-09-03",
-      "owner": "TBD — assign a data owner before go-live",
-      "review_cadence": "TBD — recommend per academic cycle (annual), plus scholarship deadlines checked termly",
+      "owner": "TBD, assign a data owner before go-live",
+      "review_cadence": "TBD, recommend per academic cycle (annual), plus scholarship deadlines checked termly",
       "verified_notes": [
         "Corrected: polytechnic admission after Class 10 is via DTE Karnataka merit/counselling, NOT DCET (DCET = lateral entry to BTech).",
         "Refined govt PU fees (~₹1,500–6,500/yr) and govt polytechnic fees (~₹6,000–13,000/yr, branch-dependent).",
-        "Sep 2026 verification pass (scholarships + eligibility): corroborated across multiple sources —",
+        "Sep 2026 verification pass (scholarships + eligibility): corroborated across multiple sources, ",
         "  • Polytechnic eligibility: min 35% SSLC + compulsory Maths & Science, merit-based (no entrance) via DTE Karnataka; admissions portal is dtetech.karnataka.gov.in (dtek… is exams/results). Removed an unverified 'min age 15'.",
         "  • ITI eligibility: min 35% Class 10 for engineering trades; min age ~14; merit-based.",
         "  • PM YASASVI pre-matric: ₹4,000/yr, income < ₹2.5 lakh, OBC/EBC/DNT.",
-        "  • NMMS: ₹12,000/yr, income ≤ ₹3.5 lakh — but govt/aided/local-body school ONLY (excludes private/KV/NVS), so most CBSE private-school students are ineligible; flag honestly.",
+        "  • NMMS: ₹12,000/yr, income ≤ ₹3.5 lakh but govt/aided/local-body school ONLY (excludes private/KV/NVS), so most CBSE private-school students are ineligible; flag honestly.",
         "  • Vidyadhan (Karnataka): ₹10,000/yr, 90% Class-10 cutoff (75% for disability), income < ₹2 lakh.",
         "  • AICTE Pragati/Saksham: ₹50,000/yr, income ≤ ₹8 lakh, AICTE-approved diploma, girls/differently-abled only.",
         "  • SSP Karnataka canonical portal corrected to ssp.karnataka.gov.in.",
-        "Added specialized_pathways[] expansion tier (9 entries: integrated PU+coaching, NSDC/PMKVY skill dev, creative/design, sports academy, agriculture/allied, paramedical/allied health, aviation/maritime, entrepreneurship, alternative education NIOS/IB-IGCSE) — ALL unverified (needs_verification=true), LLM-sourced, pending primary confirmation. Aviation/maritime carries a scam-risk + post-12-entry caution; entrepreneurship framed as an enrichment add-on; IB/IGCSE flagged out-of-Phase-1-scope.",
-        "STILL NEEDS OFFICIAL/PRIMARY CONFIRMATION: current-year per-college private & coaching fees, exhaustive college lists, NIOS fee specifics, all specialized_pathways[] entries, and each scholarship's live cycle/deadline. Corroboration above is from multiple secondary aggregators, not primary portals — before go-live, confirm against DTE Karnataka (dtetech.karnataka.gov.in), PUE (pue.karnataka.gov.in), KEA (cetonline.karnataka.gov.in), scholarships.gov.in, ssp.karnataka.gov.in and vidyadhan.org."
+        "Added specialized_pathways[] expansion tier (9 entries: integrated PU+coaching, NSDC/PMKVY skill dev, creative/design, sports academy, agriculture/allied, paramedical/allied health, aviation/maritime, entrepreneurship, alternative education NIOS/IB-IGCSE), ALL unverified (needs_verification=true), LLM-sourced, pending primary confirmation. Aviation/maritime carries a scam-risk + post-12-entry caution; entrepreneurship framed as an enrichment add-on; IB/IGCSE flagged out-of-Phase-1-scope.",
+        "STILL NEEDS OFFICIAL/PRIMARY CONFIRMATION: current-year per-college private & coaching fees, exhaustive college lists, NIOS fee specifics, all specialized_pathways[] entries, and each scholarship's live cycle/deadline. Corroboration above is from multiple secondary aggregators, not primary portals, before go-live, confirm against DTE Karnataka (dtetech.karnataka.gov.in), PUE (pue.karnataka.gov.in), KEA (cetonline.karnataka.gov.in), scholarships.gov.in, ssp.karnataka.gov.in and vidyadhan.org."
       ],
-      "note": "INTERNAL audit trail only — not shown to users. Retained so a data owner keeps the Sep-2026 verification findings."
+      "note": "INTERNAL audit trail only, not shown to users. Retained so a data owner keeps the Sep-2026 verification findings."
     },
     "usage_notes": [
       "options[] powers Mode A (Explore): show the full set (the 7 core options), never eliminate one, always surface at least one the student had not considered.",
       "specialized_pathways[] is the EXPANSION TIER: do NOT show in the primary option wall. Surface these under a distinct 'Paths you might not have considered' section so Explore leads with the core 7 and keeps decision fatigue low. As with all facts in this MVP, treat these as provisional under the blanket disclaimer. This is where the 'surface ≥1 unconsidered option' principle lives without overwhelming the core decision.",
       "pathways[] powers Mode B (Aspire/Plan, thin preview): next-horizon steps only, honest cost + real routes, adjacent destinations, and a 'what if this changes' fallback.",
-      "AI weighting sits ON TOP of this data as a light, disclaimered overlay — it must not invent options, scholarships, or links beyond what is listed here."
+      "AI weighting sits ON TOP of this data as a light, disclaimered overlay, it must not invent options, scholarships, or links beyond what is listed here."
     ],
     "sources": [
       "https://collegesinfo.org/blogs/pu-college-fees-bangalore",
@@ -46,8 +46,8 @@
       "https://www.buddy4study.com/article/scholarships-karnataka-after-10th-12th",
       "https://www.thequint.com/news/education/pm-yasasvi-scholarship-scheme-2024-eligibility-criteria-steps-to-apply",
       "https://deekshalearning.com/blog/polytechnic-iti-or-cbse-11th-12th-alternative-career-paths-after-class-10/",
-      "https://ssp.karnataka.gov.in/ (Karnataka SSP — canonical portal)",
-      "https://dtetech.karnataka.gov.in/ (DTE Karnataka — polytechnic admissions portal)",
+      "https://ssp.karnataka.gov.in/ (Karnataka SSP, canonical portal)",
+      "https://dtetech.karnataka.gov.in/ (DTE Karnataka, polytechnic admissions portal)",
       "https://www.vidyadhan.org/apply (Vidyadhan / Sarojini Damodaran Foundation)",
       "https://www.buddy4study.com/article/nmms (NMMS amount/eligibility corroboration)",
       "https://www.collegedekho.com/articles/karnataka-polytechnic-admission-dates-eligibility-application-form-merit-list/ (polytechnic eligibility)",
@@ -60,7 +60,7 @@
     {
       "id": "pu_science",
       "official_links": [{"label":"Dept. of Pre-University Education, Karnataka","url":"https://pue.karnataka.gov.in"}],
-      "name": "Pre-University (PU) — Science",
+      "name": "Pre-University (PU), Science",
       "type": "academic_stream",
       "combinations": [
         "PCM (Physics, Chemistry, Maths)",
@@ -106,7 +106,7 @@
         "ssp_karnataka",
         "vidyadhan"
       ],
-      "honest_notes": "Cost variance is huge; coaching-integrated PU can be very expensive. Science does not 'lock you in' — but a strong aversion to Maths/Science is a real signal to weigh, not ignore.",
+      "honest_notes": "Cost variance is huge; coaching-integrated PU can be very expensive. Science does not 'lock you in' but a strong aversion to Maths/Science is a real signal to weigh, not ignore.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Short story from a current PU Science student or recent alum."
@@ -115,7 +115,7 @@
     {
       "id": "pu_commerce",
       "official_links": [{"label":"Dept. of Pre-University Education, Karnataka","url":"https://pue.karnataka.gov.in"}],
-      "name": "Pre-University (PU) — Commerce",
+      "name": "Pre-University (PU), Commerce",
       "type": "academic_stream",
       "combinations": [
         "Commerce with Maths",
@@ -159,7 +159,7 @@
         "ssp_karnataka",
         "vidyadhan"
       ],
-      "honest_notes": "Often wrongly seen as 'lesser' than Science; it is a strong, distinct path. Only ~14% choose it nationally (see PRD S4) — scarcity is not weakness.",
+      "honest_notes": "Often wrongly seen as 'lesser' than Science; it is a strong, distinct path. Only ~14% choose it nationally (see PRD S4), scarcity is not weakness.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Story from a CA aspirant or B.Com student."
@@ -168,7 +168,7 @@
     {
       "id": "pu_humanities",
       "official_links": [{"label":"Dept. of Pre-University Education, Karnataka","url":"https://pue.karnataka.gov.in"}],
-      "name": "Pre-University (PU) — Humanities / Arts",
+      "name": "Pre-University (PU), Humanities / Arts",
       "type": "academic_stream",
       "combinations": [
         "History, Economics, Political Science, Sociology, Psychology, Languages, Fine Arts (varies by college)"
@@ -238,7 +238,7 @@
       ],
       "keeps_open": "Strong practical + BTech bridge; good for hands-on learners who want earlier employability.",
       "eligibility": {
-        "text": "Passed SSLC/Class 10 with min 35% marks and Maths & Science as compulsory subjects. First-year admission is merit-based (SSLC marks) via DTE Karnataka online counselling — NO entrance exam, and NOT DCET (DCET is the later lateral-entry-to-BTech test for diploma holders). Admissions portal: dtetech.karnataka.gov.in."
+        "text": "Passed SSLC/Class 10 with min 35% marks and Maths & Science as compulsory subjects. First-year admission is merit-based (SSLC marks) via DTE Karnataka online counselling, NO entrance exam, and NOT DCET (DCET is the later lateral-entry-to-BTech test for diploma holders). Admissions portal: dtetech.karnataka.gov.in."
       },
       "duration": "3 years",
       "where_in_bangalore": {
@@ -247,7 +247,7 @@
           "S J Polytechnic",
           "various private polytechnics"
         ],
-        "note": "Allotted via DTE Karnataka merit/counselling. College list is illustrative, not exhaustive — confirm current participating colleges on dtetech.karnataka.gov.in."
+        "note": "Allotted via DTE Karnataka merit/counselling. College list is illustrative, not exhaustive, confirm current participating colleges on dtetech.karnataka.gov.in."
       },
       "approx_cost_inr": {
         "government_per_year": "~6,000–13,000 (branch-dependent; highly subsidised by DTE Karnataka)",
@@ -264,7 +264,7 @@
         "ssp_karnataka",
         "aicte_scholarships"
       ],
-      "honest_notes": "Often invisible to CBSE families who default to PU. A genuinely strong, low-cost, employable route — worth surfacing as an expansion option.",
+      "honest_notes": "Often invisible to CBSE families who default to PU. A genuinely strong, low-cost, employable route, worth surfacing as an expansion option.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Story from a diploma holder who did lateral entry to BTech."
@@ -272,7 +272,7 @@
     },
     {
       "id": "iti",
-      "official_links": [{"label":"Directorate General of Training (DGT), Govt. of India","url":"https://dgt.gov.in"},{"label":"NCVT MIS — ITI directory & results","url":"https://ncvtmis.gov.in"}],
+      "official_links": [{"label":"Directorate General of Training (DGT), Govt. of India","url":"https://dgt.gov.in"},{"label":"NCVT MIS, ITI directory & results","url":"https://ncvtmis.gov.in"}],
       "name": "ITI (Industrial Training Institute)",
       "type": "vocational_training",
       "combinations": [
@@ -314,7 +314,7 @@
         "nsp",
         "ssp_karnataka"
       ],
-      "honest_notes": "Best when a student needs to start earning within 1-2 years (an economic-necessity path — pair honestly with routes, per PRD S6). Not 'lesser' — high demand for Electrician/Fitter.",
+      "honest_notes": "Best when a student needs to start earning within 1-2 years (an economic-necessity path, pair honestly with routes, per PRD S6). Not 'lesser', high demand for Electrician/Fitter.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Story from an ITI Electrician now employed / in a PSU."
@@ -363,7 +363,7 @@
     },
     {
       "id": "vocational",
-      "official_links": [{"label":"Skill India Digital (Govt. of India)","url":"https://www.skillindiadigital.gov.in"},{"label":"PMKVY — Pradhan Mantri Kaushal Vikas Yojana","url":"https://www.pmkvyofficial.org"}],
+      "official_links": [{"label":"Skill India Digital (Govt. of India)","url":"https://www.skillindiadigital.gov.in"},{"label":"PMKVY, Pradhan Mantri Kaushal Vikas Yojana","url":"https://www.pmkvyofficial.org"}],
       "name": "Vocational / Skill Courses",
       "type": "vocational_training",
       "combinations": [
@@ -371,7 +371,7 @@
         "Healthcare (nursing assistant, lab tech, pharmacy)",
         "Creative (graphic design, animation, fashion)"
       ],
-      "summary": "Skill-oriented courses across digital, healthcare and creative fields — some available alongside or instead of a traditional stream.",
+      "summary": "Skill-oriented courses across digital, healthcare and creative fields, some available alongside or instead of a traditional stream.",
       "leads_to": [
         "Skill-based employment",
         "Further specialised study",
@@ -400,7 +400,7 @@
         "nsp",
         "ssp_karnataka"
       ],
-      "honest_notes": "Recognition varies wildly — flag unrecognised/for-profit courses honestly. Do not list a course whose credential value cannot be verified.",
+      "honest_notes": "Recognition varies wildly, flag unrecognised/for-profit courses honestly. Do not list a course whose credential value cannot be verified.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Story from someone employed via a recognised vocational course."
@@ -414,9 +414,9 @@
       "next_horizon_steps": [
         "After Class 10: choose PU Science with Biology (PCB or PCMB).",
         "Across Class 11-12: build toward NEET (national medical entrance).",
-        "Stay aware: NEET is highly competitive — plan realistically and know the alternatives below."
+        "Stay aware: NEET is highly competitive, plan realistically and know the alternatives below."
       ],
-      "honest_cost_effort": "MBBS is ~5.5 years after Class 12, very competitive, and expensive without a government seat. Scholarships/aid exist — see routes.",
+      "honest_cost_effort": "MBBS is ~5.5 years after Class 12, very competitive, and expensive without a government seat. Scholarships/aid exist, see routes.",
       "real_routes_through_cost": [
         "Government medical seats (lower cost)",
         "PM YASASVI / state scholarships",
@@ -428,7 +428,7 @@
         "Biosciences & research",
         "Veterinary science"
       ],
-      "what_if_it_changes": "PCB/PCMB still keeps pharmacy, allied health, biosciences and research open — not a dead end."
+      "what_if_it_changes": "PCB/PCMB still keeps pharmacy, allied health, biosciences and research open, not a dead end."
     },
     {
       "id": "become_engineer",
@@ -493,7 +493,7 @@
         "UX/product design",
         "Fine arts / crafts"
       ],
-      "what_if_it_changes": "A creative direction is buildable from multiple streams — this is the path most wrongly closed off by pressure (see PRD S6)."
+      "what_if_it_changes": "A creative direction is buildable from multiple streams, this is the path most wrongly closed off by pressure (see PRD S6)."
     },
     {
       "id": "start_earning_soon",
@@ -514,7 +514,7 @@
         "Self-employment/trade business",
         "PSU technical jobs"
       ],
-      "what_if_it_changes": "Skilled trades and diplomas still allow further study later — earning early does not close the door to a degree."
+      "what_if_it_changes": "Skilled trades and diplomas still allow further study later, earning early does not close the door to a degree."
     }
   ],
   "specialized_pathways": [
@@ -528,7 +528,7 @@
       "leads_to": [
         "Same destinations as the underlying PU stream (Science/Commerce), with structured entrance prep built in"
       ],
-      "frame": "Not a separate stream — it is a higher-cost, higher-intensity WAY OF DOING PU. Choose the stream first; treat integrated coaching as an add-on for a student who is genuinely exam-focused and can handle the pressure.",
+      "frame": "Not a separate stream, it is a higher-cost, higher-intensity WAY OF DOING PU. Choose the stream first; treat integrated coaching as an add-on for a student who is genuinely exam-focused and can handle the pressure.",
       "eligibility": {
         "text": "Passed Class 10; college-specific merit/entrance cutoffs, often stricter than plain PU."
       },
@@ -544,7 +544,7 @@
         "note": "Illustrative, not exhaustive; recognition and quality vary widely."
       },
       "approx_cost_inr": {
-        "note": "Substantially higher than plain PU — often ₹80,000 to ₹3,50,000/yr (residential higher)."
+        "note": "Substantially higher than plain PU, often ₹80,000 to ₹3,50,000/yr (residential higher)."
       },
       "related_scholarships": [
         "pm_yasasvi",
@@ -557,25 +557,25 @@
         "pu_science",
         "pu_commerce"
       ],
-      "honest_notes": "High cost and high pressure. Good for a self-motivated exam aspirant; a poor fit for an unsure student — the intensity can worsen fatigue, not reduce it. Verify the college's actual results before trusting marketing claims.",
+      "honest_notes": "High cost and high pressure. Good for a self-motivated exam aspirant; a poor fit for an unsure student, the intensity can worsen fatigue, not reduce it. Verify the college's actual results before trusting marketing claims.",
       "human_touchpoint": {
         "status": "to_source",
-        "idea": "Story from a student who did integrated PU — what the pressure was really like."
+        "idea": "Story from a student who did integrated PU, what the pressure was really like."
       }
     },
     {
       "id": "skill_development_nsdc",
-      "official_links": [{"label":"Skill India Digital (Govt. of India)","url":"https://www.skillindiadigital.gov.in"},{"label":"NSDC — National Skill Development Corporation","url":"https://nsdcindia.org"}],
+      "official_links": [{"label":"Skill India Digital (Govt. of India)","url":"https://www.skillindiadigital.gov.in"},{"label":"NSDC, National Skill Development Corporation","url":"https://nsdcindia.org"}],
       "name": "Skill Development Programs (NSDC / PMKVY)",
       "type": "vocational_training",
       "tier": "expansion",
-      "summary": "Short-term, national-mission-aligned skill courses — AI/data, robotics, digital marketing, cybersecurity, hospitality and more — via NSDC / PMKVY sector skill councils.",
+      "summary": "Short-term, national-mission-aligned skill courses, AI/data, robotics, digital marketing, cybersecurity, hospitality and more, via NSDC / PMKVY sector skill councils.",
       "leads_to": [
         "Entry-level skilled roles",
         "Apprenticeships",
         "A skill stacked on top of a mainstream stream"
       ],
-      "frame": "Usually a COMPLEMENT to a mainstream path, not a replacement for one — many are short (weeks to months). Strong for a student with a clear practical interest who wants an employable skill early.",
+      "frame": "Usually a COMPLEMENT to a mainstream path, not a replacement for one, many are short (weeks to months). Strong for a student with a clear practical interest who wants an employable skill early.",
       "eligibility": {
         "text": "Varies by course; many accept Class 10 pass. Prefer PMKVY / NSDC-recognised sector skill council courses."
       },
@@ -585,7 +585,7 @@
           "PMKVY training centres",
           "NSDC-affiliated / Skill India centres"
         ],
-        "note": "Verify the centre is genuinely PMKVY/NSDC-affiliated — this space has many unrecognised for-profit imitators."
+        "note": "Verify the centre is genuinely PMKVY/NSDC-affiliated, this space has many unrecognised for-profit imitators."
       },
       "approx_cost_inr": {
         "note": "Many PMKVY courses are free/subsidised; private 'skill' courses vary widely."
@@ -598,7 +598,7 @@
         "vocational",
         "iti"
       ],
-      "honest_notes": "Credential recognition varies wildly (see the 'vocational' core option) — flag unrecognised/for-profit courses honestly. Best paired with, not instead of, a base qualification.",
+      "honest_notes": "Credential recognition varies wildly (see the 'vocational' core option), flag unrecognised/for-profit courses honestly. Best paired with, not instead of, a base qualification.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Story from someone who got a job via a PMKVY/NSDC course."
@@ -606,17 +606,17 @@
     },
     {
       "id": "creative_design_school",
-      "official_links": [{"label":"National Institute of Design (NID)","url":"https://www.nid.edu"},{"label":"NIFT — National Institute of Fashion Technology","url":"https://www.nift.ac.in"}],
+      "official_links": [{"label":"National Institute of Design (NID)","url":"https://www.nid.edu"},{"label":"NIFT, National Institute of Fashion Technology","url":"https://www.nift.ac.in"}],
       "name": "Creative & Design Schools (Early Entry)",
       "type": "vocational_training",
       "tier": "expansion",
-      "summary": "Early-entry programmes in fashion design, animation, game design, fine arts, or performing arts (music, theatre, dance) — some foundation/diploma courses accept students after Class 10.",
+      "summary": "Early-entry programmes in fashion design, animation, game design, fine arts, or performing arts (music, theatre, dance), some foundation/diploma courses accept students after Class 10.",
       "leads_to": [
         "Design/creative diplomas and degrees",
         "Portfolio-based creative careers",
         "Design entrances later (NID/NIFT/UCEED-adjacent)"
       ],
-      "frame": "For a student with a genuine, demonstrated creative interest. Design is also reachable from Humanities or any stream — this is the specialised, earlier-start route, not the only door.",
+      "frame": "For a student with a genuine, demonstrated creative interest. Design is also reachable from Humanities or any stream, this is the specialised, earlier-start route, not the only door.",
       "eligibility": {
         "text": "Varies by institute; many foundation courses accept Class 10 pass, some require a portfolio or aptitude test."
       },
@@ -626,7 +626,7 @@
           "Recognised design/animation institutes in Bengaluru",
           "Fine/performing arts academies"
         ],
-        "note": "Verify credential recognition and placement — this space has many unaccredited private institutes."
+        "note": "Verify credential recognition and placement, this space has many unaccredited private institutes."
       },
       "approx_cost_inr": {
         "note": "Highly variable; private design/animation courses can be expensive."
@@ -639,7 +639,7 @@
         "pu_humanities",
         "vocational"
       ],
-      "honest_notes": "Recognition varies widely; do not list a course whose credential value cannot be verified. Portfolio and demonstrated work matter more than the stream — see the 'become a designer/artist' Mode-B pathway.",
+      "honest_notes": "Recognition varies widely; do not list a course whose credential value cannot be verified. Portfolio and demonstrated work matter more than the stream, see the 'become a designer/artist' Mode-B pathway.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Story from a working designer/animator who started early."
@@ -657,7 +657,7 @@
         "Sports scholarships and quotas",
         "Careers in coaching, physiotherapy, sports science"
       ],
-      "frame": "Pursue ONLY with an academic backup running in parallel — professional sport is high-variance. Prefer academies/PU colleges that keep the student's 10+2 on track.",
+      "frame": "Pursue ONLY with an academic backup running in parallel, professional sport is high-variance. Prefer academies/PU colleges that keep the student's 10+2 on track.",
       "eligibility": {
         "text": "Trials/selection by the academy; combine with a PU college that supports a sports track."
       },
@@ -689,19 +689,19 @@
     },
     {
       "id": "agriculture_allied",
-      "official_links": [{"label":"ICAR — Indian Council of Agricultural Research","url":"https://icar.org.in"},{"label":"Univ. of Agricultural Sciences, Bengaluru","url":"https://www.uasbangalore.edu.in"}],
+      "official_links": [{"label":"ICAR, Indian Council of Agricultural Research","url":"https://icar.org.in"},{"label":"Univ. of Agricultural Sciences, Bengaluru","url":"https://www.uasbangalore.edu.in"}],
       "name": "Agriculture & Allied Sciences (Diplomas)",
       "type": "technical_diploma",
       "tier": "expansion",
-      "summary": "Specialised diplomas in agriculture, horticulture, veterinary science, sericulture or fisheries — particularly relevant across Karnataka's agrarian districts.",
+      "summary": "Specialised diplomas in agriculture, horticulture, veterinary science, sericulture or fisheries, particularly relevant across Karnataka's agrarian districts.",
       "leads_to": [
         "Agri/allied technician and extension roles",
         "Further study (B.Sc Agriculture and allied degrees)",
         "Agri-entrepreneurship / farming enterprise"
       ],
-      "frame": "A genuinely underrated, low-visibility route for a student interested in agriculture, animals or the outdoors — especially with a rural/land background.",
+      "frame": "A genuinely underrated, low-visibility route for a student interested in agriculture, animals or the outdoors, especially with a rural/land background.",
       "eligibility": {
-        "text": "Passed Class 10; specific diplomas offered via Karnataka's agricultural/horticultural universities and polytechnics — cutoffs and subject requirements vary."
+        "text": "Passed Class 10; specific diplomas offered via Karnataka's agricultural/horticultural universities and polytechnics, cutoffs and subject requirements vary."
       },
       "duration": "2-3 years (diploma)",
       "where_in_bangalore": {
@@ -734,22 +734,22 @@
       "name": "Paramedical & Allied Health Diplomas",
       "type": "technical_diploma",
       "tier": "expansion",
-      "summary": "Shorter healthcare-focused diplomas — medical lab technology (DMLT), radiology/imaging, physiotherapy assistant, nursing assistant, and similar — leading into allied-health careers.",
+      "summary": "Shorter healthcare-focused diplomas, medical lab technology (DMLT), radiology/imaging, physiotherapy assistant, nursing assistant, and similar, leading into allied-health careers.",
       "leads_to": [
         "Allied-health technician and assistant roles",
         "Hospital/diagnostic-lab employment",
         "Bridge toward further health-science study"
       ],
-      "frame": "A real, employable healthcare route that does NOT require the NEET/MBBS marathon — strong for a student drawn to health/care work who wants earlier employability.",
+      "frame": "A real, employable healthcare route that does NOT require the NEET/MBBS marathon, strong for a student drawn to health/care work who wants earlier employability.",
       "eligibility": {
-        "text": "Passed Class 10 (some diplomas require 10+2 with Science — verify per course); offered by recognised paramedical institutes/boards."
+        "text": "Passed Class 10 (some diplomas require 10+2 with Science, verify per course); offered by recognised paramedical institutes/boards."
       },
       "duration": "1-3 years depending on the diploma",
       "where_in_bangalore": {
         "examples": [
           "Recognised paramedical institutes / hospital-affiliated training schools in Bengaluru"
         ],
-        "note": "This space has many unrecognised private institutes — verify the course is affiliated to a recognised paramedical board/university before listing."
+        "note": "This space has many unrecognised private institutes, verify the course is affiliated to a recognised paramedical board/university before listing."
       },
       "approx_cost_inr": {
         "note": "Varies; government/hospital-affiliated programmes cheaper than private institutes."
@@ -771,20 +771,20 @@
     },
     {
       "id": "aviation_maritime",
-      "official_links": [{"label":"DGCA — approved flying training organisations","url":"https://www.dgca.gov.in"},{"label":"DG Shipping — approved maritime institutes","url":"https://www.dgshipping.gov.in"},{"label":"Indian Coast Guard — official recruitment","url":"https://joinindiancoastguard.gov.in"},{"label":"Indian Maritime University (IMU)","url":"https://www.imu.edu.in"}],
+      "official_links": [{"label":"DGCA, approved flying training organisations","url":"https://www.dgca.gov.in"},{"label":"DG Shipping, approved maritime institutes","url":"https://www.dgshipping.gov.in"},{"label":"Indian Coast Guard, official recruitment","url":"https://joinindiancoastguard.gov.in"},{"label":"Indian Maritime University (IMU)","url":"https://www.imu.edu.in"}],
       "name": "Aviation, Pilot & Marine Services",
       "type": "specialised_track",
       "tier": "expansion",
-      "summary": "Careers in the sky and at sea — commercial pilot, cabin crew, merchant navy, and the Indian Coast Guard (\"marine guards\"). Most formal entry is after 10+2 with Science; the honest move now is a strong PU Science base.",
+      "summary": "Careers in the sky and at sea, commercial pilot, cabin crew, merchant navy, and the Indian Coast Guard (\"marine guards\"). Most formal entry is after 10+2 with Science; the honest move now is a strong PU Science base.",
       "leads_to": [
-        "Commercial pilot — CPL via a DGCA-approved academy (after 10+2 with Physics & Maths)",
+        "Commercial pilot, CPL via a DGCA-approved academy (after 10+2 with Physics & Maths)",
         "Cabin crew / airport ground & operations staff",
         "Merchant navy officer (nautical / marine engineering, after 10+2 Science)",
-        "Indian Coast Guard — \"marine guards\" (Navik / Yantrik / Assistant Commandant; a government uniformed service)"
+        "Indian Coast Guard, \"marine guards\" (Navik / Yantrik / Assistant Commandant; a government uniformed service)"
       ],
-      "frame": "Two very different things sit here, so read carefully. (1) The Indian Coast Guard is a legitimate government uniformed service — entry is through official recruitment and an exam, largely funded, not a paid course. (2) Commercial pilot and merchant-navy training are genuine but almost always need 10+2 with Physics/Maths — not an after-10th shortcut — and the private-academy side of this sector is expensive and has many misleading, scam-prone operators.",
+      "frame": "Two very different things sit here, so read carefully. (1) The Indian Coast Guard is a legitimate government uniformed service, entry is through official recruitment and an exam, largely funded, not a paid course. (2) Commercial pilot and merchant-navy training are genuine but almost always need 10+2 with Physics/Maths, not an after-10th shortcut and the private-academy side of this sector is expensive and has many misleading, scam-prone operators.",
       "eligibility": {
-        "text": "Pilot (CPL) and merchant navy need 10+2 with Physics & Maths and medical fitness. Indian Coast Guard: various entries after 10+2 (some technical entries need PCM), age and fitness standards apply. Verify against DGCA (aviation), DG Shipping (maritime), and the official Indian Coast Guard recruitment portal — never a private academy's claims."
+        "text": "Pilot (CPL) and merchant navy need 10+2 with Physics & Maths and medical fitness. Indian Coast Guard: various entries after 10+2 (some technical entries need PCM), age and fitness standards apply. Verify against DGCA (aviation), DG Shipping (maritime), and the official Indian Coast Guard recruitment portal, never a private academy's claims."
       },
       "duration": "Varies; professional pilot/marine licensing is post-12 and multi-year. Coast Guard: recruitment, then service training.",
       "where_in_bangalore": {
@@ -793,10 +793,10 @@
           "DGCA-approved flying academies / DG-Shipping-recognised marine institutes only",
           "Indian Coast Guard recruitment (national, via the official portal)"
         ],
-        "note": "For pilot/marine training list only institutes with verifiable DGCA or DG Shipping recognition — this is a high-scam sector. Coast Guard entry is national, not Bengaluru-specific."
+        "note": "For pilot/marine training list only institutes with verifiable DGCA or DG Shipping recognition, this is a high-scam sector. Coast Guard entry is national, not Bengaluru-specific."
       },
       "approx_cost_inr": {
-        "note": "Pilot training is very expensive (₹40 lakh+) — flag cost honestly. Merchant navy varies. Coast Guard training is largely state-funded/stipended."
+        "note": "Pilot training is very expensive (₹40 lakh+), flag cost honestly. Merchant navy varies. Coast Guard training is largely state-funded/stipended."
       },
       "related_scholarships": [],
       "related_core_options": [
@@ -814,13 +814,13 @@
       "name": "Entrepreneurship & Startup Programs",
       "type": "enrichment",
       "tier": "expansion",
-      "summary": "Youth entrepreneurship and incubator programmes — Bengaluru's startup ecosystem runs student-focused ventures, workshops and early incubation.",
+      "summary": "Youth entrepreneurship and incubator programmes, Bengaluru's startup ecosystem runs student-focused ventures, workshops and early incubation.",
       "leads_to": [
         "Early venture / business experience",
         "Entrepreneurial and problem-solving skills",
         "A head start on building something while studying"
       ],
-      "frame": "An ENRICHMENT ADD-ON, not a stream you choose instead of PU/diploma/ITI. Pursue it ALONGSIDE a base academic path — a student still needs a foundational qualification.",
+      "frame": "An ENRICHMENT ADD-ON, not a stream you choose instead of PU/diploma/ITI. Pursue it ALONGSIDE a base academic path, a student still needs a foundational qualification.",
       "eligibility": {
         "text": "Open programmes; typically no formal cutoff. Pursue in parallel with a mainstream stream."
       },
@@ -847,7 +847,7 @@
     },
     {
       "id": "alternative_education",
-      "official_links": [{"label":"NIOS — National Institute of Open Schooling","url":"https://www.nios.ac.in"},{"label":"IB — International Baccalaureate","url":"https://www.ibo.org"},{"label":"Cambridge International (IGCSE)","url":"https://www.cambridgeinternational.org"}],
+      "official_links": [{"label":"NIOS, National Institute of Open Schooling","url":"https://www.nios.ac.in"},{"label":"IB, International Baccalaureate","url":"https://www.ibo.org"},{"label":"Cambridge International (IGCSE)","url":"https://www.cambridgeinternational.org"}],
       "name": "Alternative Education Routes (NIOS / IB / IGCSE)",
       "type": "open_schooling",
       "tier": "expansion",
@@ -856,7 +856,7 @@
         "Flexible 10+2 (NIOS)",
         "International 10+2 with global university exposure (IB/IGCSE)"
       ],
-      "frame": "NIOS is a fully-covered core option (see the 'nios' record) for students needing a flexible pace. IB/IGCSE is a BOARD SWITCH — it sits OUTSIDE Marg's Phase-1 CBSE scope, so it is informational only here (not a Class X→XI stream choice within CBSE), and typically a higher-cost, family-driven decision.",
+      "frame": "NIOS is a fully-covered core option (see the 'nios' record) for students needing a flexible pace. IB/IGCSE is a BOARD SWITCH, it sits OUTSIDE Marg's Phase-1 CBSE scope, so it is informational only here (not a Class X→XI stream choice within CBSE), and typically a higher-cost, family-driven decision.",
       "eligibility": {
         "text": "NIOS: open eligibility after Class 10. IB/IGCSE: admission to an international school; verify recognition for Indian college admission."
       },
@@ -878,7 +878,7 @@
       "related_core_options": [
         "nios"
       ],
-      "honest_notes": "Frame NIOS supportively (never as failure). Treat IB/IGCSE as out-of-scope context, not a recommended action — Phase 1 is CBSE, Class X→XI.",
+      "honest_notes": "Frame NIOS supportively (never as failure). Treat IB/IGCSE as out-of-scope context, not a recommended action, Phase 1 is CBSE, Class X→XI.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Story from a student who used NIOS or switched to an international curriculum."
@@ -886,54 +886,54 @@
     },
     {
       "id": "defence_forces",
-      "official_links": [{"label":"UPSC — NDA & CDS exams","url":"https://www.upsc.gov.in"},{"label":"Join Indian Army","url":"https://joinindianarmy.nic.in"},{"label":"Join Indian Navy","url":"https://www.joinindiannavy.gov.in"},{"label":"Indian Air Force careers","url":"https://careerindianairforce.cdac.in"},{"label":"NEET (for AFMC)","url":"https://neet.nta.nic.in"}],
+      "official_links": [{"label":"UPSC, NDA & CDS exams","url":"https://www.upsc.gov.in"},{"label":"Join Indian Army","url":"https://joinindianarmy.nic.in"},{"label":"Join Indian Navy","url":"https://www.joinindiannavy.gov.in"},{"label":"Indian Air Force careers","url":"https://careerindianairforce.cdac.in"},{"label":"NEET (for AFMC)","url":"https://neet.nta.nic.in"}],
       "name": "Defence & the armed forces",
       "type": "service",
       "tier": "expansion",
-      "summary": "A career serving in the Army, Navy or Air Force — as an officer, a military doctor, or in allied roles. Entry usually runs through 10+2 first, then a defence entrance and selection.",
+      "summary": "A career serving in the Army, Navy or Air Force, as an officer, a military doctor, or in allied roles. Entry usually runs through 10+2 first, then a defence entrance and selection.",
       "leads_to": ["Officer in the Army / Navy / Air Force (NDA, CDS)", "Military doctor via AFMC", "A disciplined, purpose-driven career with strong benefits"],
-      "frame": "A respected, purpose-driven route — but plan the steps realistically. NDA is after Class 12 (PCM for Navy/Air Force; any stream for the Army), AFMC needs 10+2 with Biology plus NEET, and CDS is after graduation. All involve a written exam (UPSC NDA/CDS), an SSB interview, and strict physical & medical fitness standards.",
+      "frame": "A respected, purpose-driven route but plan the steps realistically. NDA is after Class 12 (PCM for Navy/Air Force; any stream for the Army), AFMC needs 10+2 with Biology plus NEET, and CDS is after graduation. All involve a written exam (UPSC NDA/CDS), an SSB interview, and strict physical & medical fitness standards.",
       "eligibility": { "text": "After Class 10, PU keeps these open (Science for NDA-technical / Navy / Air Force and for AFMC). NDA: 10+2, age ~16.5-19.5, unmarried, fitness standards. AFMC: 10+2 with PCB via NEET. CDS: after graduation." },
       "duration": "2 years PU, then entrance + academy training (NDA ~3 years)",
       "where_in_bangalore": { "examples": ["PU (Science) colleges as the base", "NDA, Khadakwasla (via UPSC)", "AFMC Pune (via NEET)", "SSB selection centres"], "note": "Illustrative; entry is national, not Bengaluru-specific." },
       "approx_cost_inr": { "note": "Training is largely state-funded/stipended; the main cost is PU plus exam preparation." },
       "related_scholarships": ["pm_yasasvi", "nsp", "ssp_karnataka"],
       "related_core_options": ["pu_science", "pu_commerce", "pu_humanities"],
-      "honest_notes": "Highly competitive, with strict fitness and medical standards. Keep a parallel academic path (PU keeps degrees open) as a backup — selection is tough.",
+      "honest_notes": "Highly competitive, with strict fitness and medical standards. Keep a parallel academic path (PU keeps degrees open) as a backup, selection is tough.",
       "human_touchpoint": { "status": "to_source", "idea": "Story from someone who cleared NDA / SSB and joined the forces." }
     },
     {
       "id": "police_uniformed",
-      "official_links": [{"label":"Karnataka State Police — recruitment","url":"https://recruitment.ksp.gov.in"},{"label":"Staff Selection Commission (SSC)","url":"https://ssc.nic.in"},{"label":"UPSC (for IPS via Civil Services)","url":"https://www.upsc.gov.in"}],
+      "official_links": [{"label":"Karnataka State Police, recruitment","url":"https://recruitment.ksp.gov.in"},{"label":"Staff Selection Commission (SSC)","url":"https://ssc.nic.in"},{"label":"UPSC (for IPS via Civil Services)","url":"https://www.upsc.gov.in"}],
       "name": "Police, customs & uniformed services",
       "type": "service",
       "tier": "expansion",
-      "summary": "Government service careers in the police, customs, border and paramilitary forces (BSF, CRPF, CISF), and the merchant navy — different routes, mostly after 10+2 or graduation.",
-      "leads_to": ["State police / IPS", "Customs & central excise (SSC / IRS)", "Paramilitary & border forces — BSF, CRPF, CISF", "Merchant navy (deck / engine officer)"],
+      "summary": "Government service careers in the police, customs, border and paramilitary forces (BSF, CRPF, CISF), and the merchant navy, different routes, mostly after 10+2 or graduation.",
+      "leads_to": ["State police / IPS", "Customs & central excise (SSC / IRS)", "Paramilitary & border forces, BSF, CRPF, CISF", "Merchant navy (deck / engine officer)"],
       "frame": "A broad family of service careers with different doors: police constable/SI via state exams (after 12); IPS, customs and paramilitary officers via UPSC/SSC after graduation; paramilitary constables (CAPF) via SSC GD after Class 10/12; and the merchant navy via IMU-CET after 10+2 with Physics/Maths. Most involve competitive exams plus physical & medical standards.",
       "eligibility": { "text": "Varies by service: constable/GD roles after Class 10/12; officer roles (IPS, customs, CAPF) after graduation via UPSC/SSC; merchant navy after 10+2 with PCM via IMU-CET. Check the specific exam." },
       "duration": "Varies (exam preparation + training)",
       "where_in_bangalore": { "examples": ["Karnataka State Police recruitment", "SSC / UPSC exam routes", "IMU-CET / DG-Shipping approved maritime institutes"], "note": "Illustrative; confirm current eligibility and standards per service." },
-      "approx_cost_inr": { "note": "Government roles have low course cost (mainly exam prep); merchant navy training can be expensive — verify DG-Shipping approval." },
+      "approx_cost_inr": { "note": "Government roles have low course cost (mainly exam prep); merchant navy training can be expensive, verify DG-Shipping approval." },
       "related_scholarships": ["nsp", "ssp_karnataka", "pm_yasasvi"],
       "related_core_options": ["pu_science", "pu_commerce", "pu_humanities", "iti"],
-      "honest_notes": "Many of these come after Class 12 or a degree — so from Class 10 the practical step is choosing a PU stream that keeps the target exam open (e.g. Science with Maths for merchant navy). Verify physical/medical standards early.",
+      "honest_notes": "Many of these come after Class 12 or a degree so from Class 10 the practical step is choosing a PU stream that keeps the target exam open (e.g. Science with Maths for merchant navy). Verify physical/medical standards early.",
       "human_touchpoint": { "status": "to_source", "idea": "Story from someone serving in the police, a paramilitary force, or the merchant navy." }
     },
     {
       "id": "civil_services",
-      "official_links": [{"label":"UPSC — Union Public Service Commission","url":"https://www.upsc.gov.in"},{"label":"Karnataka Public Service Commission (KPSC)","url":"https://www.kpsc.kar.nic.in"}],
+      "official_links": [{"label":"UPSC, Union Public Service Commission","url":"https://www.upsc.gov.in"},{"label":"Karnataka Public Service Commission (KPSC)","url":"https://www.kpsc.kar.nic.in"}],
       "name": "Civil Services (UPSC / State PSC)",
       "type": "service",
       "tier": "expansion",
-      "summary": "The administrative backbone of the country — IAS, IPS and IFS (Indian Foreign Service), plus state services through the Karnataka PSC (KPSC). Entry is after a bachelor's degree, through one of the toughest exams in India.",
+      "summary": "The administrative backbone of the country, IAS, IPS and IFS (Indian Foreign Service), plus state services through the Karnataka PSC (KPSC). Entry is after a bachelor's degree, through one of the toughest exams in India.",
       "leads_to": [
-        "IAS — Indian Administrative Service",
-        "IPS — Indian Police Service",
-        "IFS — Indian Foreign Service (diplomat)",
+        "IAS, Indian Administrative Service",
+        "IPS, Indian Police Service",
+        "IFS, Indian Foreign Service (diplomat)",
         "State services (KAS) via the Karnataka PSC (KPSC)"
       ],
-      "frame": "This is a long road, not an after-10th step — and that's important to know early. You need a bachelor's degree first, then clear the UPSC Civil Services Exam (prelims → mains → interview) or a State PSC. The good news: ANY graduation stream qualifies, so there is no single 'correct' PU stream now. Many aspirants take Humanities because the syllabus overlaps, but Science and Commerce graduates clear it every year too.",
+      "frame": "This is a long road, not an after-10th step and that's important to know early. You need a bachelor's degree first, then clear the UPSC Civil Services Exam (prelims → mains → interview) or a State PSC. The good news: ANY graduation stream qualifies, so there is no single 'correct' PU stream now. Many aspirants take Humanities because the syllabus overlaps, but Science and Commerce graduates clear it every year too.",
       "eligibility": {
         "text": "A bachelor's degree in any discipline; Indian citizen; age typically 21-32 with category relaxations. From Class 10, any PU stream keeps this fully open."
       },
@@ -948,11 +948,11 @@
         "note": "Entry is national/state-level and not tied to a particular school or city."
       },
       "approx_cost_inr": {
-        "note": "The exam itself is low-cost; the real investment is years of preparation. Be wary of very expensive coaching promises — most toppers rely on free/official NCERT-based material."
+        "note": "The exam itself is low-cost; the real investment is years of preparation. Be wary of very expensive coaching promises, most toppers rely on free/official NCERT-based material."
       },
       "related_scholarships": ["nsp", "ssp_karnataka", "pm_yasasvi"],
       "related_core_options": ["pu_science", "pu_commerce", "pu_humanities"],
-      "honest_notes": "The single most useful message for a Class 10 student: you do NOT need a special stream now for UPSC — any degree works, so pick a PU stream you'll genuinely excel in. It's a marathon; keep a parallel career so your future doesn't ride on one exam.",
+      "honest_notes": "The single most useful message for a Class 10 student: you do NOT need a special stream now for UPSC, any degree works, so pick a PU stream you'll genuinely excel in. It's a marathon; keep a parallel career so your future doesn't ride on one exam.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Story from a serving IAS / IPS / IFS or KAS officer on their actual path and the streams they took."
@@ -960,36 +960,36 @@
     },
     {
       "id": "government_jobs",
-      "official_links": [{"label":"Staff Selection Commission (SSC)","url":"https://ssc.nic.in"},{"label":"RRB — Railway recruitment (official apply)","url":"https://www.rrbapply.gov.in"},{"label":"IBPS — banking recruitment","url":"https://www.ibps.in"},{"label":"Karnataka Public Service Commission (KPSC)","url":"https://www.kpsc.kar.nic.in"}],
+      "official_links": [{"label":"Staff Selection Commission (SSC)","url":"https://ssc.nic.in"},{"label":"RRB, Railway recruitment (official apply)","url":"https://www.rrbapply.gov.in"},{"label":"IBPS, banking recruitment","url":"https://www.ibps.in"},{"label":"Karnataka Public Service Commission (KPSC)","url":"https://www.kpsc.kar.nic.in"}],
       "name": "Government & Public-Sector Jobs",
       "type": "service",
       "tier": "expansion",
-      "summary": "Stable government and PSU employment beyond the civil services — Staff Selection Commission (SSC), railways, banking, and state government posts. Unlike the civil services, several of these open right after Class 10 or 12.",
+      "summary": "Stable government and PSU employment beyond the civil services, Staff Selection Commission (SSC), railways, banking, and state government posts. Unlike the civil services, several of these open right after Class 10 or 12.",
       "leads_to": [
         "SSC jobs (MTS after 10th/12th, CHSL after 12th, CGL after graduation)",
-        "Railway jobs (RRB — Group D after Class 10, technical & NTPC roles)",
+        "Railway jobs (RRB, Group D after Class 10, technical & NTPC roles)",
         "Banking (IBPS / SBI clerk & PO)",
         "State government & PSUs (KPSC, Karnataka departments, BHEL / ISRO / BEL)"
       ],
-      "frame": "A big, reassuring landscape — and one of the FEW families with real early routes: Railway Group D and SSC MTS accept a Class 10/12 pass, clerical roles come after 12th, and officer-level posts (SSC CGL, bank PO) after a degree. Each has its own exam. From Class 10, finishing PU — or even a diploma / ITI — keeps most of these open.",
+      "frame": "A big, reassuring landscape and one of the FEW families with real early routes: Railway Group D and SSC MTS accept a Class 10/12 pass, clerical roles come after 12th, and officer-level posts (SSC CGL, bank PO) after a degree. Each has its own exam. From Class 10, finishing PU or even a diploma / ITI, keeps most of these open.",
       "eligibility": {
-        "text": "Ranges from Class 10 pass (some railway/SSC roles) to 12th pass (clerical) to graduation (officer roles). Age limits and exams vary by post — always check the specific notification."
+        "text": "Ranges from Class 10 pass (some railway/SSC roles) to 12th pass (clerical) to graduation (officer roles). Age limits and exams vary by post, always check the specific notification."
       },
-      "duration": "Varies — from soon after schooling to post-degree, plus exam preparation",
+      "duration": "Varies, from soon after schooling to post-degree, plus exam preparation",
       "where_in_bangalore": {
         "examples": [
           "SSC / RRB / IBPS exams (national)",
           "Karnataka PSC and state-department recruitment",
-          "PSUs with a Bengaluru presence — BHEL, ISRO, BEL"
+          "PSUs with a Bengaluru presence, BHEL, ISRO, BEL"
         ],
         "note": "Recruitment is exam-based and mostly national/state-level."
       },
       "approx_cost_inr": {
-        "note": "Low course cost — mainly exam preparation. Official syllabi and previous papers are freely available."
+        "note": "Low course cost, mainly exam preparation. Official syllabi and previous papers are freely available."
       },
       "related_scholarships": ["nsp", "ssp_karnataka", "pm_yasasvi"],
       "related_core_options": ["pu_science", "pu_commerce", "pu_humanities", "iti", "vocational"],
-      "honest_notes": "Worth surfacing early because a few of these (railways, SSC MTS) are genuine near-term routes after Class 10/12 — but most reward finishing 12th or a degree. Always point to the specific exam's official notification for exact eligibility.",
+      "honest_notes": "Worth surfacing early because a few of these (railways, SSC MTS) are genuine near-term routes after Class 10/12 but most reward finishing 12th or a degree. Always point to the specific exam's official notification for exact eligibility.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Story from someone in a railway / SSC / banking government job about how they got in."
@@ -997,18 +997,18 @@
     },
     {
       "id": "forestry_environment",
-      "official_links": [{"label":"UPSC — Indian Forest Service (IFoS)","url":"https://www.upsc.gov.in"},{"label":"ICAR (agriculture / forestry education)","url":"https://icar.org.in"},{"label":"Karnataka Public Service Commission (RFO)","url":"https://www.kpsc.kar.nic.in"}],
+      "official_links": [{"label":"UPSC, Indian Forest Service (IFoS)","url":"https://www.upsc.gov.in"},{"label":"ICAR (agriculture / forestry education)","url":"https://icar.org.in"},{"label":"Karnataka Public Service Commission (RFO)","url":"https://www.kpsc.kar.nic.in"}],
       "name": "Forestry, Environment & Wildlife",
       "type": "specialised_track",
       "tier": "expansion",
-      "summary": "Careers caring for forests, wildlife and the environment — from a BSc in Forestry to the Indian Forest Service (IFoS) and wildlife/conservation science. Entry runs through PU Science and a relevant degree.",
+      "summary": "Careers caring for forests, wildlife and the environment, from a BSc in Forestry to the Indian Forest Service (IFoS) and wildlife/conservation science. Entry runs through PU Science and a relevant degree.",
       "leads_to": [
         "BSc / BSc (Hons) Forestry, or Environmental Science",
-        "Indian Forest Service (IFoS) — via UPSC, after a science/agriculture degree",
+        "Indian Forest Service (IFoS), via UPSC, after a science/agriculture degree",
         "Range Forest Officer (state forest department) via Karnataka PSC",
         "Wildlife biology, ecology & conservation research"
       ],
-      "frame": "If you love the outdoors, ecology or animals, this is a real career family. One thing to clear up first: IFoS (the Indian Forest Service) is NOT the same as IFS (the Indian Foreign Service) — students often mix them up. The professional doors open after a degree: IFoS is a UPSC exam after a science/engineering/agriculture degree, and Range Forest Officer posts come through the state PSC. From Class 10, PU Science (with Biology) is the natural base.",
+      "frame": "If you love the outdoors, ecology or animals, this is a real career family. One thing to clear up first: IFoS (the Indian Forest Service) is NOT the same as IFS (the Indian Foreign Service), students often mix them up. The professional doors open after a degree: IFoS is a UPSC exam after a science/engineering/agriculture degree, and Range Forest Officer posts come through the state PSC. From Class 10, PU Science (with Biology) is the natural base.",
       "eligibility": {
         "text": "PU Science (Biology helps) → BSc Forestry / Environmental Science / Agriculture. IFoS: a bachelor's in a science, engineering or agriculture subject, via UPSC. RFO: via the Karnataka PSC."
       },
@@ -1035,18 +1035,18 @@
     },
     {
       "id": "arts_film_animation",
-      "official_links": [{"label":"FTII — Film & Television Institute of India","url":"https://www.ftii.ac.in"},{"label":"SRFTI — Satyajit Ray Film & TV Institute","url":"https://srfti.ac.in"},{"label":"National Institute of Design (NID)","url":"https://www.nid.edu"}],
+      "official_links": [{"label":"FTII, Film & Television Institute of India","url":"https://www.ftii.ac.in"},{"label":"SRFTI, Satyajit Ray Film & TV Institute","url":"https://srfti.ac.in"},{"label":"National Institute of Design (NID)","url":"https://www.nid.edu"}],
       "name": "Fine Arts, Film & Animation",
       "type": "specialised_track",
       "tier": "expansion",
       "summary": "Creative careers in fine arts (painting, sculpture, applied art), cinema (direction, cinematography, editing, acting) and animation / VFX / gaming. Most formal training is a degree or diploma after 12th; some foundation courses begin after Class 10.",
       "leads_to": [
-        "BFA — Bachelor of Fine Arts (painting, sculpture, applied / commercial art)",
-        "Film & television — FTII, SRFTI or private film schools (direction, cinematography, editing, sound)",
+        "BFA, Bachelor of Fine Arts (painting, sculpture, applied / commercial art)",
+        "Film & television, FTII, SRFTI or private film schools (direction, cinematography, editing, sound)",
         "Animation, VFX & game art (2D / 3D, motion graphics)",
         "Illustration, concept art, comics & digital media"
       ],
-      "frame": "A genuine and growing set of careers — but treat the training market with care. The respected public film schools (FTII Pune, SRFTI Kolkata) and university BFA programmes usually take you after 12th, where a portfolio and aptitude often matter more than marks; animation/VFX diplomas are everywhere but vary a lot in quality. From Class 10, any PU stream works — the real move is to start building a body of work now.",
+      "frame": "A genuine and growing set of careers but treat the training market with care. The respected public film schools (FTII Pune, SRFTI Kolkata) and university BFA programmes usually take you after 12th, where a portfolio and aptitude often matter more than marks; animation/VFX diplomas are everywhere but vary a lot in quality. From Class 10, any PU stream works, the real move is to start building a body of work now.",
       "eligibility": {
         "text": "BFA and film schools: usually after 12th (any stream), with a portfolio / aptitude test / interview. Animation & VFX diplomas: after 10th or 12th depending on the course. Talent and a portfolio matter as much as marks."
       },
@@ -1058,14 +1058,14 @@
           "FTII Pune / SRFTI Kolkata (film, national)",
           "Reputed animation / VFX institutes (check placement records)"
         ],
-        "note": "Illustrative; verify accreditation and placement claims — course quality varies widely."
+        "note": "Illustrative; verify accreditation and placement claims, course quality varies widely."
       },
       "approx_cost_inr": {
-        "note": "Public and university programmes are affordable; private animation/VFX and film courses can be costly — check accreditation and real placement outcomes before paying."
+        "note": "Public and university programmes are affordable; private animation/VFX and film courses can be costly, check accreditation and real placement outcomes before paying."
       },
       "related_scholarships": ["nsp", "ssp_karnataka"],
       "related_core_options": ["pu_humanities", "pu_commerce", "pu_science"],
-      "honest_notes": "Encourage building a portfolio early — it matters more than a specific stream. Separate respected public institutions from expensive private courses of uncertain quality. Any PU stream keeps these open.",
+      "honest_notes": "Encourage building a portfolio early, it matters more than a specific stream. Separate respected public institutions from expensive private courses of uncertain quality. Any PU stream keeps these open.",
       "human_touchpoint": {
         "status": "to_source",
         "idea": "Story from a fine artist, filmmaker or animator on how they trained and broke in."
@@ -1090,7 +1090,7 @@
     {
       "id": "nmms",
       "name": "National Means-cum-Merit Scholarship (NMMS)",
-      "who": "Class 9-12; means + merit. Family income ≤ ₹3.5 lakh/year; ≥55% in Class 7 to sit the Class-8 selection test (relaxation for SC/ST). ONLY government / government-aided / local-body school students — NOT private, KV, NVS or Sainik school students.",
+      "who": "Class 9-12; means + merit. Family income ≤ ₹3.5 lakh/year; ≥55% in Class 7 to sit the Class-8 selection test (relaxation for SC/ST). ONLY government / government-aided / local-body school students, NOT private, KV, NVS or Sainik school students.",
       "amount": "₹12,000 per year (₹1,000/month), Classes 9-12",
       "link": "https://scholarships.gov.in"
     },
@@ -1110,7 +1110,7 @@
     },
     {
       "id": "aicte_scholarships",
-      "name": "AICTE Scholarships — Pragati (girls) / Saksham (differently-abled)",
+      "name": "AICTE Scholarships, Pragati (girls) / Saksham (differently-abled)",
       "who": "Girls (Pragati) or differently-abled (Saksham) students in 1st/2nd-year (lateral) diploma at an AICTE-approved institute via centralised admission; family income ≤ ₹8 lakh/year; up to two girls per family (Pragati)",
       "amount": "₹50,000 per year (lump sum for fees/books/equipment), via DBT",
       "link": "https://www.aicte-india.org"

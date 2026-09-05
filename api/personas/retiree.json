@@ -1,18 +1,18 @@
 {
   "meta": {
-    "dataset": "Marg AI — Retiree (PROTOTYPE)",
+    "dataset": "Marg AI, Retiree (PROTOTYPE)",
     "version": "proto-0",
     "context": { "stage": "Retiree / senior (55+)", "region": "India", "focus": "Purpose, wellbeing, community and later-life direction" },
     "created": "2026-09-04",
-    "disclaimer": "Beta — accuracy still being checked. Everything here is provisional and for guidance only. This chapter touches health, money and wellbeing: treat everything as information, NOT advice. For anything to do with finances, health or legal matters, consult a qualified professional, and be wary of anyone promising guaranteed returns or pressuring a quick decision."
+    "disclaimer": "Beta, accuracy still being checked. Everything here is provisional and for guidance only. This chapter touches health, money and wellbeing: treat everything as information, NOT advice. For anything to do with finances, health or legal matters, consult a qualified professional, and be wary of anyone promising guaranteed returns or pressuring a quick decision."
   },
   "options": [
     {
       "id": "purpose_work",
-      "official_links": [{"label":"SACRED — senior citizens' re-employment portal","url":"https://sacred.dosje.gov.in"},{"label":"National Career Service","url":"https://www.ncs.gov.in"}],
+      "official_links": [{"label":"SACRED, senior citizens' re-employment portal","url":"https://sacred.dosje.gov.in"},{"label":"National Career Service","url":"https://www.ncs.gov.in"}],
       "name": "Purpose & encore work",
       "type": "purpose",
-      "summary": "Stay engaged on your own terms — part-time work, consulting in your old field, advising, or a passion project. Not about the paycheck; about staying useful and connected.",
+      "summary": "Stay engaged on your own terms, part-time work, consulting in your old field, advising, or a passion project. Not about the paycheck; about staying useful and connected.",
       "leads_to": ["Part-time / flexible work", "Consulting or advisory roles", "A meaningful project of your own"],
       "keeps_open": "Structure and identity without full-time pressure; dial it up or down as you like.",
       "eligibility": { "text": "For anyone who wants to stay active and contribute. Go at the pace that suits your health and energy." },
@@ -28,10 +28,10 @@
       "official_links": [{"label":"Ayushman Bharat (PM-JAY)","url":"https://pmjay.gov.in"},{"label":"Fit India Movement","url":"https://fitindia.gov.in"}],
       "name": "Health & active living",
       "type": "wellbeing",
-      "summary": "Put daily wellbeing at the centre — gentle exercise, walking groups, yoga, routine, and staying physically active in ways that suit your body.",
+      "summary": "Put daily wellbeing at the centre, gentle exercise, walking groups, yoga, routine, and staying physically active in ways that suit your body.",
       "leads_to": ["Better energy and mobility", "Routine and structure", "Social contact through activity"],
       "keeps_open": "The foundation everything else rests on; adaptable to any fitness level.",
-      "eligibility": { "text": "Anyone — start gently and build up. Check with your doctor before beginning anything new." },
+      "eligibility": { "text": "Anyone, start gently and build up. Check with your doctor before beginning anything new." },
       "duration": "Ongoing, daily",
       "where_in_bangalore": { "examples": ["Parks and walking groups", "senior yoga / fitness classes", "community centres"], "note": "Illustrative, unverified." },
       "approx_cost_inr": { "note": "Often free (walking, parks) to modest (classes)." },
@@ -44,7 +44,7 @@
       "official_links": [{"label":"Ministry of AYUSH (yoga & wellness)","url":"https://www.ayush.gov.in"}],
       "name": "Spiritual life & inner calm",
       "type": "reflective",
-      "summary": "Make room for meaning and calm — meditation, prayer, religious practice, reading, pilgrimage, or simply quiet reflection. A path many find deeply steadying in this chapter.",
+      "summary": "Make room for meaning and calm, meditation, prayer, religious practice, reading, pilgrimage, or simply quiet reflection. A path many find deeply steadying in this chapter.",
       "leads_to": ["A steadier, calmer daily life", "Community through a faith or practice group", "Time for reflection and meaning"],
       "keeps_open": "Personal and flexible; costs little and asks only your time.",
       "eligibility": { "text": "Open to everyone, of any faith or none." },
@@ -52,15 +52,15 @@
       "where_in_bangalore": { "examples": ["Meditation / yoga centres", "temples, churches, mosques, gurudwaras and faith groups", "reflection and reading circles"], "note": "Illustrative, unverified." },
       "approx_cost_inr": { "note": "Usually free or by donation; residential retreats vary." },
       "related_scholarships": [],
-      "honest_notes": "A genuinely grounding path — but be cautious of any group or 'guru' that pressures you for large donations, isolates you from family, or promises miracle cures. Meaning shouldn't cost your savings or your relationships.",
+      "honest_notes": "A genuinely grounding path but be cautious of any group or 'guru' that pressures you for large donations, isolates you from family, or promises miracle cures. Meaning shouldn't cost your savings or your relationships.",
       "human_touchpoint": { "status": "to_source", "idea": "Story from someone whose spiritual practice became central after retirement." }
     },
     {
       "id": "community_connection",
-      "official_links": [{"label":"Ministry of Social Justice — senior citizens","url":"https://socialjustice.gov.in"},{"label":"SACRED — senior citizens' portal","url":"https://sacred.dosje.gov.in"}],
+      "official_links": [{"label":"Ministry of Social Justice, senior citizens","url":"https://socialjustice.gov.in"},{"label":"SACRED, senior citizens' portal","url":"https://sacred.dosje.gov.in"}],
       "name": "Community & connection",
       "type": "social",
-      "summary": "Guard against isolation — senior citizens' clubs, neighbourhood groups, old-friend circles, and regular contact. One of the most important, most overlooked parts of retiring well.",
+      "summary": "Guard against isolation, senior citizens' clubs, neighbourhood groups, old-friend circles, and regular contact. One of the most important, most overlooked parts of retiring well.",
       "leads_to": ["Regular social contact", "New friendships and belonging", "A support network close to home"],
       "keeps_open": "Protects against loneliness, which is a real health risk in later life.",
       "eligibility": { "text": "Anyone. Even one or two regular connections makes a difference." },
@@ -68,15 +68,15 @@
       "where_in_bangalore": { "examples": ["Senior citizens' associations", "resident welfare / neighbourhood groups", "hobby and interest clubs"], "note": "Illustrative, unverified." },
       "approx_cost_inr": { "note": "Usually free or a small membership." },
       "related_scholarships": [],
-      "honest_notes": "Loneliness quietly harms health as much as many physical conditions. If days feel empty or isolating, reaching out is a strength, not a weakness — and help is available (see the help option).",
+      "honest_notes": "Loneliness quietly harms health as much as many physical conditions. If days feel empty or isolating, reaching out is a strength, not a weakness and help is available (see the help option).",
       "human_touchpoint": { "status": "to_source", "idea": "Story from someone who built a new community after retiring." }
     },
     {
       "id": "learning_travel",
-      "official_links": [{"label":"SWAYAM — free govt online courses","url":"https://swayam.gov.in"},{"label":"IGNOU — open university","url":"https://www.ignou.ac.in"}],
+      "official_links": [{"label":"SWAYAM, free govt online courses","url":"https://swayam.gov.in"},{"label":"IGNOU, open university","url":"https://www.ignou.ac.in"}],
       "name": "Learning, hobbies & travel",
       "type": "growth",
-      "summary": "Pick up what you never had time for — a language, an instrument, gardening, painting, writing, or unhurried travel. Curiosity keeps the mind sharp and the days full.",
+      "summary": "Pick up what you never had time for, a language, an instrument, gardening, painting, writing, or unhurried travel. Curiosity keeps the mind sharp and the days full.",
       "leads_to": ["New skills and interests", "Mental sharpness and joy", "Travel and new experiences"],
       "keeps_open": "Endlessly flexible; scale to your budget and energy.",
       "eligibility": { "text": "Anyone, any starting point. It's never too late to begin." },
@@ -89,10 +89,10 @@
     },
     {
       "id": "financial_wellbeing",
-      "official_links": [{"label":"Senior Citizens' Savings Scheme (India Post)","url":"https://www.indiapost.gov.in"},{"label":"NPS / PFRDA","url":"https://www.pfrda.org.in"},{"label":"EPFO — pension","url":"https://www.epfindia.gov.in"},{"label":"RBI Sachet — check for scams / unauthorised schemes","url":"https://sachet.rbi.org.in"}],
+      "official_links": [{"label":"Senior Citizens' Savings Scheme (India Post)","url":"https://www.indiapost.gov.in"},{"label":"NPS / PFRDA","url":"https://www.pfrda.org.in"},{"label":"EPFO, pension","url":"https://www.epfindia.gov.in"},{"label":"RBI Sachet, check for scams / unauthorised schemes","url":"https://sachet.rbi.org.in"}],
       "name": "Financial peace of mind",
       "type": "finance",
-      "summary": "Get clear and comfortable about money for this chapter — understanding your pension and savings, sensible budgeting, and protecting yourself from fraud.",
+      "summary": "Get clear and comfortable about money for this chapter, understanding your pension and savings, sensible budgeting, and protecting yourself from fraud.",
       "leads_to": ["A clearer picture of your finances", "Steadier monthly income planning", "Protection against scams"],
       "keeps_open": "Peace of mind that frees you to enjoy everything else.",
       "eligibility": { "text": "Everyone benefits from clarity here." },
@@ -100,36 +100,36 @@
       "where_in_bangalore": { "examples": ["A qualified, registered financial advisor", "your bank's senior-citizen desk", "trusted family involvement"], "note": "Use only registered, verifiable professionals." },
       "approx_cost_inr": { "note": "Registered advice may have a fee; be wary of 'free' advice that sells products." },
       "related_scholarships": [],
-      "honest_notes": "IMPORTANT: this is information, not financial advice. Consult a qualified, registered advisor. Never share OTPs or bank details, never act on pressure or 'guaranteed high returns', and be especially cautious of schemes targeting seniors — financial fraud against older people is common. When in doubt, involve someone you trust.",
+      "honest_notes": "IMPORTANT: this is information, not financial advice. Consult a qualified, registered advisor. Never share OTPs or bank details, never act on pressure or 'guaranteed high returns', and be especially cautious of schemes targeting seniors, financial fraud against older people is common. When in doubt, involve someone you trust.",
       "human_touchpoint": { "status": "to_source", "idea": "Story from someone who got their retirement finances organised safely." }
     }
   ],
   "specialized_pathways": [
     {
       "id": "encore_enterprise",
-      "official_links": [{"label":"MSME — Udyam registration","url":"https://udyamregistration.gov.in"},{"label":"Startup India","url":"https://www.startupindia.gov.in"},{"label":"SACRED — senior citizens' portal","url":"https://sacred.dosje.gov.in"}],
+      "official_links": [{"label":"MSME, Udyam registration","url":"https://udyamregistration.gov.in"},{"label":"Startup India","url":"https://www.startupindia.gov.in"},{"label":"SACRED, senior citizens' portal","url":"https://sacred.dosje.gov.in"}],
       "name": "A small venture or social enterprise",
       "type": "encore",
       "tier": "expansion",
-      "summary": "Turn experience or a passion into a small business or a cause-driven venture — at a gentle, self-chosen scale.",
+      "summary": "Turn experience or a passion into a small business or a cause-driven venture, at a gentle, self-chosen scale.",
       "leads_to": ["A small business of your own", "A social / community enterprise", "Purpose plus modest income"],
-      "frame": "Rewarding for the energetic — but keep it small and low-risk, and protect your retirement savings. Never stake money you'd need to live on.",
+      "frame": "Rewarding for the energetic but keep it small and low-risk, and protect your retirement savings. Never stake money you'd need to live on.",
       "eligibility": { "text": "For those with the energy and appetite; start tiny." },
       "duration": "Open-ended, self-paced",
       "related_scholarships": [],
       "related_core_options": ["purpose_work", "financial_wellbeing"],
-      "honest_notes": "Protect your capital — a later-life venture should never risk the savings your retirement depends on.",
+      "honest_notes": "Protect your capital, a later-life venture should never risk the savings your retirement depends on.",
       "needs_verification": true
     },
     {
       "id": "mentoring_legacy",
-      "official_links": [{"label":"SACRED — senior citizens' portal","url":"https://sacred.dosje.gov.in"},{"label":"National Career Service","url":"https://www.ncs.gov.in"}],
+      "official_links": [{"label":"SACRED, senior citizens' portal","url":"https://sacred.dosje.gov.in"},{"label":"National Career Service","url":"https://www.ncs.gov.in"}],
       "name": "Mentoring & passing on knowledge",
       "type": "encore",
       "tier": "expansion",
-      "summary": "Share a lifetime of experience — mentoring younger people, teaching, recording family history, or guiding a community group.",
+      "summary": "Share a lifetime of experience, mentoring younger people, teaching, recording family history, or guiding a community group.",
       "leads_to": ["Mentoring / advising roles", "Teaching or tutoring", "Leaving a legacy of knowledge"],
-      "frame": "A quietly powerful source of purpose that costs nothing and gives a great deal — to you and to those you guide.",
+      "frame": "A quietly powerful source of purpose that costs nothing and gives a great deal, to you and to those you guide.",
       "eligibility": { "text": "Anyone with experience and the wish to share it." },
       "duration": "As you like",
       "related_scholarships": [],
@@ -143,42 +143,42 @@
       "id": "stay_purposeful",
       "ambition": "Stay useful and purposeful",
       "next_horizon_steps": [
-        "Name what you'd miss most from working — the people, the problem-solving, the structure?",
+        "Name what you'd miss most from working, the people, the problem-solving, the structure?",
         "Pick one low-pressure way to get it back (advising, a project, volunteering, mentoring).",
-        "Start small and adjust to your energy — this is yours to shape."
+        "Start small and adjust to your energy, this is yours to shape."
       ],
-      "honest_cost_effort": "Mostly time and intention, not money. The main risk is overcommitting — protect your rest and health.",
+      "honest_cost_effort": "Mostly time and intention, not money. The main risk is overcommitting, protect your rest and health.",
       "real_routes_through_cost": ["Volunteering (free, high-meaning)", "Advisory / part-time in your old field", "A small passion project"],
       "adjacent_destinations": ["Mentoring", "Community leadership", "Learning something new"],
-      "what_if_it_changes": "Purpose can be found many ways — if one doesn't fit, another will. Nothing here is a commitment.",
+      "what_if_it_changes": "Purpose can be found many ways, if one doesn't fit, another will. Nothing here is a commitment.",
       "needs_verification": true
     },
     {
       "id": "health_calm",
       "ambition": "Feel healthier and calmer",
       "next_horizon_steps": [
-        "Start with one gentle daily habit — a walk, some stretching, a few quiet minutes.",
-        "Add company where you can — a walking group, a class — so it's social too.",
+        "Start with one gentle daily habit, a walk, some stretching, a few quiet minutes.",
+        "Add company where you can, a walking group, a class so it's social too.",
         "Build slowly; consistency matters more than intensity."
       ],
       "honest_cost_effort": "Low cost, but needs gentle consistency. Please check with your doctor before starting anything new.",
       "real_routes_through_cost": ["Walking and parks (free)", "Senior yoga / fitness classes", "Meditation and breathing practice"],
       "adjacent_destinations": ["Spiritual practice", "Community groups", "A new active hobby"],
-      "what_if_it_changes": "Wellbeing is the base everything else rests on — small steps here help every other path.",
+      "what_if_it_changes": "Wellbeing is the base everything else rests on, small steps here help every other path.",
       "needs_verification": true
     },
     {
       "id": "deepen_faith",
       "ambition": "Deepen my spiritual life",
       "next_horizon_steps": [
-        "Choose a practice that speaks to you — meditation, prayer, reading, a faith community.",
+        "Choose a practice that speaks to you, meditation, prayer, reading, a faith community.",
         "Make a small regular time for it rather than waiting for a big change.",
-        "Find company in it if you'd like — many practices come with a warm community."
+        "Find company in it if you'd like, many practices come with a warm community."
       ],
       "honest_cost_effort": "Usually costs little but your time and attention.",
       "real_routes_through_cost": ["Free meditation / faith groups", "Reflection and reading", "Retreats (optional, vary in cost)"],
       "adjacent_destinations": ["Community and belonging", "Calmer health", "Reflection and writing"],
-      "what_if_it_changes": "This is deeply personal — follow what feels genuine. Be wary of anyone who pressures you for money or isolates you from family.",
+      "what_if_it_changes": "This is deeply personal, follow what feels genuine. Be wary of anyone who pressures you for money or isolates you from family.",
       "needs_verification": true
     },
     {
@@ -186,7 +186,7 @@
       "ambition": "Feel secure about money",
       "next_horizon_steps": [
         "Get a clear picture: pension, savings, monthly needs.",
-        "Speak to a qualified, REGISTERED financial advisor or your bank's senior desk — and involve someone you trust.",
+        "Speak to a qualified, REGISTERED financial advisor or your bank's senior desk and involve someone you trust.",
         "Set up simple protections against fraud (never share OTPs; verify before acting)."
       ],
       "honest_cost_effort": "Information, NOT advice. The real safeguard is using registered professionals and never acting under pressure.",

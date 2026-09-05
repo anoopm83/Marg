@@ -21,6 +21,6 @@ COPY marg-dataset-v0.json /app/marg-dataset-v0.json
 COPY --from=web /app/web/dist /app/web/dist
 ENV NODE_ENV=production
 ENV WEB_DIST=/app/web/dist
-ENV PORT=5175
+# PORT is provided by the host (Render injects it); the app falls back to 5175.
 EXPOSE 5175
 CMD ["npm", "start"]

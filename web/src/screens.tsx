@@ -241,7 +241,11 @@ export function Home({ ctx }: { ctx: Ctx }) {
           <h1>See every path ahead — then choose your own.</h1>
           <p className="hero-sub">Marg lays out your real options at life's crossroads — clearly, honestly, and never tells you what to pick. From Class 10 to retirement, the choice stays yours.</p>
           <button className="btn btn-primary hero-cta" onClick={start}>Explore your paths <Icon name="chev" size={18} stroke={2.4} style={{ color: "#fff" }} /></button>
-          <div className="hero-trust"><Icon name="lock" size={14} /> Private by design · nothing is ranked · you decide, always</div>
+          <div className="hero-trust">
+            <span className="trust-chip"><Icon name="lock" size={13} /> Private &amp; secure</span>
+            <span className="trust-chip"><Icon name="list" size={13} /> Nothing ranked or pushed</span>
+            <span className="trust-chip"><Icon name="check" size={13} /> You decide, always</span>
+          </div>
         </div>
       </header>
 

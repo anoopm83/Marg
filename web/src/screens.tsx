@@ -221,7 +221,7 @@ export function Home({ ctx }: { ctx: Ctx }) {
   const start = () => ctx.go("personas");
   const openStage = (id: string) => { const p = ctx.personas.find((x) => x.id === id); if (p) { ctx.setPersona(p); ctx.go("welcome"); } else start(); };
   const stages = [
-    { id: "class10", when: "After Class 10", line: "Choosing a stream, a course, a direction.", ready: true },
+    { id: "class10", when: "School", line: "Choosing a stream, a course, a direction.", ready: true },
     { id: "midcareer", when: "Mid-career", line: "A switch, growth, or more meaning at work.", ready: false },
     { id: "retiree", when: "Later life", line: "Purpose, calm and community, this chapter.", ready: false },
   ];
@@ -239,7 +239,7 @@ export function Home({ ctx }: { ctx: Ctx }) {
         <div className="hero-inner">
           <SunMark size={104} />
           <h1>See every path ahead, then choose your own.</h1>
-          <p className="hero-sub">Marg lays out your real options at life's crossroads, clearly and honestly. It never tells you what to pick. From Class 10 to retirement, the choice stays yours.</p>
+          <p className="hero-sub">Marg lays out your real options at life's crossroads, clearly and honestly. It never tells you what to pick. From school to retirement, the choice stays yours.</p>
           <button className="btn btn-primary hero-cta" onClick={start}>Explore your paths <Icon name="chev" size={18} stroke={2.4} style={{ color: "#fff" }} /></button>
           <div className="hero-trust">
             <span className="trust-chip"><Icon name="lock" size={12} /> Private &amp; secure</span>
@@ -349,7 +349,7 @@ export function PersonaPick({ ctx }: { ctx: Ctx }) {
           </button>
         ))}
       </div>
-      <div className="disclaimer-foot" style={{ marginTop: 18 }}>Class 10 is the built, verified experience. Others are early beta versions of Marg's one-engine vision.</div>
+      <div className="disclaimer-foot" style={{ marginTop: 18 }}>School is the built, verified experience. Others are early beta versions of Marg's one-engine vision.</div>
     </section>
   );
 }
@@ -367,8 +367,8 @@ export function Welcome({ ctx }: { ctx: Ctx }) {
       <div className="wordmark"><Compass /><span>Marg</span></div>
       <div className="spacer" />
       <div className="stack" style={{ gap: 16 }}>
-        <div className="eyebrow">{p?.tagline ?? "For Class 10 · CBSE · Bengaluru"}</div>
-        <h1 style={{ fontSize: 33 }}>{isClass10 ? "See all your paths after Class 10, then choose, without being boxed in." : "See your real options, then choose your next step, without being boxed in."}</h1>
+        <div className="eyebrow">{p?.tagline ?? "CBSE · Bengaluru"}</div>
+        <h1 style={{ fontSize: 33 }}>{isClass10 ? "See all your paths from here, then choose, without being boxed in." : "See your real options, then choose your next step, without being boxed in."}</h1>
         <p className="lead">A calm way to explore your real options and plan your next steps. No pressure, no verdicts.</p>
       </div>
       <div className="spacer" />
@@ -517,7 +517,7 @@ export function Explore({ ctx }: { ctx: Ctx }) {
   return (
     <section className="screen wide">
       <div className="topbar"><button className="back" onClick={() => ctx.go("mode")}><Icon name="back" size={22} /></button><div className="wordmark" style={{ fontSize: 17 }}>Your options</div></div>
-      <h1 style={{ fontSize: 24 }}>{ctx.persona?.framing.exploreTitle ?? "Everything open to you after Class 10"}</h1>
+      <h1 style={{ fontSize: 24 }}>{ctx.persona?.framing.exploreTitle ?? "Everything open to you"}</h1>
       <p className="lead" style={{ marginTop: 6 }}>{ctx.persona?.framing.exploreLead ?? "Nothing here is ranked. Look around freely."}</p>
       {ctx.disclaimer && (
         <div className="note" style={{ marginTop: 12, display: "flex", gap: 8, alignItems: "flex-start" }}>
@@ -839,7 +839,7 @@ export function GoalChat({ ctx }: { ctx: Ctx }) {
       <div style={{ marginTop: 14 }}>
         <Chat ctx={ctx} mode="aspire" goal={goal}
           placeholder="Ask me how to get there, what it takes, or what else is close…"
-          seedAssistant={`Tell me a little about why “${goal}” draws you, and I'll walk you through the real routes toward it after Class 10.`} />
+          seedAssistant={`Tell me a little about why “${goal}” draws you, and I'll walk you through the real routes toward it from here.`} />
       </div>
     </section>
   );

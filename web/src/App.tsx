@@ -13,7 +13,7 @@ type Theme = (typeof THEMES)[number];
 const THEME_LABEL: Record<Theme, string> = { dark: "Dark", light: "Light", contrast: "Contrast" };
 const SCALES = [0.9, 1, 1.15, 1.3, 1.5]; // text-size steps (zoom on the content)
 
-const PERSONA_SHORT: Record<string, string> = { class10: "Student", midcareer: "Working professional", retiree: "Retiree" };
+const PERSONA_SHORT: Record<string, string> = { class10: "School", midcareer: "Working professional", retiree: "Retiree" };
 // "Start over" = restart the session, so a circular restart arrow (not a logout door).
 const RestartIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" /></svg>);
 const UserIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></svg>);

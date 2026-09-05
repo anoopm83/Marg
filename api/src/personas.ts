@@ -50,14 +50,14 @@ const HELP_SENIOR = [
 const CONFIGS: Record<string, PersonaConfig> = {
   class10: {
     id: "class10",
-    label: "Class 10 student",
+    label: "School",
     age_band: "13-16",
     category: "school-to-stream",
     experimental: false,
     audience: "an Indian Class 10 student (Bengaluru, CBSE) choosing what to do after Class 10",
-    tagline: "After Class 10 · CBSE · Bengaluru",
+    tagline: "CBSE · Bengaluru",
     framing: {
-      exploreTitle: "Everything open to you after Class 10",
+      exploreTitle: "Everything open to you",
       exploreLead: "Nothing here is ranked. Look around freely.",
       modeExploreLabel: "I'm not sure yet",
       modeExploreDesc: "Help me explore all my options and see what fits.",

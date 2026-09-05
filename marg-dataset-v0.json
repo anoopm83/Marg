@@ -758,37 +758,40 @@
     },
     {
       "id": "aviation_maritime",
-      "name": "Aviation & Maritime Training",
+      "name": "Aviation, Pilot & Marine Services",
       "type": "specialised_track",
       "tier": "expansion",
-      "summary": "Careers in aviation (pilot, cabin crew) and the merchant navy. Most formal entry is after 10+2 with Science; a few foundation/diploma courses begin after Class 10.",
+      "summary": "Careers in the sky and at sea — commercial pilot, cabin crew, merchant navy, and the Indian Coast Guard (\"marine guards\"). Most formal entry is after 10+2 with Science; the honest move now is a strong PU Science base.",
       "leads_to": [
-        "Pilot training (post-12, Science)",
-        "Cabin crew / ground staff",
-        "Merchant navy (via 10+2 Science routes)"
+        "Commercial pilot — CPL via a DGCA-approved academy (after 10+2 with Physics & Maths)",
+        "Cabin crew / airport ground & operations staff",
+        "Merchant navy officer (nautical / marine engineering, after 10+2 Science)",
+        "Indian Coast Guard — \"marine guards\" (Navik / Yantrik / Assistant Commandant; a government uniformed service)"
       ],
-      "frame": "CAUTION: the genuine professional routes (commercial pilot, merchant navy officer) almost always need 10+2 with Physics/Maths — not an after-10th shortcut. After-10th 'aviation/maritime foundation' diplomas exist but are often expensive and this sector has many misleading, scam-prone academies.",
+      "frame": "Two very different things sit here, so read carefully. (1) The Indian Coast Guard is a legitimate government uniformed service — entry is through official recruitment and an exam, largely funded, not a paid course. (2) Commercial pilot and merchant-navy training are genuine but almost always need 10+2 with Physics/Maths — not an after-10th shortcut — and the private-academy side of this sector is expensive and has many misleading, scam-prone operators.",
       "eligibility": {
-        "text": "Professional routes need 10+2 with Physics & Maths and medical fitness; after-10th foundation courses vary. Verify against DGCA (aviation) / DG Shipping (maritime) recognition."
+        "text": "Pilot (CPL) and merchant navy need 10+2 with Physics & Maths and medical fitness. Indian Coast Guard: various entries after 10+2 (some technical entries need PCM), age and fitness standards apply. Verify against DGCA (aviation), DG Shipping (maritime), and the official Indian Coast Guard recruitment portal — never a private academy's claims."
       },
-      "duration": "Varies; professional licensing is post-12 and multi-year",
+      "duration": "Varies; professional pilot/marine licensing is post-12 and multi-year. Coast Guard: recruitment, then service training.",
       "where_in_bangalore": {
         "examples": [
-          "DGCA-approved / DG-Shipping-recognised institutes only"
+          "PU (Science) colleges as the base",
+          "DGCA-approved flying academies / DG-Shipping-recognised marine institutes only",
+          "Indian Coast Guard recruitment (national, via the official portal)"
         ],
-        "note": "Only list institutes with verifiable DGCA or DG Shipping recognition — this is a high-scam sector."
+        "note": "For pilot/marine training list only institutes with verifiable DGCA or DG Shipping recognition — this is a high-scam sector. Coast Guard entry is national, not Bengaluru-specific."
       },
       "approx_cost_inr": {
-        "note": "Pilot training is very expensive (₹40 lakh+); flag cost honestly."
+        "note": "Pilot training is very expensive (₹40 lakh+) — flag cost honestly. Merchant navy varies. Coast Guard training is largely state-funded/stipended."
       },
       "related_scholarships": [],
       "related_core_options": [
         "pu_science"
       ],
-      "honest_notes": "Present this cautiously and truthfully: for most Class 10 students the real preparation is 10+2 Science, not an early diploma. Never surface an unrecognised academy. High cost + high scam risk = show with the strongest disclaimers.",
+      "honest_notes": "Present cautiously and truthfully. Keep the government route (Coast Guard) clearly separate from paid pilot/merchant-navy academies. For most Class 10 students the real preparation is 10+2 Science, not an early diploma. Never surface an unrecognised academy; for the Coast Guard, point only to the official recruitment portal.",
       "human_touchpoint": {
         "status": "to_source",
-        "idea": "Story from a pilot or merchant-navy officer on the real (post-12) pathway and costs."
+        "idea": "Stories from a commercial pilot, a merchant-navy officer, and a Coast Guard entrant on the real (post-12) pathways and costs."
       }
     },
     {
@@ -898,6 +901,153 @@
       "related_core_options": ["pu_science", "pu_commerce", "pu_humanities", "iti"],
       "honest_notes": "Many of these come after Class 12 or a degree — so from Class 10 the practical step is choosing a PU stream that keeps the target exam open (e.g. Science with Maths for merchant navy). Verify physical/medical standards early.",
       "human_touchpoint": { "status": "to_source", "idea": "Story from someone serving in the police, a paramilitary force, or the merchant navy." }
+    },
+    {
+      "id": "civil_services",
+      "name": "Civil Services (UPSC / State PSC)",
+      "type": "service",
+      "tier": "expansion",
+      "summary": "The administrative backbone of the country — IAS, IPS and IFS (Indian Foreign Service), plus state services through the Karnataka PSC (KPSC). Entry is after a bachelor's degree, through one of the toughest exams in India.",
+      "leads_to": [
+        "IAS — Indian Administrative Service",
+        "IPS — Indian Police Service",
+        "IFS — Indian Foreign Service (diplomat)",
+        "State services (KAS) via the Karnataka PSC (KPSC)"
+      ],
+      "frame": "This is a long road, not an after-10th step — and that's important to know early. You need a bachelor's degree first, then clear the UPSC Civil Services Exam (prelims → mains → interview) or a State PSC. The good news: ANY graduation stream qualifies, so there is no single 'correct' PU stream now. Many aspirants take Humanities because the syllabus overlaps, but Science and Commerce graduates clear it every year too.",
+      "eligibility": {
+        "text": "A bachelor's degree in any discipline; Indian citizen; age typically 21-32 with category relaxations. From Class 10, any PU stream keeps this fully open."
+      },
+      "duration": "Degree (3-4 yrs) + 1-2+ years of focused exam preparation",
+      "where_in_bangalore": {
+        "examples": [
+          "Any PU stream → any bachelor's degree as the base",
+          "UPSC Civil Services Exam (national)",
+          "Karnataka PSC (KPSC) for state services",
+          "Bengaluru coaching hubs (optional, not required)"
+        ],
+        "note": "Entry is national/state-level and not tied to a particular school or city."
+      },
+      "approx_cost_inr": {
+        "note": "The exam itself is low-cost; the real investment is years of preparation. Be wary of very expensive coaching promises — most toppers rely on free/official NCERT-based material."
+      },
+      "related_scholarships": ["nsp", "ssp_karnataka", "pm_yasasvi"],
+      "related_core_options": ["pu_science", "pu_commerce", "pu_humanities"],
+      "honest_notes": "The single most useful message for a Class 10 student: you do NOT need a special stream now for UPSC — any degree works, so pick a PU stream you'll genuinely excel in. It's a marathon; keep a parallel career so your future doesn't ride on one exam.",
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a serving IAS / IPS / IFS or KAS officer on their actual path and the streams they took."
+      }
+    },
+    {
+      "id": "government_jobs",
+      "name": "Government & Public-Sector Jobs",
+      "type": "service",
+      "tier": "expansion",
+      "summary": "Stable government and PSU employment beyond the civil services — Staff Selection Commission (SSC), railways, banking, and state government posts. Unlike the civil services, several of these open right after Class 10 or 12.",
+      "leads_to": [
+        "SSC jobs (MTS after 10th/12th, CHSL after 12th, CGL after graduation)",
+        "Railway jobs (RRB — Group D after Class 10, technical & NTPC roles)",
+        "Banking (IBPS / SBI clerk & PO)",
+        "State government & PSUs (KPSC, Karnataka departments, BHEL / ISRO / BEL)"
+      ],
+      "frame": "A big, reassuring landscape — and one of the FEW families with real early routes: Railway Group D and SSC MTS accept a Class 10/12 pass, clerical roles come after 12th, and officer-level posts (SSC CGL, bank PO) after a degree. Each has its own exam. From Class 10, finishing PU — or even a diploma / ITI — keeps most of these open.",
+      "eligibility": {
+        "text": "Ranges from Class 10 pass (some railway/SSC roles) to 12th pass (clerical) to graduation (officer roles). Age limits and exams vary by post — always check the specific notification."
+      },
+      "duration": "Varies — from soon after schooling to post-degree, plus exam preparation",
+      "where_in_bangalore": {
+        "examples": [
+          "SSC / RRB / IBPS exams (national)",
+          "Karnataka PSC and state-department recruitment",
+          "PSUs with a Bengaluru presence — BHEL, ISRO, BEL"
+        ],
+        "note": "Recruitment is exam-based and mostly national/state-level."
+      },
+      "approx_cost_inr": {
+        "note": "Low course cost — mainly exam preparation. Official syllabi and previous papers are freely available."
+      },
+      "related_scholarships": ["nsp", "ssp_karnataka", "pm_yasasvi"],
+      "related_core_options": ["pu_science", "pu_commerce", "pu_humanities", "iti", "vocational"],
+      "honest_notes": "Worth surfacing early because a few of these (railways, SSC MTS) are genuine near-term routes after Class 10/12 — but most reward finishing 12th or a degree. Always point to the specific exam's official notification for exact eligibility.",
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from someone in a railway / SSC / banking government job about how they got in."
+      }
+    },
+    {
+      "id": "forestry_environment",
+      "name": "Forestry, Environment & Wildlife",
+      "type": "specialised_track",
+      "tier": "expansion",
+      "summary": "Careers caring for forests, wildlife and the environment — from a BSc in Forestry to the Indian Forest Service (IFoS) and wildlife/conservation science. Entry runs through PU Science and a relevant degree.",
+      "leads_to": [
+        "BSc / BSc (Hons) Forestry, or Environmental Science",
+        "Indian Forest Service (IFoS) — via UPSC, after a science/agriculture degree",
+        "Range Forest Officer (state forest department) via Karnataka PSC",
+        "Wildlife biology, ecology & conservation research"
+      ],
+      "frame": "If you love the outdoors, ecology or animals, this is a real career family. One thing to clear up first: IFoS (the Indian Forest Service) is NOT the same as IFS (the Indian Foreign Service) — students often mix them up. The professional doors open after a degree: IFoS is a UPSC exam after a science/engineering/agriculture degree, and Range Forest Officer posts come through the state PSC. From Class 10, PU Science (with Biology) is the natural base.",
+      "eligibility": {
+        "text": "PU Science (Biology helps) → BSc Forestry / Environmental Science / Agriculture. IFoS: a bachelor's in a science, engineering or agriculture subject, via UPSC. RFO: via the Karnataka PSC."
+      },
+      "duration": "2 yrs PU + 3-4 yr degree, then the relevant exam",
+      "where_in_bangalore": {
+        "examples": [
+          "PU (Science) as the base",
+          "College of Forestry (Ponnampet / Sirsi, under UAS)",
+          "UPSC Indian Forest Service (national)",
+          "Karnataka PSC for Range Forest Officer"
+        ],
+        "note": "Illustrative; confirm current college and exam details."
+      },
+      "approx_cost_inr": {
+        "note": "Government degree colleges are affordable; the main investment is the degree plus exam preparation."
+      },
+      "related_scholarships": ["nsp", "ssp_karnataka", "pm_yasasvi"],
+      "related_core_options": ["pu_science"],
+      "honest_notes": "Always clarify the IFS (Foreign Service) vs IFoS (Forest Service) confusion. Entry is post-degree; from Class 10 the move is PU Science with Biology. Verify current college names and UPSC/PSC eligibility.",
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a forest officer, wildlife biologist or environmental scientist on their path."
+      }
+    },
+    {
+      "id": "arts_film_animation",
+      "name": "Fine Arts, Film & Animation",
+      "type": "specialised_track",
+      "tier": "expansion",
+      "summary": "Creative careers in fine arts (painting, sculpture, applied art), cinema (direction, cinematography, editing, acting) and animation / VFX / gaming. Most formal training is a degree or diploma after 12th; some foundation courses begin after Class 10.",
+      "leads_to": [
+        "BFA — Bachelor of Fine Arts (painting, sculpture, applied / commercial art)",
+        "Film & television — FTII, SRFTI or private film schools (direction, cinematography, editing, sound)",
+        "Animation, VFX & game art (2D / 3D, motion graphics)",
+        "Illustration, concept art, comics & digital media"
+      ],
+      "frame": "A genuine and growing set of careers — but treat the training market with care. The respected public film schools (FTII Pune, SRFTI Kolkata) and university BFA programmes usually take you after 12th, where a portfolio and aptitude often matter more than marks; animation/VFX diplomas are everywhere but vary a lot in quality. From Class 10, any PU stream works — the real move is to start building a body of work now.",
+      "eligibility": {
+        "text": "BFA and film schools: usually after 12th (any stream), with a portfolio / aptitude test / interview. Animation & VFX diplomas: after 10th or 12th depending on the course. Talent and a portfolio matter as much as marks."
+      },
+      "duration": "Foundation / diploma (1-2 yrs) or degree (3-4 yrs), after 10th / 12th",
+      "where_in_bangalore": {
+        "examples": [
+          "Chitrakala Parishath (fine arts), Bengaluru",
+          "Srishti Manipal & other art / design schools",
+          "FTII Pune / SRFTI Kolkata (film, national)",
+          "Reputed animation / VFX institutes (check placement records)"
+        ],
+        "note": "Illustrative; verify accreditation and placement claims — course quality varies widely."
+      },
+      "approx_cost_inr": {
+        "note": "Public and university programmes are affordable; private animation/VFX and film courses can be costly — check accreditation and real placement outcomes before paying."
+      },
+      "related_scholarships": ["nsp", "ssp_karnataka"],
+      "related_core_options": ["pu_humanities", "pu_commerce", "pu_science"],
+      "honest_notes": "Encourage building a portfolio early — it matters more than a specific stream. Separate respected public institutions from expensive private courses of uncertain quality. Any PU stream keeps these open.",
+      "human_touchpoint": {
+        "status": "to_source",
+        "idea": "Story from a fine artist, filmmaker or animator on how they trained and broke in."
+      }
     }
   ],
   "scholarships": [

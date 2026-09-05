@@ -15,7 +15,8 @@ const SCALES = [0.9, 1, 1.15, 1.3, 1.5]; // text-size steps (zoom on the content
 
 const PERSONA_SHORT: Record<string, string> = { class10: "Student", midcareer: "Working professional", retiree: "Retiree" };
 const HomeIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5" /><path d="M5.5 10v9.5h13V10" /><path d="M9.5 19.5v-5h5v5" /></svg>);
-const LogoutIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 4h3a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3" /><path d="M10 12h9M16 8l3.5 4-3.5 4" /></svg>);
+// "Start over" = restart the session, so a circular restart arrow (not a logout door).
+const RestartIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" /></svg>);
 const UserIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></svg>);
 const MoonIcon = () => (<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6 6 0 0 0 10.5 10.5z" /></svg>);
 const SunIcon = () => (<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.3" /><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.5 1.5M17.3 17.3l1.5 1.5M18.8 5.2l-1.5 1.5M6.7 17.3l-1.5 1.5" /></svg>);
@@ -169,7 +170,7 @@ export default function App() {
           )}
         </div>
         <div className="appbar-r">
-          {inApp && loggedIn && <button className="ab-btn" onClick={logout} title="Start over" aria-label="Start over (clears this session)"><LogoutIcon /></button>}
+          {inApp && loggedIn && <button className="ab-btn" onClick={logout} title="Start over" aria-label="Start over (clears this session)"><RestartIcon /></button>}
           <button className="a11y-btn" onClick={cycleFont} title="Text size — tap to change" aria-label={`Text size ${Math.round(SCALES[fontStep] * 100)} percent, tap to change`}>
             <span className="ab-a">A</span><span className="ab-v">{Math.round(SCALES[fontStep] * 100)}%</span>
           </button>

@@ -168,7 +168,12 @@ app.post("/api/chat", auth, async (req: AuthedRequest, res) => {
     logEvent(req.userId!, "chat_message", { mode, turns: history.length, persona });
     res.json({ source: PROVIDER, model: MODEL, reply });
   } catch (e: any) {
-    res.status(e?.status || 500).json({ error: "chat_failed", message: String(e?.message || e) });
+    const msg = String(e?.message || e);
+    // Free-tier rate limit: answer honestly instead of a generic failure.
+    if (/\b429\b|rate.?limit/i.test(msg)) {
+      return res.json({ reply: "I'm getting a lot of questions right now and briefly hit my free-tier limit. Please wait about a minute, then ask again — I'll be right here." });
+    }
+    res.status(e?.status || 500).json({ error: "chat_failed", message: msg });
   }
 });
 

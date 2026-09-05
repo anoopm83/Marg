@@ -90,21 +90,40 @@ const OPENAI_COMPAT: Record<string, { base: string; key?: string }> = {
   ollama: { base: process.env.OLLAMA_BASE || "http://localhost:11434/v1", key: undefined },
 };
 
-async function callOpenAICompat(system: string, user: string): Promise<string> {
+// Shared OpenAI-compatible POST with 429 backoff. Groq's free tier is a rolling
+// tokens-per-minute limit that resets in ~seconds, and the 429 body tells us how
+// long to wait ("try again in Xs") — so honour it and retry rather than failing.
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+async function openaiPost(body: object): Promise<any> {
   const cfg = OPENAI_COMPAT[PROVIDER];
-  const r = await fetch(cfg.base + "/chat/completions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...(cfg.key ? { Authorization: "Bearer " + cfg.key } : {}) },
-    body: JSON.stringify({
-      model: MODEL,
-      messages: [{ role: "system", content: system }, { role: "user", content: user }],
-      response_format: { type: "json_object" },
-      temperature: 0.4,
-      max_tokens: 400,
-    }),
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const r = await fetch(cfg.base + "/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...(cfg.key ? { Authorization: "Bearer " + cfg.key } : {}) },
+      body: JSON.stringify(body),
+    });
+    if (r.ok) return r.json();
+    const text = await r.text();
+    if (r.status === 429 && attempt < 2) {
+      const header = Number(r.headers.get("retry-after")); // seconds, if present
+      const m = text.match(/try again in ([\d.]+)\s*s/i);
+      const waitMs = Math.min((header ? header : m ? parseFloat(m[1]) : 1.5) * 1000 + 250, 8000);
+      await sleep(waitMs);
+      continue;
+    }
+    throw new Error(`LLM ${r.status}: ${text.slice(0, 300)}`);
+  }
+  throw new Error("LLM: rate-limit retries exhausted");
+}
+
+async function callOpenAICompat(system: string, user: string): Promise<string> {
+  const d = await openaiPost({
+    model: MODEL,
+    messages: [{ role: "system", content: system }, { role: "user", content: user }],
+    response_format: { type: "json_object" },
+    temperature: 0.4,
+    max_tokens: 400,
   });
-  if (!r.ok) throw new Error(`LLM ${r.status}: ${(await r.text()).slice(0, 300)}`);
-  const d: any = await r.json();
   return d.choices?.[0]?.message?.content ?? "";
 }
 
@@ -223,19 +242,12 @@ function groundingBlock(ctx: any): string {
 }
 
 async function chatOpenAICompat(system: string, messages: ChatMsg[]): Promise<string> {
-  const cfg = OPENAI_COMPAT[PROVIDER];
-  const r = await fetch(cfg.base + "/chat/completions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...(cfg.key ? { Authorization: "Bearer " + cfg.key } : {}) },
-    body: JSON.stringify({
-      model: MODEL,
-      messages: [{ role: "system", content: system }, ...messages],
-      temperature: 0.5,
-      max_tokens: 900,
-    }),
+  const d = await openaiPost({
+    model: MODEL,
+    messages: [{ role: "system", content: system }, ...messages],
+    temperature: 0.5,
+    max_tokens: 900,
   });
-  if (!r.ok) throw new Error(`LLM ${r.status}: ${(await r.text()).slice(0, 300)}`);
-  const d: any = await r.json();
   const m = d.choices?.[0]?.message;
   return (m?.content || m?.reasoning || "") ?? ""; // some reasoning models leave content empty
 }

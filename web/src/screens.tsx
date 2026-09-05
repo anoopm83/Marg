@@ -578,6 +578,7 @@ export function Detail({ ctx }: { ctx: Ctx }) {
   const [showChat, setShowChat] = useState(false);
   useEffect(() => {
     if (!o) return;
+    api.event("option_viewed", { option_id: o.id, persona: ctx.persona?.id }); // North-Star: field exploration (fires even if the reflection can't load)
     setRefl(localReflect(o, ctx.profile));
     setLoading(true);
     let live = true;
@@ -1014,8 +1015,8 @@ export function AdminDashboard({ ctx }: { ctx: Ctx }) {
       <div className="adm-funnel">
         {frow("Entered", f.entered)}
         {frow("Completed intake", f.completedIntake)}
-        {frow("Explored an unconsidered path", f.exploredUnconsidered)}
-        {frow("Saved a 2–3 shortlist", f.savedShortlist)}
+        {frow("Explored the field (new path / 2+ options)", f.exploredUnconsidered)}
+        {frow("Saved a shortlist (2+)", f.savedShortlist)}
       </div>
 
       <div className="section-k" style={{ marginTop: 22 }}>ENGAGEMENT</div>

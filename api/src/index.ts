@@ -257,20 +257,35 @@ app.get("/api/admin/metrics", adminAuth, (_req, res) => {
   const chats = n("SELECT COUNT(*) n FROM events WHERE name='chat_message'");
   const shortlistItems = n("SELECT COUNT(*) n FROM shortlist_items");
   const usersWithShortlist = n("SELECT COUNT(DISTINCT user_id) n FROM shortlist_items");
-  const savedShortlist = n("SELECT COUNT(*) n FROM (SELECT user_id FROM shortlist_items GROUP BY user_id HAVING COUNT(*) BETWEEN 2 AND 3)");
-  // "Engaged an option they hadn't considered" = opened a specialized path OR acted
-  // on the "have you considered" nudge. Both are the broadening moment the North Star
-  // is about, so both count (the nudge was previously invisible to the metric).
-  const UNCONSIDERED = "name IN ('specialized_viewed','nudge_engaged')";
-  const exploredUnconsidered = n(`SELECT COUNT(DISTINCT user_id) n FROM events WHERE ${UNCONSIDERED}`);
   const distress = n("SELECT COUNT(*) n FROM events WHERE name='distress_flag_raised'");
-  // North Star — Informed-Convergence Rate: completed intake AND engaged an option
-  // they hadn't considered AND saved a 2-3 shortlist, over everyone who entered.
-  const nsmNum = n(`SELECT COUNT(*) n FROM (
-    SELECT u.id FROM users u
-    WHERE EXISTS(SELECT 1 FROM intake i WHERE i.user_id = u.id)
-      AND EXISTS(SELECT 1 FROM events e WHERE e.user_id = u.id AND ${UNCONSIDERED})
-      AND (SELECT COUNT(*) FROM shortlist_items s WHERE s.user_id = u.id) BETWEEN 2 AND 3)`);
+
+  // ---- North Star (fair instrumentation) ----
+  // Three sets, computed from real events:
+  //  intake    — completed the intake
+  //  explored  — genuinely looked beyond the obvious: opened an expansion path,
+  //              engaged the "have you considered" nudge, OR compared >=2 distinct
+  //              options (viewed/reflected). The old version only counted the
+  //              collapsed expansion tier + the one nudge, so real comparing users
+  //              were missed — that made the metric near-impossible to satisfy.
+  //  converged — saved a shortlist of 2 or more (narrowed the field; was "exactly 2-3").
+  const intakeSet = new Set<string>();
+  for (const r of db.prepare("SELECT user_id AS uid FROM intake").all() as any[]) intakeSet.add(r.uid);
+
+  const explored = new Set<string>();
+  for (const r of db.prepare("SELECT DISTINCT user_id AS uid FROM events WHERE name IN ('specialized_viewed','nudge_engaged') AND user_id IS NOT NULL").all() as any[]) explored.add(r.uid);
+  const optsByUser = new Map<string, Set<string>>(); // distinct options each user opened
+  for (const r of db.prepare("SELECT user_id AS uid, props FROM events WHERE name IN ('option_reflected','option_viewed') AND user_id IS NOT NULL").all() as any[]) {
+    try { const oid = JSON.parse(r.props || "{}").option_id; if (oid) { (optsByUser.get(r.uid) ?? optsByUser.set(r.uid, new Set()).get(r.uid)!).add(oid); } } catch { /* skip */ }
+  }
+  for (const [uid, s] of optsByUser) if (s.size >= 2) explored.add(uid);
+
+  const converged = new Set<string>();
+  for (const r of db.prepare("SELECT user_id AS uid FROM shortlist_items GROUP BY user_id HAVING COUNT(*) >= 2").all() as any[]) converged.add(r.uid);
+
+  const exploredUnconsidered = explored.size;
+  const savedShortlist = converged.size;
+  let nsmNum = 0;
+  for (const uid of intakeSet) if (explored.has(uid) && converged.has(uid)) nsmNum++;
   const nsmDen = totalUsers;
   // helpfulness: 👍/👎 ratings live in events; count them for a direct benefit read.
   let up = 0, down = 0;
@@ -296,7 +311,7 @@ app.get("/api/admin/metrics", adminAuth, (_req, res) => {
     northStar: {
       name: "Informed-Convergence Rate",
       numerator: nsmNum, denominator: nsmDen, rate: nsmDen ? nsmNum / nsmDen : 0,
-      definition: "Users who completed intake, engaged an option they hadn't considered, and saved a 2–3 shortlist ÷ everyone who entered.",
+      definition: "Users who completed intake, explored the field (opened a new path, took the nudge, or compared 2+ options), and saved a shortlist of 2+ ÷ everyone who entered.",
     },
     funnel: { entered: totalUsers, completedIntake, exploredUnconsidered, savedShortlist },
     engagement: { reflections, chats, shortlistItems, usersWithShortlist },

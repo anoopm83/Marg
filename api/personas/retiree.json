@@ -9,6 +9,7 @@
   "options": [
     {
       "id": "purpose_work",
+      "official_links": [{"label":"SACRED — senior citizens' re-employment portal","url":"https://sacred.dosje.gov.in"},{"label":"National Career Service","url":"https://www.ncs.gov.in"}],
       "name": "Purpose & encore work",
       "type": "purpose",
       "summary": "Stay engaged on your own terms — part-time work, consulting in your old field, advising, or a passion project. Not about the paycheck; about staying useful and connected.",
@@ -24,6 +25,7 @@
     },
     {
       "id": "health_wellbeing",
+      "official_links": [{"label":"Ayushman Bharat (PM-JAY)","url":"https://pmjay.gov.in"},{"label":"Fit India Movement","url":"https://fitindia.gov.in"}],
       "name": "Health & active living",
       "type": "wellbeing",
       "summary": "Put daily wellbeing at the centre — gentle exercise, walking groups, yoga, routine, and staying physically active in ways that suit your body.",
@@ -39,6 +41,7 @@
     },
     {
       "id": "spiritual_practice",
+      "official_links": [{"label":"Ministry of AYUSH (yoga & wellness)","url":"https://www.ayush.gov.in"}],
       "name": "Spiritual life & inner calm",
       "type": "reflective",
       "summary": "Make room for meaning and calm — meditation, prayer, religious practice, reading, pilgrimage, or simply quiet reflection. A path many find deeply steadying in this chapter.",
@@ -54,6 +57,7 @@
     },
     {
       "id": "community_connection",
+      "official_links": [{"label":"Ministry of Social Justice — senior citizens","url":"https://socialjustice.gov.in"},{"label":"SACRED — senior citizens' portal","url":"https://sacred.dosje.gov.in"}],
       "name": "Community & connection",
       "type": "social",
       "summary": "Guard against isolation — senior citizens' clubs, neighbourhood groups, old-friend circles, and regular contact. One of the most important, most overlooked parts of retiring well.",
@@ -69,6 +73,7 @@
     },
     {
       "id": "learning_travel",
+      "official_links": [{"label":"SWAYAM — free govt online courses","url":"https://swayam.gov.in"},{"label":"IGNOU — open university","url":"https://www.ignou.ac.in"}],
       "name": "Learning, hobbies & travel",
       "type": "growth",
       "summary": "Pick up what you never had time for — a language, an instrument, gardening, painting, writing, or unhurried travel. Curiosity keeps the mind sharp and the days full.",
@@ -84,6 +89,7 @@
     },
     {
       "id": "financial_wellbeing",
+      "official_links": [{"label":"Senior Citizens' Savings Scheme (India Post)","url":"https://www.indiapost.gov.in"},{"label":"NPS / PFRDA","url":"https://www.pfrda.org.in"},{"label":"EPFO — pension","url":"https://www.epfindia.gov.in"},{"label":"RBI Sachet — check for scams / unauthorised schemes","url":"https://sachet.rbi.org.in"}],
       "name": "Financial peace of mind",
       "type": "finance",
       "summary": "Get clear and comfortable about money for this chapter — understanding your pension and savings, sensible budgeting, and protecting yourself from fraud.",
@@ -101,6 +107,7 @@
   "specialized_pathways": [
     {
       "id": "encore_enterprise",
+      "official_links": [{"label":"MSME — Udyam registration","url":"https://udyamregistration.gov.in"},{"label":"Startup India","url":"https://www.startupindia.gov.in"},{"label":"SACRED — senior citizens' portal","url":"https://sacred.dosje.gov.in"}],
       "name": "A small venture or social enterprise",
       "type": "encore",
       "tier": "expansion",
@@ -116,6 +123,7 @@
     },
     {
       "id": "mentoring_legacy",
+      "official_links": [{"label":"SACRED — senior citizens' portal","url":"https://sacred.dosje.gov.in"},{"label":"National Career Service","url":"https://www.ncs.gov.in"}],
       "name": "Mentoring & passing on knowledge",
       "type": "encore",
       "tier": "expansion",

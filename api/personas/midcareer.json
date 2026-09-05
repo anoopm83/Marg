@@ -13,6 +13,7 @@
   "options": [
     {
       "id": "upskill_current",
+      "official_links": [{"label":"Skill India Digital","url":"https://www.skillindiadigital.gov.in"},{"label":"SWAYAM — free govt online courses","url":"https://swayam.gov.in"}],
       "name": "Upskill in your current field",
       "type": "growth_in_place",
       "summary": "Deepen expertise where you already are — advanced certifications, a specialisation, or a senior-track skill — to grow without changing domain.",
@@ -49,6 +50,7 @@
     },
     {
       "id": "pivot_tech_data",
+      "official_links": [{"label":"SWAYAM / NPTEL (tech & data courses)","url":"https://swayam.gov.in"},{"label":"Skill India Digital","url":"https://www.skillindiadigital.gov.in"},{"label":"National Career Service","url":"https://www.ncs.gov.in"}],
       "name": "Pivot into tech / data",
       "type": "career_change",
       "summary": "Move toward software, data, analytics or product via structured reskilling — bootcamps, certifications, or a guided self-study path.",
@@ -86,6 +88,7 @@
     },
     {
       "id": "management_route",
+      "official_links": [{"label":"SWAYAM — management courses","url":"https://swayam.gov.in"},{"label":"AICTE (approved institutions)","url":"https://www.aicte-india.org"}],
       "name": "Management / leadership route",
       "type": "growth_in_place",
       "summary": "Grow toward people-leadership or general management — via an MBA, executive education, or moving into a lead role on the job.",
@@ -122,6 +125,7 @@
     },
     {
       "id": "entrepreneurship",
+      "official_links": [{"label":"Startup India","url":"https://www.startupindia.gov.in"},{"label":"MSME — Udyam registration","url":"https://udyamregistration.gov.in"},{"label":"PM MUDRA loans","url":"https://www.mudra.org.in"}],
       "name": "Start your own venture",
       "type": "independent",
       "summary": "Build a business or product of your own — full-time, or as a side venture you grow before leaving a job.",
@@ -157,6 +161,7 @@
     },
     {
       "id": "stable_sector",
+      "official_links": [{"label":"National Career Service","url":"https://www.ncs.gov.in"},{"label":"Staff Selection Commission (SSC)","url":"https://ssc.nic.in"},{"label":"UPSC","url":"https://www.upsc.gov.in"}],
       "name": "Stable / public sector move",
       "type": "career_change",
       "summary": "Shift toward stability — government roles, PSUs, or established sectors — often via competitive exams or lateral moves.",
@@ -190,6 +195,7 @@
     },
     {
       "id": "freelance_consulting",
+      "official_links": [{"label":"MSME — Udyam registration","url":"https://udyamregistration.gov.in"},{"label":"GST portal","url":"https://www.gst.gov.in"},{"label":"National Career Service","url":"https://www.ncs.gov.in"}],
       "name": "Freelance / independent consulting",
       "type": "independent",
       "summary": "Take your existing expertise independent — consulting, contracting or freelancing — for flexibility and control over your work.",
@@ -223,6 +229,7 @@
     },
     {
       "id": "territorial_army",
+      "official_links": [{"label":"Territorial Army (official)","url":"https://territorialarmy.in"},{"label":"Join Indian Army","url":"https://joinindianarmy.nic.in"}],
       "name": "Territorial Army (part-time service)",
       "type": "service",
       "summary": "Serve the nation part-time as a Territorial Army officer while keeping your civilian job or business — annual training and short embodiment periods, without leaving your career.",
@@ -240,6 +247,7 @@
   "specialized_pathways": [
     {
       "id": "teaching_coaching",
+      "official_links": [{"label":"CTET — teacher eligibility (schools)","url":"https://ctet.nic.in"},{"label":"UGC NET — college teaching","url":"https://ugcnet.nta.ac.in"}],
       "name": "Teaching, training or coaching",
       "type": "encore",
       "tier": "expansion",
@@ -263,6 +271,7 @@
     },
     {
       "id": "social_sector",
+      "official_links": [{"label":"NGO Darpan (NITI Aayog)","url":"https://ngodarpan.gov.in"},{"label":"National Career Service","url":"https://www.ncs.gov.in"}],
       "name": "Social sector / purpose-driven work",
       "type": "encore",
       "tier": "expansion",

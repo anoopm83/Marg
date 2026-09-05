@@ -94,6 +94,8 @@ main{flex:1;display:flex;flex-direction:column;}
 .appbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;
   padding:7px 12px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:40;}
 .appbar-l,.appbar-r{display:flex;align-items:center;gap:7px;min-width:0;}
+.ab-logo{display:inline-flex;align-items:center;padding:0;border:none;background:none;cursor:pointer;flex:none;}
+.ab-logo img{height:26px;width:auto;display:block;}
 .ab-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:32px;padding:0;border:1px solid var(--border);
   background:var(--chip-bg);color:var(--ink);border-radius:9px;cursor:pointer;transition:border-color .12s ease;}
 .ab-btn:hover{border-color:var(--primary);}
@@ -261,8 +263,6 @@ input::placeholder,textarea::placeholder{ color:var(--placeholder); }
 /* ============ Home / landing (Persuade) ============ */
 .home{width:100%;}
 .home h2{font-size:23px;line-height:1.16;text-wrap:balance;letter-spacing:-.005em;}
-.home-nav{display:flex;align-items:center;padding:16px 20px 4px;}
-.home-logo{height:46px;width:auto;display:block;}
 
 /* hero */
 .home-hero{position:relative;overflow:hidden;padding:14px 22px 30px;text-align:center;}
@@ -339,9 +339,11 @@ input::placeholder,textarea::placeholder{ color:var(--placeholder); }
 @media (prefers-reduced-motion:reduce){.dawn{animation:none;opacity:1;transform:none;}}
 
 /* legibility: the colour logo has dark lettering — give it a light plate on dark grounds */
-[data-theme="dark"] .home-logo, [data-theme="contrast"] .home-logo,
 [data-theme="dark"] .foot-logo, [data-theme="contrast"] .foot-logo{
   background:#F4F1EA; border-radius:9px; padding:5px 9px;
+}
+[data-theme="dark"] .ab-logo img, [data-theme="contrast"] .ab-logo img{
+  background:#F4F1EA; border-radius:7px; padding:3px 6px;
 }
 
 /* ---- home: scale-of-the-problem (decision fatigue) ---- */

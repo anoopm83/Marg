@@ -14,7 +14,6 @@ const THEME_LABEL: Record<Theme, string> = { dark: "Dark", light: "Light", contr
 const SCALES = [0.9, 1, 1.15, 1.3, 1.5]; // text-size steps (zoom on the content)
 
 const PERSONA_SHORT: Record<string, string> = { class10: "Student", midcareer: "Working professional", retiree: "Retiree" };
-const HomeIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5" /><path d="M5.5 10v9.5h13V10" /><path d="M9.5 19.5v-5h5v5" /></svg>);
 // "Start over" = restart the session, so a circular restart arrow (not a logout door).
 const RestartIcon = () => (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" /></svg>);
 const UserIcon = () => (<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></svg>);
@@ -164,7 +163,7 @@ export default function App() {
     <div className="frame">
       <div className="appbar">
         <div className="appbar-l">
-          {inApp && <button className="ab-btn" onClick={() => go("home")} title="Homepage" aria-label="Go to homepage"><HomeIcon /></button>}
+          <button className="ab-logo" onClick={() => go("home")} title="Marg — home" aria-label="Marg, go to homepage"><img src="/marg-logo.png" alt="Marg" /></button>
           {inApp && loggedIn && persona && (
             <span className="ab-persona" title="You're exploring as this persona"><UserIcon /> {PERSONA_SHORT[persona.id] ?? persona.label}</span>
           )}

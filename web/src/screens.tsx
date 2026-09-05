@@ -207,8 +207,6 @@ export function Home({ ctx }: { ctx: Ctx }) {
 
   return (
     <div className="home">
-      <nav className="home-nav"><img className="home-logo" src="/marg-logo.png" alt="Marg — Guiding India's Life Choices" /></nav>
-
       <header className="home-hero">
         <div className="dawn" aria-hidden="true" />
         <div className="hero-inner">

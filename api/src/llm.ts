@@ -246,7 +246,7 @@ async function chatOpenAICompat(system: string, messages: ChatMsg[]): Promise<st
     model: MODEL,
     messages: [{ role: "system", content: system }, ...messages],
     temperature: 0.5,
-    max_tokens: 900,
+    max_tokens: 550,
   });
   const m = d.choices?.[0]?.message;
   return (m?.content || m?.reasoning || "") ?? ""; // some reasoning models leave content empty

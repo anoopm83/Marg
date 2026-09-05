@@ -24,16 +24,16 @@ export interface Pack {
   groundingFor: (mode: "explore" | "aspire") => Record<string, unknown>;
 }
 
+// Grounding is chat-only and every call re-sends it, so keep it lean (Groq's free
+// tier is tokens-per-minute). Reflect/plan build their own richer payloads.
 const trimOption = (o: any) => ({
-  id: o.id, name: o.name, type: o.type, summary: o.summary, leads_to: o.leads_to,
-  eligibility: o.eligibility?.text, duration: o.duration,
+  id: o.id, name: o.name, summary: o.summary, leads_to: o.leads_to,
+  eligibility: o.eligibility?.text,
   approx_cost: o.approx_cost_per_year_inr || o.approx_cost_inr,
-  exams: o.entrance_exams_it_feeds, scholarships: o.related_scholarships,
+  scholarships: o.related_scholarships,
 });
-const trimSpecial = (p: any) => ({
-  id: p.id, name: p.name, summary: p.summary, frame: p.frame, leads_to: p.leads_to,
-  eligibility: p.eligibility?.text,
-});
+// Specialized set is 15 items — send only a light index (no long `frame` text).
+const trimSpecial = (p: any) => ({ id: p.id, name: p.name, summary: p.summary });
 const trimAmbition = (p: any) => ({
   id: p.id, ambition: p.ambition, next_horizon_steps: p.next_horizon_steps,
   honest_cost_effort: p.honest_cost_effort, real_routes_through_cost: p.real_routes_through_cost,

@@ -44,6 +44,22 @@ function FooterLinks({ ctx }: { ctx: Ctx }) {
   );
 }
 
+// A prominent, inviting entry point to the same feedback channel — for high-traffic
+// screens (e.g. Explore) where a footer link is too easy to miss.
+export function ImprovePrompt({ ctx, where }: { ctx: Ctx; where: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button className="improve-cta" onClick={() => setOpen(true)}>
+        <span className="ic-ic"><Icon name="bulb" size={18} stroke={2} /></span>
+        <span className="ic-body"><b>Spotted something wrong or missing?</b><span>Tell Marg — every note is read and helps us improve.</span></span>
+        <span className="ic-chev"><Icon name="chev" size={18} stroke={2} /></span>
+      </button>
+      {open && <ImproveMarg ctx={ctx} where={where} onClose={() => setOpen(false)} />}
+    </>
+  );
+}
+
 // The deliberate "tell Marg what to improve" channel. Free text + an optional
 // category. It goes to the same interpreted feedback loop as the 👍/👎 note —
 // Marg tags it for the admin; it never auto-changes the product.
@@ -538,6 +554,8 @@ export function Explore({ ctx }: { ctx: Ctx }) {
       )}
 
       <button className="btn btn-ghost" style={{ marginTop: 20 }} onClick={() => ctx.go("shortlist")}>View my shortlist ({ctx.shortlist.length})</button>
+      <ImprovePrompt ctx={ctx} where="explore" />
+      <FooterLinks ctx={ctx} />
     </section>
   );
 }
@@ -619,6 +637,7 @@ export function Detail({ ctx }: { ctx: Ctx }) {
       )}
       <div className="spacer" style={{ minHeight: 16 }} />
       <button className={"btn " + (saved ? "btn-soft" : "btn-primary")} onClick={toggleSave}>{saved ? "✓ In your shortlist" : <><Icon name="plus" size={18} style={{ color: "#fff" }} /> Add to my shortlist</>}</button>
+      <FooterLinks ctx={ctx} />
     </section>
   );
 }
@@ -709,6 +728,7 @@ export function SpecializedDetail({ ctx }: { ctx: Ctx }) {
 
       <div className="spacer" style={{ minHeight: 16 }} />
       <button className="btn btn-ghost" onClick={() => ctx.go("explore")}>Back to all options</button>
+      <FooterLinks ctx={ctx} />
     </section>
   );
 }

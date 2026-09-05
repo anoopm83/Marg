@@ -363,6 +363,7 @@ input::placeholder,textarea::placeholder{ color:var(--placeholder); }
 /* ---- home: scale-of-the-problem (decision fatigue) ---- */
 .home-problem{padding:34px 22px 8px;}
 .prob-lead{font-size:15px;color:var(--muted);line-height:1.55;margin-top:8px;max-width:40ch;}
+.prob-illus{display:block;width:100%;max-width:440px;height:auto;margin:20px auto 4px;border-radius:16px;box-shadow:var(--shadow);}
 .stat-lead{display:flex;gap:16px;align-items:center;margin-top:20px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow);}
 .stat-lead b{flex:none;font-family:'Spectral',Georgia,serif;font-weight:600;font-size:40px;line-height:.9;color:var(--amber);letter-spacing:.5px;font-variant-numeric:tabular-nums;}
 .stat-lead span{font-size:14.5px;color:var(--ink);line-height:1.4;}

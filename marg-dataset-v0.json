@@ -59,6 +59,7 @@
   "options": [
     {
       "id": "pu_science",
+      "official_links": [{"label":"Dept. of Pre-University Education, Karnataka","url":"https://pue.karnataka.gov.in"}],
       "name": "Pre-University (PU) — Science",
       "type": "academic_stream",
       "combinations": [
@@ -113,6 +114,7 @@
     },
     {
       "id": "pu_commerce",
+      "official_links": [{"label":"Dept. of Pre-University Education, Karnataka","url":"https://pue.karnataka.gov.in"}],
       "name": "Pre-University (PU) — Commerce",
       "type": "academic_stream",
       "combinations": [
@@ -165,6 +167,7 @@
     },
     {
       "id": "pu_humanities",
+      "official_links": [{"label":"Dept. of Pre-University Education, Karnataka","url":"https://pue.karnataka.gov.in"}],
       "name": "Pre-University (PU) — Humanities / Arts",
       "type": "academic_stream",
       "combinations": [
@@ -216,6 +219,7 @@
     },
     {
       "id": "polytechnic_diploma",
+      "official_links": [{"label":"Directorate of Technical Education, Karnataka (diploma admissions)","url":"https://dtetech.karnataka.gov.in"}],
       "name": "Polytechnic Diploma",
       "type": "technical_diploma",
       "combinations": [
@@ -268,6 +272,7 @@
     },
     {
       "id": "iti",
+      "official_links": [{"label":"Directorate General of Training (DGT), Govt. of India","url":"https://dgt.gov.in"},{"label":"NCVT MIS — ITI directory & results","url":"https://ncvtmis.gov.in"}],
       "name": "ITI (Industrial Training Institute)",
       "type": "vocational_training",
       "combinations": [
@@ -317,6 +322,7 @@
     },
     {
       "id": "nios",
+      "official_links": [{"label":"National Institute of Open Schooling (NIOS)","url":"https://www.nios.ac.in"}],
       "name": "NIOS (National Institute of Open Schooling)",
       "type": "open_schooling",
       "combinations": [
@@ -357,6 +363,7 @@
     },
     {
       "id": "vocational",
+      "official_links": [{"label":"Skill India Digital (Govt. of India)","url":"https://www.skillindiadigital.gov.in"},{"label":"PMKVY — Pradhan Mantri Kaushal Vikas Yojana","url":"https://www.pmkvyofficial.org"}],
       "name": "Vocational / Skill Courses",
       "type": "vocational_training",
       "combinations": [
@@ -513,6 +520,7 @@
   "specialized_pathways": [
     {
       "id": "integrated_pu_coaching",
+      "official_links": [{"label":"Dept. of Pre-University Education, Karnataka (the PU part)","url":"https://pue.karnataka.gov.in"}],
       "name": "Integrated PU + Coaching (NEET / JEE / CA / CLAT)",
       "type": "academic_stream_variant",
       "tier": "expansion",
@@ -557,6 +565,7 @@
     },
     {
       "id": "skill_development_nsdc",
+      "official_links": [{"label":"Skill India Digital (Govt. of India)","url":"https://www.skillindiadigital.gov.in"},{"label":"NSDC — National Skill Development Corporation","url":"https://nsdcindia.org"}],
       "name": "Skill Development Programs (NSDC / PMKVY)",
       "type": "vocational_training",
       "tier": "expansion",
@@ -597,6 +606,7 @@
     },
     {
       "id": "creative_design_school",
+      "official_links": [{"label":"National Institute of Design (NID)","url":"https://www.nid.edu"},{"label":"NIFT — National Institute of Fashion Technology","url":"https://www.nift.ac.in"}],
       "name": "Creative & Design Schools (Early Entry)",
       "type": "vocational_training",
       "tier": "expansion",
@@ -637,6 +647,7 @@
     },
     {
       "id": "sports_academy",
+      "official_links": [{"label":"Sports Authority of India (SAI)","url":"https://sportsauthorityofindia.nic.in"},{"label":"Khelo India","url":"https://kheloindia.gov.in"}],
       "name": "Sports Academies (Academics + Training)",
       "type": "specialised_track",
       "tier": "expansion",
@@ -678,6 +689,7 @@
     },
     {
       "id": "agriculture_allied",
+      "official_links": [{"label":"ICAR — Indian Council of Agricultural Research","url":"https://icar.org.in"},{"label":"Univ. of Agricultural Sciences, Bengaluru","url":"https://www.uasbangalore.edu.in"}],
       "name": "Agriculture & Allied Sciences (Diplomas)",
       "type": "technical_diploma",
       "tier": "expansion",
@@ -718,6 +730,7 @@
     },
     {
       "id": "paramedical_allied_health",
+      "official_links": [{"label":"Rajiv Gandhi Univ. of Health Sciences, Karnataka (RGUHS)","url":"https://www.rguhs.ac.in"}],
       "name": "Paramedical & Allied Health Diplomas",
       "type": "technical_diploma",
       "tier": "expansion",
@@ -758,6 +771,7 @@
     },
     {
       "id": "aviation_maritime",
+      "official_links": [{"label":"DGCA — approved flying training organisations","url":"https://www.dgca.gov.in"},{"label":"DG Shipping — approved maritime institutes","url":"https://www.dgshipping.gov.in"},{"label":"Indian Coast Guard — official recruitment","url":"https://joinindiancoastguard.gov.in"},{"label":"Indian Maritime University (IMU)","url":"https://www.imu.edu.in"}],
       "name": "Aviation, Pilot & Marine Services",
       "type": "specialised_track",
       "tier": "expansion",
@@ -796,6 +810,7 @@
     },
     {
       "id": "entrepreneurship_startup",
+      "official_links": [{"label":"Startup India (Govt. of India)","url":"https://www.startupindia.gov.in"}],
       "name": "Entrepreneurship & Startup Programs",
       "type": "enrichment",
       "tier": "expansion",
@@ -832,6 +847,7 @@
     },
     {
       "id": "alternative_education",
+      "official_links": [{"label":"NIOS — National Institute of Open Schooling","url":"https://www.nios.ac.in"},{"label":"IB — International Baccalaureate","url":"https://www.ibo.org"},{"label":"Cambridge International (IGCSE)","url":"https://www.cambridgeinternational.org"}],
       "name": "Alternative Education Routes (NIOS / IB / IGCSE)",
       "type": "open_schooling",
       "tier": "expansion",
@@ -870,6 +886,7 @@
     },
     {
       "id": "defence_forces",
+      "official_links": [{"label":"UPSC — NDA & CDS exams","url":"https://www.upsc.gov.in"},{"label":"Join Indian Army","url":"https://joinindianarmy.nic.in"},{"label":"Join Indian Navy","url":"https://www.joinindiannavy.gov.in"},{"label":"Indian Air Force careers","url":"https://careerindianairforce.cdac.in"},{"label":"NEET (for AFMC)","url":"https://neet.nta.nic.in"}],
       "name": "Defence & the armed forces",
       "type": "service",
       "tier": "expansion",
@@ -887,6 +904,7 @@
     },
     {
       "id": "police_uniformed",
+      "official_links": [{"label":"Karnataka State Police — recruitment","url":"https://recruitment.ksp.gov.in"},{"label":"Staff Selection Commission (SSC)","url":"https://ssc.nic.in"},{"label":"UPSC (for IPS via Civil Services)","url":"https://www.upsc.gov.in"}],
       "name": "Police, customs & uniformed services",
       "type": "service",
       "tier": "expansion",
@@ -904,6 +922,7 @@
     },
     {
       "id": "civil_services",
+      "official_links": [{"label":"UPSC — Union Public Service Commission","url":"https://www.upsc.gov.in"},{"label":"Karnataka Public Service Commission (KPSC)","url":"https://www.kpsc.kar.nic.in"}],
       "name": "Civil Services (UPSC / State PSC)",
       "type": "service",
       "tier": "expansion",
@@ -941,6 +960,7 @@
     },
     {
       "id": "government_jobs",
+      "official_links": [{"label":"Staff Selection Commission (SSC)","url":"https://ssc.nic.in"},{"label":"RRB — Railway recruitment (official apply)","url":"https://www.rrbapply.gov.in"},{"label":"IBPS — banking recruitment","url":"https://www.ibps.in"},{"label":"Karnataka Public Service Commission (KPSC)","url":"https://www.kpsc.kar.nic.in"}],
       "name": "Government & Public-Sector Jobs",
       "type": "service",
       "tier": "expansion",
@@ -977,6 +997,7 @@
     },
     {
       "id": "forestry_environment",
+      "official_links": [{"label":"UPSC — Indian Forest Service (IFoS)","url":"https://www.upsc.gov.in"},{"label":"ICAR (agriculture / forestry education)","url":"https://icar.org.in"},{"label":"Karnataka Public Service Commission (RFO)","url":"https://www.kpsc.kar.nic.in"}],
       "name": "Forestry, Environment & Wildlife",
       "type": "specialised_track",
       "tier": "expansion",
@@ -1014,6 +1035,7 @@
     },
     {
       "id": "arts_film_animation",
+      "official_links": [{"label":"FTII — Film & Television Institute of India","url":"https://www.ftii.ac.in"},{"label":"SRFTI — Satyajit Ray Film & TV Institute","url":"https://srfti.ac.in"},{"label":"National Institute of Design (NID)","url":"https://www.nid.edu"}],
       "name": "Fine Arts, Film & Animation",
       "type": "specialised_track",
       "tier": "expansion",

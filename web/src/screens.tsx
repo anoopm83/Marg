@@ -590,6 +590,7 @@ export function Detail({ ctx }: { ctx: Ctx }) {
         {schs && row("sch", "Scholarships", schs)}
       </div>
       <div className="verify"><Icon name="refresh" size={14} style={{ color: "var(--muted)" }} />{ctx.disclaimer || "Figures shown are provisional — confirm before you rely on them."}</div>
+      <OfficialLinks links={o.official_links} />
       {!!o.human_touchpoint && (
         <button className="touch" style={{ width: "100%" }} onClick={() => ctx.toast("Coming soon: a short, real story from someone on this path.")}>
           <span style={{ color: "var(--primary)" }}><Icon name="user" size={20} /></span><span style={{ flex: 1, textAlign: "left" }}>Hear from someone who took this path</span><span style={{ color: "var(--primary)" }}><Icon name="chev" size={18} stroke={2} /></span>
@@ -621,6 +622,28 @@ export function Detail({ ctx }: { ctx: Ctx }) {
       <div className="spacer" style={{ minHeight: 16 }} />
       <button className={"btn " + (saved ? "btn-soft" : "btn-primary")} onClick={toggleSave}>{saved ? "✓ In your shortlist" : <><Icon name="plus" size={18} style={{ color: "#fff" }} /> Add to my shortlist</>}</button>
     </section>
+  );
+}
+
+// Official "where to look" links — curated government / recognised-body portals
+// only (the source of truth where the current, verified centre list lives). Marg
+// never lists private coaching centres; these open the authority's own directory.
+function OfficialLinks({ links, accent = "var(--primary)" }: { links?: { label: string; url: string }[]; accent?: string }) {
+  if (!links || links.length === 0) return null;
+  return (
+    <>
+      <div className="section-k" style={{ marginTop: 20 }}>WHERE TO LOOK · OFFICIAL PORTALS</div>
+      <div className="offlink-note">Government &amp; recognised-body sites — the current, verified list lives here. Marg doesn't list private coaching centres or agents.</div>
+      <div className="stack" style={{ marginTop: 10 }}>
+        {links.map((l) => (
+          <a key={l.url} className="offlink" href={l.url} target="_blank" rel="noopener noreferrer">
+            <span className="offlink-ic" style={{ color: accent }}><Icon name="pin" size={16} /></span>
+            <span className="offlink-label">{l.label}</span>
+            <span className="offlink-ext" aria-hidden="true" style={{ color: accent }}>↗</span>
+          </a>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -667,6 +690,8 @@ export function SpecializedDetail({ ctx }: { ctx: Ctx }) {
       {s.honest_notes && (
         <div className="note" style={{ marginTop: 14 }}>{s.honest_notes}</div>
       )}
+
+      <OfficialLinks links={s.official_links} accent="var(--violet)" />
 
       {related.length > 0 && (
         <>

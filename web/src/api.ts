@@ -8,7 +8,9 @@ export interface Option {
   approx_cost_inr?: Record<string, string>;
   entrance_exams_it_feeds?: string[]; related_scholarships?: string[];
   honest_notes?: string; human_touchpoint?: unknown;
+  official_links?: { label: string; url: string }[];
 }
+export interface OfficialLink { label: string; url: string }
 export interface Reflection {
   band: "Worth exploring" | "Strong fit" | "A stretch";
   why_this_connects: string; what_to_watch: string; confidence: string;
@@ -27,6 +29,7 @@ export interface Specialized {
   approx_cost_inr?: Record<string, string>; approx_cost_per_year_inr?: Record<string, string>;
   related_scholarships?: string[]; related_core_options?: string[];
   honest_notes?: string; needs_verification?: boolean; human_touchpoint?: unknown;
+  official_links?: { label: string; url: string }[];
 }
 export interface Pathway {
   id: string; ambition: string;

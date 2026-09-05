@@ -25,6 +25,6 @@ Thumbs.db
 *.log
 npm-debug.log*
 
-# personal / non-project files
+# personal files (kept locally, not in the repo)
 LinkedIn.docx
-*.docx
+Interview.docx

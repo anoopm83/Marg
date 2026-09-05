@@ -52,6 +52,12 @@ function logEvent(userId: string | null, name: string, props: any) {
 
 // ---- health & content ----
 app.get("/api/health", (_req, res) => res.json({ ok: true, provider: PROVIDER, model: MODEL, ai_key_detected: hasKey, options: options.length }));
+// Public runtime config for the front-end (PostHog project keys are public/client-side).
+// Set POSTHOG_KEY in the host env to enable analytics — no rebuild needed.
+app.get("/api/config", (_req, res) => res.json({
+  posthog: { key: process.env.POSTHOG_KEY || null, host: process.env.POSTHOG_HOST || "https://us.i.posthog.com" },
+  appVersion: process.env.APP_VERSION || "0.1.0",
+}));
 // Persona registry for the picker (config only, no data pack).
 app.get("/api/personas", (_req, res) => res.json({ personas: personaList }));
 app.get("/api/options", (req, res) => {

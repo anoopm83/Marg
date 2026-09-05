@@ -20,6 +20,7 @@ and the built React front-end, so there's a single URL and no CORS setup.
 | `ADMIN_USER` / `ADMIN_PASS` | yes | **Change from `admin`/`admin`.** Gates the metrics dashboard. |
 | `NODE_ENV` | recommended | `production` |
 | `PORT` | auto | Most hosts set this; the app reads it. |
+| `POSTHOG_KEY` | optional | PostHog project key → enables product analytics (sessions, funnels, time-to-value). No rebuild needed; served at runtime via `/api/config`. |
 
 The Docker image sets `WEB_DIST` and serves the SPA automatically.
 

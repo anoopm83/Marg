@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { api, setAdmin, getAdmin, clearAdmin, type Option, type Profile, type Reflection, type ShortlistItem, type Pathway, type PlanReflection, type ChatMsg, type Specialized, type PersonaPublic, type AdminMetrics, type FeedbackItem } from "./api";
 import { Icon, Compass, Bookmark } from "./icons";
 import { INTERESTS, VALUES, localReflect, planLocal, pickNudge, costText, checkDistress, shortName, optIconName } from "./lib";
+import { trackFeature, trackFlowStep, trackValueMoment } from "./analytics";
 
 export interface Ctx {
   go: (name: string, param?: string | null) => void;
@@ -127,6 +128,7 @@ export function Chat({ ctx, mode, contextId, goal, placeholder, seedAssistant }:
     const text = input.trim();
     if (!text || busy) return;
     if (checkDistress(text)) ctx.openSafety(true); // instant local pre-check; server re-checks authoritatively
+    trackFeature("chat", contextId ? "option_detail" : "goal", ctx.persona?.id);
     const next: ChatMsg[] = [...msgs, { role: "user", content: text }];
     setMsgs(next); setInput(""); setBusy(true);
     const res = await api.chat({ mode, contextId, goal, messages: next, persona: ctx.persona?.id });
@@ -453,6 +455,7 @@ export function Intake({ ctx }: { ctx: Ctx }) {
     setBusy(true);
     await api.saveIntake(next);
     setBusy(false);
+    trackFlowStep("onboarding", "intake_completed", 1, ctx.persona?.id);
     if (distress) ctx.openSafety(true); else ctx.go("mode");
   }
   return (
@@ -508,6 +511,7 @@ export function Mode({ ctx }: { ctx: Ctx }) {
 }
 
 export function Explore({ ctx }: { ctx: Ctx }) {
+  useEffect(() => { trackFlowStep("onboarding", "explore_opened", 2, ctx.persona?.id); trackFeature("explore", "mode", ctx.persona?.id); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const academic = new Set(["pu_science", "pu_commerce", "pu_humanities"]);
   // Personalised "have you considered", only shows when a picked interest maps to a
   // genuinely-overlooked option; otherwise nothing (no arbitrary suggestion).
@@ -588,6 +592,8 @@ export function Detail({ ctx }: { ctx: Ctx }) {
   useEffect(() => {
     if (!o) return;
     api.event("option_viewed", { option_id: o.id, persona: ctx.persona?.id }); // North-Star: field exploration (fires even if the reflection can't load)
+    trackFlowStep("onboarding", "option_detail_opened", 3, ctx.persona?.id);
+    trackFeature("option_detail", "explore", ctx.persona?.id);
     setRefl(localReflect(o, ctx.profile));
     setLoading(true);
     let live = true;
@@ -608,6 +614,10 @@ export function Detail({ ctx }: { ctx: Ctx }) {
     const res = saved ? await api.removeShortlist(o!.id) : await api.addShortlist(o!.id, ctx.persona?.id);
     if (res.data?.shortlist) ctx.setShortlist(res.data.shortlist);
     ctx.toast(saved ? "Removed from shortlist" : "Added to your shortlist");
+    if (!saved) { // first tangible value: kept something worth exploring
+      trackFlowStep("onboarding", "shortlist_saved", 4, ctx.persona?.id);
+      trackValueMoment("first_shortlist_save", ctx.persona?.id);
+    }
   }
   const row = (name: string, lab: string, val: string) => (
     <div className="row"><span style={{ color: "var(--primary)" }}><Icon name={name} size={18} /></span><div><div className="lab">{lab}</div><div className="val">{val}</div></div></div>
@@ -691,7 +701,7 @@ function OfficialLinks({ links, accent = "var(--primary)" }: { links?: { label: 
 export function SpecializedDetail({ ctx }: { ctx: Ctx }) {
   const s = ctx.specialized.find((x) => x.id === ctx.param);
   // North-star signal: the user engaged an option they hadn't considered.
-  useEffect(() => { if (s) api.event("specialized_viewed", { id: s.id, persona: ctx.persona?.id }); }, [s?.id]);
+  useEffect(() => { if (s) { api.event("specialized_viewed", { id: s.id, persona: ctx.persona?.id }); trackFeature("specialized_path", "explore", ctx.persona?.id); } }, [s?.id]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!s) return <Explore ctx={ctx} />;
   const where = s.where_in_bangalore?.examples?.slice(0, 3).join(", ") || "";
   const cost = costText(s as unknown as Option);

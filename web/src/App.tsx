@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, getToken, setToken, clearToken, type Option, type Profile, type ShortlistItem, type Pathway, type Specialized, type PersonaPublic } from "./api";
 import { HELPLINES } from "./lib";
+import { initAnalytics } from "./analytics";
 import {
   Home, Welcome, Consent, Intake, Mode, Explore, Detail, SpecializedDetail, Shortlist, DeleteConfirm,
   Aspire, WhyGoal, Plan, GoalChat, PersonaPick, AdminLogin, AdminDashboard, type Ctx,
@@ -113,6 +114,7 @@ export default function App() {
       let chosen = list.find((p) => p.id === "class10") ?? list[0] ?? null;
       try { const sp = localStorage.getItem("marg_persona"); const f = sp && list.find((p) => p.id === sp); if (f) chosen = f; } catch { /* private mode */ }
       if (chosen) { setPersonaState(chosen); await loadPacks(chosen.id); }
+      initAnalytics(chosen?.id); // app_opened + engagement_session_started
       if (getToken()) {
         const [ik, sl] = await Promise.all([api.getIntake(), api.getShortlist()]);
         if (ik.status === 401) {

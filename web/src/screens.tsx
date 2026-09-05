@@ -162,10 +162,20 @@ export function Chat({ ctx, mode, contextId, goal, placeholder, seedAssistant }:
 export function Feedback({ ctx, where, prompt }: { ctx: Ctx; where: string; prompt: string }) {
   const [rating, setRating] = useState<null | "up" | "down">(null);
   const [note, setNote] = useState("");
-  const [sent, setSent] = useState(false);
-  const rate = (r: "up" | "down") => { setRating(r); api.event("feedback", { where, rating: r, persona: ctx.persona?.id }); };
-  const submit = () => { if (note.trim()) api.feedback({ text: note.trim(), rating, context: where, persona: ctx.persona?.id }); setSent(true); };
-  if (sent) return <div className="fb-done"><Icon name="check" size={14} /> Thanks — that helps us learn.</div>;
+  const [noteSent, setNoteSent] = useState(false);
+  // The 👍/👎 is recorded the instant it's clicked — no Send needed. Send only
+  // submits the optional free-text note. (Re-clicking the same thumb is a no-op.)
+  const rate = (r: "up" | "down") => {
+    if (r === rating) return;
+    setRating(r);
+    api.event("feedback", { where, rating: r, persona: ctx.persona?.id });
+  };
+  const submit = () => {
+    if (!note.trim()) return;
+    api.feedback({ text: note.trim(), rating, context: where, persona: ctx.persona?.id });
+    setNoteSent(true);
+  };
+  if (noteSent) return <div className="fb-done"><Icon name="check" size={14} /> Thanks — that helps us learn.</div>;
   return (
     <div className="fb">
       <div className="fb-row">
@@ -175,8 +185,9 @@ export function Feedback({ ctx, where, prompt }: { ctx: Ctx; where: string; prom
       </div>
       {rating && (
         <div className="fb-note">
-          <input className="ta" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Anything you'd add? (optional)" onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
-          <button className="fb-send" onClick={submit}>Send</button>
+          <span className="fb-ok"><Icon name="check" size={13} /> Thanks — noted.</span>
+          <input className="ta" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Want to add why? (optional)" onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
+          <button className="fb-send" onClick={submit} disabled={!note.trim()}>Send</button>
         </div>
       )}
     </div>

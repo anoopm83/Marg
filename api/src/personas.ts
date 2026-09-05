@@ -50,7 +50,7 @@ const HELP_SENIOR = [
 const CONFIGS: Record<string, PersonaConfig> = {
   class10: {
     id: "class10",
-    label: "School",
+    label: "School-going",
     age_band: "13-16",
     category: "school-to-stream",
     experimental: false,

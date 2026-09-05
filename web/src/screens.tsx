@@ -223,7 +223,7 @@ export function Home({ ctx }: { ctx: Ctx }) {
   const start = () => ctx.go("personas");
   const openStage = (id: string) => { const p = ctx.personas.find((x) => x.id === id); if (p) { ctx.setPersona(p); ctx.go("welcome"); } else start(); };
   const stages = [
-    { id: "class10", when: "School", line: "Choosing a stream, a course, a direction.", ready: true },
+    { id: "class10", when: "School-going", line: "Choosing a stream, a course, a direction.", ready: true },
     { id: "midcareer", when: "Mid-career", line: "A switch, growth, or more meaning at work.", ready: false },
     { id: "retiree", when: "Later life", line: "Purpose, calm and community, this chapter.", ready: false },
   ];
@@ -351,7 +351,7 @@ export function PersonaPick({ ctx }: { ctx: Ctx }) {
           </button>
         ))}
       </div>
-      <div className="disclaimer-foot" style={{ marginTop: 18 }}>School is the built, verified experience. Others are early beta versions of Marg's one-engine vision.</div>
+      <div className="disclaimer-foot" style={{ marginTop: 18 }}>The school-going stage is the built, verified experience. Others are early beta versions of Marg's one-engine vision.</div>
     </section>
   );
 }
